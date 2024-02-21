@@ -1,0 +1,118 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}{{ question.titleQuestion }}{% endblock %}
+
+{% block body %}
+
+<body class="custom-cursor">
+
+    <div class="custom-cursor__cursor"></div>
+    <div class="custom-cursor__cursor-two"></div>
+    <div class="page-wrapper">
+    
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+
+        <!--Page Header Start-->
+        <section class="page-header">
+            <div class="page-header-bg" style="background-image: url(assets/images/backgrounds/page-header-bg.jpg)">
+            </div>
+            <div class="container">
+                <div class="page-header__inner">
+                    <h2>notre formulaire</h2>
+                    <ul class="thm-breadcrumb list-unstyled">
+                  
+                        <li>20 questions</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!--Faq Search Box Start-->
+        <section class="faq-search-box">
+            <div class="container">
+                <div class="faq-search-box__inner">
+                    <div class="faq-search-box__shape float-bob-x">
+                        <img src="assets/images/shapes/faq-search-shape-1.png" alt="">
+                    </div>
+                    <div class="faq-search-box__left">
+                        <h3 class="faq-search-box__title">formulaire de question</h3>
+                        <p class="faq-search-box__text">
+                            Voici un formulaire de questions pour déterminer si quelqu'un 
+                            pourrait bénéficier de consulter un psychiatre</p>
+                        <form class="faq-search-box__form">
+                  
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Faq Search Box End-->
+
+        <!--Faq Page Start-->
+        <section class="faq-page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="faq-page__left">
+                            <div class="faq-page__content">
+                                <div class="faq-page__content-bg"
+                                    style="background-image: url(assets/images/backgrounds/faq-page-content-bg.jpg);">
+                                </div>
+                                <div class="faq-page__call-icon">
+                                    <span class="icon-phone-call"></span>
+                                </div>
+                                <h4 class="faq-page__content-title"> <br> autre Questions?</h4>
+                                <div class="faq-page__call">
+                                    <p class="faq-page__call-sub-title">
+                                        Appelez à tout moment</p>
+                                    <h5 class="faq-page__call-number"><a href="tel:9288009850">+216 50 312 709</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-xl-9 col-lg-8">
+                    <div class="faq-page__right">
+                        <div class="question">
+                        <h2>{{ question.titleQuestion }}</h2>
+                        {% if question.questions|length > 0 %}
+                            <form action="{{ path('app_proposition_show', {'id': question.id}) }}" method="POST">
+                             {% for proposition in question.questions %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="proposition" id="proposition{{ proposition.id }}" value="{{ proposition.id }}">
+                                    <label class="form-check-label" for="proposition{{ proposition.id }}">
+                                        {{ proposition.titleProposition }}
+                                    </label>
+                                </div>
+                             {% endfor %}
+                            <button type="submit" class="btn btn-primary">Soumettre</button>
+                            </form>
+                        {% else %}
+                            <p>Aucune proposition disponible pour cette question.</p>
+                        {% endif %}
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <!--Faq Page End-->
+
+
+    </div><!-- /.page-wrapper -->
+
+
+
+
+
+
+
+    
+</body>
+
+{% endblock %}

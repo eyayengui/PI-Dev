@@ -1,0 +1,21 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Edit Questionnaires{% endblock %}
+
+{% block body %}
+<div class="col-12">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">Editer Questionnaires </h1>
+        </div>
+        <div class="box-body no-padding">
+            {{ include('questionnaires/_form.html.twig', {'button_label': 'Update'}) }}
+
+            <a href="{{ path('app_questionnaires_index') }}" class="btn btn-secondary">Retourner </a>
+
+            {{ include('questionnaires/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

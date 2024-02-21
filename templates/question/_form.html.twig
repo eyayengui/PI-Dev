@@ -1,0 +1,52 @@
+{{ form_start(form) }}
+    <br>
+    {{ form_row(form.title_question) }}
+    <br>
+    {{ form_row(form.questionnaires) }}
+
+    <h3>Propositions</h3>
+    <div id="propositions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
+        {% for propositionForm in form.questions %}
+            <div class="proposition-item">
+                {{ form_row(propositionForm.title_proposition) }}
+                <!-- Ajoutez ici d'autres champs de proposition si nécessaire -->
+                <button type="button" class="btn remove-proposition-button">Supprimer cette proposition</button>
+            </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" class="btn" id="add-proposition-button">Ajouter une proposition</button>
+    <button type="submit" class="btn btn-secondary">Enregistrer</button>
+{{ form_end(form) }}
+
+<script>
+document.getElementById('add-proposition-button').addEventListener('click', function() {
+    var container = document.getElementById('propositions-container');
+    var index = container.querySelectorAll('.proposition-item').length;
+    var newForm = container.getAttribute('data-prototype');
+    newForm = newForm.replace(/__name__/g, index);
+    var newFormDiv = document.createElement('div');
+    newFormDiv.classList.add('proposition-item');
+    newFormDiv.innerHTML = newForm;
+
+    // Ajoutez un bouton de suppression à cette nouvelle proposition
+    var removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = 'Supprimer cette proposition';
+    removeButton.classList.add('btn', 'remove-proposition-button');
+    removeButton.addEventListener('click', function() {
+        newFormDiv.remove();
+    });
+
+    newFormDiv.appendChild(removeButton);
+    container.appendChild(newFormDiv);
+});
+
+// Ajoutez des gestionnaires d'événements de suppression pour les propositions existantes
+document.querySelectorAll('.remove-proposition-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        button.parentNode.remove();
+    });
+});
+</script>
+

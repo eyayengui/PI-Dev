@@ -1,0 +1,158 @@
+{% extends 'front.html.twig' %}
+
+{% block body %}
+<body class="custom-cursor">
+
+    <div class="custom-cursor__cursor"></div>
+    <div class="custom-cursor__cursor-two"></div>
+    <div class="page-wrapper">
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+        <!--Page Header Start-->
+        <section class="page-header">
+            <div class="page-header-bg" style="background-image: url(assets/images/backgrounds/page-header-bg.jpg)">
+            </div>
+            <div class="container">
+                <div class="page-header__inner">
+                    <h2>Notre Questionnaire</h2>
+                    <ul class="thm-breadcrumb list-unstyled">
+                    
+                        <li>5 questions</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!--Faq Search Box Start-->
+        <section class="faq-search-box">
+            <div class="container">
+                <div class="faq-search-box__inner">
+                    <div class="faq-search-box__shape float-bob-x">
+                        <img src="assets/images/shapes/faq-search-shape-1.png" alt="">
+                    </div>
+                    <div class="faq-search-box__left">
+                        <h3 class="faq-search-box__title">Formulaire de question</h3>
+                        <p class="faq-search-box__text">
+                            Voici un formulaire de questions pour déterminer si quelqu'un 
+                            pourrait bénéficier de consulter un psychiatre</p>
+                        <form class="faq-search-box__form">
+                  
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Faq Search Box End-->
+
+        <!--Faq Page Start-->
+        <section class="faq-page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="faq-page__left">
+                            <div class="faq-page__content">
+                                <div class="faq-page__content-bg"
+                                    style="background-image: url(assets/images/backgrounds/faq-page-content-bg.jpg);">
+                                </div>
+                                <div class="faq-page__call-icon">
+                                    <span class="icon-phone-call"></span>
+                                </div>
+                                <h4 class="faq-page__content-title"> <br> autre Questions?</h4>
+                                <div class="faq-page__call">
+                                    <p class="faq-page__call-sub-title">
+                                        Appelez à tout moment</p>
+                                    <h5 class="faq-page__call-number"><a href="tel:9288009850">+216 50 312 709</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-8">
+                        <div class="faq-page__right">
+                            <h2>Question {{ questionIndex + 1 }}/{{ totalQuestions }}</h2>
+                                <h2>{{ question.titleQuestion }}</h2>
+                                <form id="question-form" action="{{ path('questionnaire_show_question', {'questionnaireId': questionnaire.id, 'questionIndex': questionIndex }) }}" method="post">
+                                    {% for proposition in question.questions %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="propositionId" id="proposition{{ proposition.id }}" value="{{ proposition.id }}">
+                                            <label class="form-check-label" for="proposition{{ proposition.id }}">
+                                                {{ proposition.titleProposition }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <button type="submit" class="btn btn-secondary">Suivant</button>
+                                </form>
+
+                            {# <div>
+                                <h2>Question {{ questionIndex + 1 }}/{{ totalQuestions }}</h2>
+                                <h2>{{ question.titleQuestion }}</h2>
+                                <form id="question-form" action="{{ path('questionnaire_answer', {'questionId': question.id}) }}" method="post">
+                                    {% for proposition in question.questions %}
+                                        <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="propositionId" id="proposition{{ proposition.id }}" value="{{ proposition.id }}">
+                                    <label class="form-check-label" for="proposition{{ proposition.id }}">
+                                        {{ proposition.titleProposition }}
+                                    </label>
+                                        </div>
+                                    {% endfor %}
+                                </form>
+                            {# <a href="#" class="btn btn-secondary next-question" data-question-id="{{ question.id }}">Next</a> #}
+                            {# <a href="{{ path('questionnaire_show_question', {'questionnaireId': questionnaire.id, 'questionIndex': questionIndex + 1 }) }}" class="btn btn-secondary">Next</a> #}
+
+
+                            {# <form action="{{ path('questionnaire_answer', {'questionId': question.id}) }}" method="post">
+                                {% for proposition in question.questions %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="propositionId" id="proposition{{ proposition.id }}" value="{{ proposition.id }}">
+                                        <label class="form-check-label" for="proposition{{ proposition.id }}">
+                                            {{ proposition.titleProposition }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                <button type="submit" class="btn btn-primary">Submit Answer</button>
+                            </form>
+                            <div>
+                                {% if questionIndex > 0 %}
+                                    <a href="{{ path('questionnaire_show_question', {'questionnaireId': questionnaire.id, 'questionIndex': questionIndex - 1}) }}" class="btn btn-primary">Previous</a>
+                                {% endif %}
+                                {% if questionIndex < totalQuestions - 1 %}
+                                    <button type="submit" href="{{ path('questionnaire_show_question', {'questionnaireId': questionnaire.id, 'questionIndex': questionIndex + 1}) }}" class="btn btn-secondary">Next</a>
+                                {% else %}
+                                    <a href="{{ path('questionnaire_complete', {'questionnaireId': questionnaire.id}) }}" class="btn btn-success">Finish</a>
+                                {% endif %}
+                            </div> #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+            {#     <script>
+        document.querySelectorAll('.next-question').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const questionId = this.getAttribute('data-question-id');
+                const selectedProposition = document.querySelector('input[name="propositionId"]:checked').value;
+                
+                fetch("{{ path('questionnaire_answer', {'questionId': 0}) }}".replace("0", questionId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        // Ajoutez ici d'autres en-têtes si nécessaire, comme les en-têtes CSRF
+                    },
+                    body: JSON.stringify({propositionId: selectedProposition})
+                }).then(response => {
+                    if (response.ok) {
+                        // Redirigez vers la question suivante ou actualisez la page pour afficher la prochaine question
+                        window.location.href = "URL_pour_la_question_suivante";
+                    } else {
+                        alert('Erreur lors de la soumission de la réponse');
+                    }
+                });
+            });
+        });
+    </script> #}
+{% endblock %}
