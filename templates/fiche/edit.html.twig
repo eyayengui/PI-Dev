@@ -1,0 +1,140 @@
+{% extends 'base-front.html.twig' %}
+
+{% block body %}
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
+    <TR>
+        <TD BACKGROUND="fade.gif">
+            &middot;
+                <A HREF="medical-admin-template.multipurposethemes.com/main/index9142.html">
+                    Doclinic - Dashboard
+                </A>       
+        </TD>
+    </TR>
+</TABLE>
+<style>
+    .form-container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .form-group input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; /* Adjust the gap between cards */
+    }
+
+    .card {
+        background-color: #f5f5f5; /* Adjust the background color */
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: calc(33.33% - 20px); /* Adjust the width of each card */
+    }
+
+    .card-header {
+        background-color: #0f4c75; /* Adjust the header background color to dark green-blue */
+        color: white;
+        padding: 10px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .card-body, .card-footer {
+        padding: 10px;
+        color: black; /* Set the text color inside the card body to black */
+    }
+
+    .card-footer a {
+        color: black; /* Set the color of delete and edit links to black */
+        margin-right: 10px;
+        text-decoration: none;
+    }
+
+    .card-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .card-title {
+        color: white; /* Adjust the title color to white */
+    }
+    .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+</style>
+
+<div class="form-container">
+    {{ form_start(formB) }}
+    <div class="form-group">
+        {{ form_label(formB.id_p) }}
+        {{ form_widget(formB.id_p, {'attr': {'placeholder': 'Enter Id Patient'}}) }}
+        <div class="error-message">
+            {{ form_errors(formB.id_p) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(formB.id_t) }}
+        {{ form_widget(formB.id_t, {'attr': {'placeholder': 'Enter Id Therapeute'}}) }}
+        <div class="error-message">
+            {{ form_errors(formB.id_t) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(formB.date_creation) }}
+        {{ form_widget(formB.date_creation) }}
+        <div class="error-message">
+            {{ form_errors(formB.date_creation) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(formB.derniere_maj) }}
+        {{ form_widget(formB.derniere_maj) }}
+        <div class="error-message">
+            {{ form_errors(formB.derniere_maj) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_widget(formB.Ajouter, {'label': 'Submit'}) }}
+    </div>
+    {{ form_end(formB) }}
+</div>
+
+{% endblock %}

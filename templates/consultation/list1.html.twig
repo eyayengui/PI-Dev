@@ -1,0 +1,188 @@
+{% extends 'base-back.html.twig' %}
+
+{% block body %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .action-links a {
+        margin-right: 5px;
+    }
+
+    form label {
+        display: inline-block;
+        width: 150px; 
+        text-align: center;
+    }
+
+    .submit-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #005F6B; 
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #005F6B; 
+    }
+
+    .consultation-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
+    }
+
+    .consultation-card {
+        background-color: #f5f5f5; 
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: calc(33.33% - 20px);
+        color: black; 
+    }
+
+    .card-header {
+        background-color: #0f4c75; 
+        color: white; 
+        font-size: 18px; 
+        padding: 10px; 
+        border-radius: 8px 8px 0 0; 
+        width: 100%; 
+        text-align: center; 
+        margin-bottom: 10px; 
+    }
+
+    .card-details {
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+
+    .action-links a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: black; 
+    }
+
+    .action-links a:hover {
+        text-decoration: underline;
+    }
+
+    .consultation-card .consultation-id {
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        background-color: #0f4c75;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .consultation-card .consultation-details {
+        font-size: 16px;
+    }
+    .error-message {
+    color: red;
+}
+.consultation-card:hover {
+    background-color: #e0e0e0;
+    transition: background-color 0.3s ease;
+}
+
+.action-links a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #0f4c75;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.action-links a:hover {
+    background-color: #1b6ca8;
+}
+.warning-box {
+    background-color: #ffcccc;
+    color: red;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+</style>
+
+<div class="consultation-cards">
+    {% for consultation in consultations %}
+        <div class="consultation-card">
+            <div class="card-details">
+                <div class="card-detail">
+                    <span class="detail-label">Id consultation:</span>
+                    <span class="detail-value">{{ consultation.getid() }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Id fiche:</span>
+                    {% if consultation.getFichemedicale() is null %}
+                        {% set _ = consultation.setFichemedicale(fiche) %}
+                    {% endif %}
+                    <span class="detail-value">{{ consultation.getFichemedicale().id }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Id Patient:</span>
+                    <span class="detail-value">{{ consultation.getIdp() }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Id Thérapeute:</span>
+                    <span class="detail-value">{{ consultation.getIdt() }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Date consultation:</span>
+                    <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Pathologie:</span>
+                    <span class="detail-value">{{ consultation.getpathologie }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Remarques:</span>
+                    <span class="detail-value">{{ consultation.getremarques }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Confirmation:</span>
+                    <span class="detail-value">{{ consultation.getConfirmation() ? 'True' : 'False' }}</span>
+                </div>
+            </div>
+            {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
+                 <div class="warning-box">Non confimé</div>
+            {% endif %}
+            {% if consultation.getFichemedicale() is not null and consultation.getFichemedicale().id == 0 %}
+                 <div class="warning-box">Fiche Non Attribuée</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
