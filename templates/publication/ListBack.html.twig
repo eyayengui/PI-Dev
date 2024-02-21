@@ -1,0 +1,75 @@
+{% extends 'base-back.html.twig' %}
+{% block body %}
+
+ <div class="container">
+        <h1 class="mt-4 mb-4">Ajouter une publication</h1>
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                {{ form_start(formA) }}
+                <div class="form-group">
+                    {{ form_label(formA.Titre_P) }}
+                    {{ form_widget(formA.Titre_P, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.Description_P) }}
+                    {{ form_widget(formA.Description_P, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.imageFile) }}
+                    {{ form_widget(formA.imageFile, {'attr': {'class': 'form-control-file'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.Date_P) }}
+                    {{ form_widget(formA.Date_P, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.ID_User) }}
+                    {{ form_widget(formA.ID_User, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(formA) }}
+            </div>
+        </div>
+    </div>
+ <hr> 
+         <h1 class="mt-4 mb-4">List des  publication</h1>
+
+ 
+    <div class="box overflow-hidden">
+        {% for publication in publications %}
+            <div id="blog-slide1" class="carousel slide" data-bs-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#blog-slide1" data-bs-slide-to="0" class="active"></li>
+                    <li data-bs-target="#blog-slide1" data-bs-slide-to="1"></li>
+                    <li data-bs-target="#blog-slide1" data-bs-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ asset('/images/' ~ publication.getImageP()) }}" alt="Publication Image" style="max-width: 50%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <ul class="nav nav-dot-separated g-0 mb-1">
+                    {{ publication.getDateP()|date('Y-m-d ') }}
+                </ul>
+                <h4><a class="hover-primary" href="#">pub n°{{ publication.id }}:{{ publication.getTitreP() }}</a></h4>
+                <p>{{ publication.getDescriptionP() }}</p>
+                <p class="text-end">
+                    <a class="btn btn-sm btn-bold btn-primary" href="{{ path('publication_details', {'id': publication.id}) }}">Read more</a>
+                </p>
+                   <p>
+                        <a href="{{ path('edit_publication', {'id': publication.id}) }}">Edit</a>
+                    </p>
+                    <p>
+                        <form method="post" action="{{ path('delete_publication', {'id': publication.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_method" value="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publication.id) }}">
+                            <button type="submit" style="border: none; background: none; padding: 0; color: blue; text-decoration: underline; cursor: pointer;">Delete</button>
+                        </form>
+                    </p>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

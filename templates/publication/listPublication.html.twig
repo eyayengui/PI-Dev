@@ -1,0 +1,82 @@
+{# templates/publication/listPublication.html.twig #}
+
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Liste des publications{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+    <!--Page Header Start-->
+            <section class="page-header">
+                <div class="page-header-bg" style="background-image: url(front-office/images/backgrounds/page-header-bg.jpg)">
+                </div>
+                <div class="container">
+                    <div class="page-header__inner">
+                        <h2>Publications</h2>
+                        <ul class="thm-breadcrumb list-unstyled">
+                            <li><a href="index.html">Home</a></li>
+                            <li><span>/</span></li>
+                            <li>Publications</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <!--Page Header End-->
+            </div>
+
+        <section class="blog-one">
+                    <div class="container">
+                        <div class="row">
+            {% for publication in publications %}
+                    <!--Blog One Single Start-->
+                    <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                        <div class="blog-one__single">
+                            <div class="blog-one__img-box">
+                                <div class="blog-one__img">
+                                   <img src="{{ asset('/images/' ~ publication.getImageP()) }}" alt="Publication Image"style="width: 400px; height: 250px;">
+                                    <a href="blog-details.html">
+                                        <span class="blog-one__plus"></span>
+                                    </a>
+                                    <div class="blog-one__date">
+                                        <p>{{ publication.getDateP()|date('Y-m-d ') }}
+                                        </div>
+                                </div>
+                                <div class="blog-one__content-top">
+                                    <div class="blog-one__content-img">
+                                        <img src="front-office/images/blog/blog-content-img.jpg" alt="">
+                                    </div>
+                                    <p class="blog-one__content-sub-title">user:{{ publication.getIDUser() }}</p>
+                                    <p class="blog-one__content-sub-title">pub n°{{ publication.id }}:{{ publication.getTitreP() }}</p>
+
+                                     <h3><a href="{{ path('publication_details', {'id': publication.id}) }}">{{ publication.getDescriptionP() }}</a></h3>
+                                </div>
+                            </div>
+                            <div class="blog-one__content">
+                                <div class="blog-one__comment-and-btn">
+                                    <div class="blog-one__comment">
+                                        <a href="blog-details.html"><span class="fas fa-comments"></span>{{ commentairesParPublication[publication.id] }} Comments</a>
+                                    </div>
+                                    <div class="blog-one__btn">
+                                        <a href="blog-details.html"><span class="icon-right-arrow"></span>More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Blog One Single End-->
+
+            {% endfor %}
+
+
+                  </div>
+            </div>
+        </section>
+
+
+
+</div>
+ 
+
+{% endblock %}
+    

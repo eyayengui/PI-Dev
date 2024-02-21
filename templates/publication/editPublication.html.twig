@@ -1,0 +1,28 @@
+{# templates/publication/editPublication.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une publication{% endblock %}
+
+{% block body %}
+    <h1>Modifier une publication</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.Titre_P) }}
+    {{ form_row(form.Description_P) }}
+
+    {# Display the current image if it exists #}
+    {% if form.vars.value.imageP %}
+        <img src="{{ asset('/images/' ~ form.vars.value.imageP) }}" alt="Current Image" style="max-width: 200px; max-height: 200px;">
+    {% endif %}
+
+    {# Allow uploading a new image #}
+    {{ form_row(form.imageFile) }}
+
+   
+    {{ form_row(form.Date_P) }}
+    {{ form_row(form.ID_User) }}
+    <button type="submit">Modifier</button>
+    
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'base-front.html.twig' %}
+{% block body %}
+  <!--Page Header Start-->
+        <section class="page-header">
+              <div class="page-header-bg" style="background-image: url('{{ asset('front-office/images/backgrounds/page-header-bg.jpg') }}')">
+            </div>
+            <div class="container">
+                <div class="page-header__inner">
+                    <h2>Detailles de publication</h2>
+                    <ul class="thm-breadcrumb list-unstyled">
+                        <li><a href="index.html">Home</a></li>
+                        <li><span>/</span></li>
+                        <li>Blog</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!--Blog Details Start-->
+        <section class="blog-details">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-7">
+                        <div class="blog-details__left">
+                            <div class="blog-details__img">
+                                        <img src="{{ asset('/images/' ~ publication.getImageP()) }}" alt="Publication Image"style="width: 750px; height: 500px;">
+
+                                <div class="blog-details__date">
+                                    <p>20
+                                        <br> Mar</p>
+                                </div>
+                            </div>
+                            <div class="blog-details__content">
+                                <ul class="blog-details__meta list-unstyled">
+                                    <li>
+                                        <a href="blog-details.html"><i class="fas fa-user-circle"></i>by {{ publication.getIDUser() }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="blog-details.html"><i class="fas fa-comments"></i>{{ commentairesParPublication[publication.id] }} Comments</a>
+                                    </li>
+                                </ul>
+                                <h3 class="blog-details__title">{{ publication.getTitreP() }}
+                                </h3>
+                                <p class="blog-details__text-1">{{ publication.getDescriptionP() }}</p>
+                                <p class="blog-details__text-2">{{ publication.getDateP()|date('Y-m-d') }}</p>
+                                <div class="blog-details__bottom">
+                                    <p class="blog-details__tags">
+                                        <span>Tags</span>
+                                        <a href="#">Depression</a>
+                                        <a href="#">Addict</a>
+                                    </p>
+                                    <div class="blog-details__social-list">
+                                        <a href="#"><i class="fab fa-twitter"></i></a>
+                                        <a href="#"><i class="fab fa-facebook"></i></a>
+                                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                        <a href="#"><i class="fab fa-instagram"></i></a>
+                                    </div>
+                                </div>
+                                <div class="blog-details__pagenation">
+                                    <div class="blog-details__pagenation-left">
+                                        <div class="blog-details__pagenation-left-img">
+                                           <img src="{{ asset('front-office/images/blog/blog-details-pagenation-img-1.jpg') }}" alt="">
+
+                                        </div>
+                                        <div class="blog-details__pagenation-left-content">
+                                            <p class="blog-details__pagenation-left-date"><i class="fas fa-clock"></i>
+                                                23 Mar, 2023</p>
+                                            <h4 class="blog-details__pagenation-left-title"><a href="#">Get Deep
+                                                    Knowledge
+                                                    of Bipolar Disorder</a></h4>
+                                        </div>
+                                    </div>
+                                    <div class="blog-details__pagenation-right">
+                                        <div class="blog-details__pagenation-right-content">
+                                            <p class="blog-details__pagenation-right-date"><i class="fas fa-clock"></i>
+                                                23 Mar, 2023</p>
+                                            <h4 class="blog-details__pagenation-right-title"><a href="#">How to Ensure
+                                                    Direct Treatment Hassle</a></h4>
+                                        </div>
+                                        <div class="blog-details__pagenation-right-img">
+                                            <img src="{{ asset('front-office/images/blog/blog-details-pagenation-img-2.jpg') }}" alt="">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 class="comment-one__title">{{ commentairesParPublication[publication.id] }} Comments</h3>
+                                {% for commentaire in commentaires %}
+                                <div class="comment-one">
+                                    
+                                    <div class="comment-one__single">
+                                        <div class="comment-one__image">
+                                            <img src="{{ asset('front-office/images/blog/comment-1-1.jpg') }}" alt="">
+
+                                        </div>
+                                        <div class="comment-one__content">
+                                            <h3>user:{{ commentaire.getIDUser() }}</h3>
+                                            <p>{{ commentaire. getContenuC() }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                                    <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}">Edit</a>
+                                            <form method="post" action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" style="display: inline;">
+                                                <input type="hidden" name="_method" value="POST">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                                                <button type="submit" style="border: none; background: none; padding: 0; color: pink; text-decoration: underline; cursor: pointer;">Delete</button>
+                                                </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <div class="comment-form">
+                                <h3 class="comment-form__title">Leave a Comment</h3>
+                                                    {# Assuming 'form' represents the Commentaire form #}
+                            <form action="{{ path('publication_details', {'id': publication.id}) }}" method="post" class="comment-one__form contact-form-validated" novalidate>
+                                {{ form_start(formB) }}
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="comment-form__input-box text-message-box">
+                                            {{ form_row(formB.Contenu_C, {'attr': {'placeholder': 'Write your comment here'}}) }}
+                                            {{ form_widget(formB.publication, {'value': publication.id}) }}
+                                            </div>
+                                        <div class="comment-form__btn-box">
+                                            <button type="submit" class="thm-btn comment-form__btn">Submit Comment</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form_end(formB) }}
+                            </form>
+
+
+
+                                <div class="result"></div>
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="sidebar">
+                            <div class="sidebar__single sidebar__search">
+                                <form action="#" class="sidebar__search-form">
+                                    <input type="search" placeholder="Keywrord...">
+                                    <button type="submit"><i class="icon-magnifying-glass"></i></button>
+                                </form>
+                            </div>
+                            <div class="sidebar__single sidebar__post">
+                                <h3 class="sidebar__title">Autre publications</h3>
+                                  {% for publication in publications %}              
+                                <ul class="sidebar__post-list list-unstyled">
+                                
+                                    <li>
+                                        <div class="sidebar__post-image">
+                                  <img src="{{ asset('/images/' ~ publication.getImageP()) }}" alt="Publication Image">
+
+                                        </div>
+                                        <div class="sidebar__post-content">
+                                            <h3>
+                                                <span class="sidebar__post-content-meta"><i class="fa fa-comments"></i>{{ commentairesParPublication[publication.id] }} 
+                                                    Comments</span>
+                                               <a href="{{ path('publication_details', {'id': publication.id}) }}">pub n°{{ publication.id }}: <br>{{ publication.getTitreP() }}
+                                                </a>
+                                            </h3>
+                                        </div>
+                                    </li>
+                                </ul>
+                                {% endfor %}
+                            </div>
+                          
+                          
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Blog Details End-->
+
+{% endblock %}
+
