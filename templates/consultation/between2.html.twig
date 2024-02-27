@@ -134,25 +134,6 @@
     margin-top: 5px;
 }
 </style>
-<form action="{{ path('search_consultation_by_date2') }}" method="get">
-    <label for="start_date">Start Date:</label>
-    <input type="date" id="start_date" name="start_date">
-    <label for="end_date">End Date:</label>
-    <input type="date" id="end_date" name="end_date">
-    <button type="submit">Search</button>
-</form>
-
-<div>
-<form action="{{ path('search_consultation2') }}" method="get">
-    <label for="id">Search by ID:</label>
-    <input type="text" id="id" name="id">
-    <button type="submit">Search</button>
-</form>
-
-<form action="{{ path('consultations_ordered_by_date2') }}" method="get">
-  <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
-</form>
-</div>
 
 <div class="consultation-cards">
     {% for consultation in consultations %}

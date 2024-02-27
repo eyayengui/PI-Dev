@@ -54,4 +54,17 @@ public function findAllExcept0(): array
         ->getResult();
 }
 
+
+public function findAllFicheMedicaleOrderedByDateCreation(): array
+{
+    return $this->createQueryBuilder('f')
+        ->where('f.id != :id')
+        ->setParameter('id', 0)
+        ->orderBy('f.date_creation', 'ASC') 
+        ->getQuery()
+        ->getResult();
+}
+
+
+
 }

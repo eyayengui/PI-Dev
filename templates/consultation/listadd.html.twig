@@ -125,10 +125,31 @@
     .action-links a:hover {
         background-color: #1b6ca8;
     }
+.completed-box {
+    background-color: #6cb2eb; /* Light blue background color */
+    color: #fff; /* White text color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+    display: inline-block; /* Display as inline block */
+}
 
+.completed-box span {
+    font-weight: bold; /* Bold text */
+}
+
+.completed-box i {
+    margin-left: 5px; /* Add some space between text and icon */
+}
 
 </style>
 
+<form action="{{ path('search_consultation_by_date') }}" method="get">
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date">
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date">
+    <button type="submit">Search</button>
+</form>
 
 
 
@@ -149,6 +170,14 @@
                     <span class="detail-label">Remarques:</span>
                     <span class="detail-value">{{ consultation.getremarques }}</span>
                 </div>
+                <div class="card-detail">
+                {% if consultation.isCompleted() %}
+                    <div class="completed-box">
+                        <span>Achevée</span>
+                        <i class="fas fa-check"></i>
+                    </div>
+                {% endif %}
+                </div>
             </div>
             <div class="action-links">
                 <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
@@ -158,6 +187,9 @@
     {% endfor %}
 </div>
 
+<form action="{{ path('consultations_ordered_by_date') }}" method="get">
+  <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
+</form>
 
 <section class="make-appointment">
     <div class="container">
@@ -174,7 +206,7 @@
                                 <div class="col-xl-12">
                                     <div class="make-appointment__form-input-box">
                                         <label for="{{ formA.date_c.vars.id }}">Date Consultation:</label>
-                                        {{ form_widget(formA.date_c, {'attr': {'placeholder': 'Date Consultation', 'class': 'form-control'}}) }}
+                                        {{ form_widget(formA.date_c, {'attr': {'placeholder': 'Date Consultation', 'class': 'form-control', 'min': 'now'|date('Y-m-d')}}) }}
                                         {{ form_errors(formA.date_c) }} {# Display errors for this field #}
                                     </div>
                                 </div>
@@ -228,4 +260,5 @@
         </div>
     </div>
 </section>
+
 {% endblock %}

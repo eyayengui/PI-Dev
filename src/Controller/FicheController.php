@@ -87,4 +87,57 @@ class FicheController extends AbstractController
     $em->flush();
     return $this->redirectToRoute('listaddfiche');    
 }
+
+
+#[Route('/searchFicheMedicale', name: 'search_fiche_medicale')]
+public function searchFicheMedicale(Request $request, FichemedicaleRepository $fichemedicaleRepository): Response
+{
+    $id = $request->query->get('id'); 
+    $ficheMedicale = $fichemedicaleRepository->find($id); 
+
+    if (!$ficheMedicale) {
+        return new Response('Fiche medicale not found.', Response::HTTP_NOT_FOUND);
+    }
+
+    return $this->render('fiche/search.html.twig', [
+        'fiche' => $ficheMedicale,
+    ]);
+}
+
+#[Route('/ficheMedicaleOrderedByDateCreation', name: 'fiche_medicale_ordered_by_date_creation')]
+public function ficheMedicaleOrderedByDateCreation(FicheMedicaleRepository $ficheMedicaleRepository): Response
+{
+    $fiches = $ficheMedicaleRepository->findAllFicheMedicaleOrderedByDateCreation();
+    return $this->render('fiche/orderbydate.html.twig', [
+        'fiches' => $fiches,
+    ]);
+}
+
+#[Route('/searchFicheMedicale1', name: 'search_fiche_medicale1')]
+public function searchFicheMedicale1(Request $request, FichemedicaleRepository $fichemedicaleRepository): Response
+{
+    $id = $request->query->get('id'); 
+    $ficheMedicale = $fichemedicaleRepository->find($id); 
+
+    if (!$ficheMedicale) {
+        return new Response('Fiche medicale not found.', Response::HTTP_NOT_FOUND);
+    }
+
+    return $this->render('fiche/search1.html.twig', [
+        'fiche' => $ficheMedicale,
+    ]);
+}
+
+#[Route('/ficheMedicaleOrderedByDateCreation1', name: 'fiche_medicale_ordered_by_date_creation1')]
+public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $ficheMedicaleRepository): Response
+{
+    $fiches = $ficheMedicaleRepository->findAllFicheMedicaleOrderedByDateCreation();
+    return $this->render('fiche/orderbydate1.html.twig', [
+        'fiches' => $fiches,
+    ]);
+}
+
+
+
+
 }

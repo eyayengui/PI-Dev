@@ -18,19 +18,24 @@ class Fichemedicale
 
     #[ORM\Column]
     #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $id_p = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $id_t = null;
 
-    
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank]
     private ?\DateTimeInterface $date_creation = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank]
+    #[Assert\Expression(
+        expression: "this.getDerniereMaj() >= this.getDateCreation()",
+        message: "The date of dernière mise à jour must be greater than or equal to the date of création."
+    )]
     private ?\DateTimeInterface $derniere_maj = null;
 
     #[ORM\OneToMany(targetEntity: Consultation::class, mappedBy: 'Fichemedicale')]

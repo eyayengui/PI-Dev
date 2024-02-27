@@ -4,7 +4,7 @@ namespace App\Entity;
 use App\Repository\ConsultationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use DateTime;
 #[ORM\Entity(repositoryClass: ConsultationRepository::class)]
 class Consultation
 {
@@ -15,10 +15,14 @@ class Consultation
     
     #[Assert\NotBlank]
     #[Assert\Type(\DateTime::class)]
+    #[Assert\GreaterThanOrEqual("today", message: "Date must be today or in the future")]
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date_c = null;
 
- 
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'Remarques must be at least 3 characters long'
+    )]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $remarques = null;
 
@@ -36,10 +40,12 @@ private ?string $pathologie = null;
 
     #[Assert\NotBlank]
     #[ORM\Column]
+    #[Assert\Positive]
     private ?int $idp = null;
 
     #[Assert\NotBlank]
     #[ORM\Column]
+    #[Assert\Positive]
     private ?int $idt = null;
 
     #[ORM\Column(nullable: true)]
@@ -132,5 +138,11 @@ private ?string $pathologie = null;
         $this->confirmation = $confirmation;
 
         return $this;
+    }
+
+    public function isCompleted(): bool
+    {
+        $currentDate = new DateTime();
+        return $this->date_c < $currentDate;
     }
 }

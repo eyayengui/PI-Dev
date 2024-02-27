@@ -2,13 +2,10 @@
 
 namespace App\Form;
 use App\Entity\Consultation;
-use App\Entity\Fichemedicale;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
 class ConsultationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,7 +18,7 @@ class ConsultationType extends AbstractType
                 'label' => 'id therapeute:', 
             ])
             ->add('date_c', null, [
-                'label' => 'Date Consultation:', 
+                'label' => 'Date Consultation:',
             ])
             ->add('pathologie', null, [
                 'label' => 'Pathologie:', 

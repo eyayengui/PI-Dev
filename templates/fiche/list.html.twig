@@ -6,7 +6,6 @@
         <TD BACKGROUND="fade.gif">
             &middot;
                 <A HREF="medical-admin-template.multipurposethemes.com/main/index9142.html">
-                    Doclinic - Dashboard
                 </A>       
         </TD>
     </TR>
@@ -160,7 +159,14 @@
 
 
 </style>
-
+<form action="{{ path('search_fiche_medicale1') }}" method="get">
+    <label for="id">Search by ID:</label>
+    <input type="text" id="id" name="id">
+    <button type="submit">Search</button>
+</form>
+<form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
+    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date of Creation</button>
+</form>
 <div class="card-container">
     {% for fiche in fiches %}
     <div class="card">

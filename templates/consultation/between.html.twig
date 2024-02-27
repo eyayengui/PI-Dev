@@ -1,4 +1,4 @@
-{% extends 'base-back.html.twig' %}
+{% extends 'base-front.html.twig' %}
 
 {% block body %}
 <style>
@@ -133,50 +133,14 @@
     font-weight: bold;
     margin-top: 5px;
 }
+
+
 </style>
-<form action="{{ path('search_consultation_by_date2') }}" method="get">
-    <label for="start_date">Start Date:</label>
-    <input type="date" id="start_date" name="start_date">
-    <label for="end_date">End Date:</label>
-    <input type="date" id="end_date" name="end_date">
-    <button type="submit">Search</button>
-</form>
-
-<div>
-<form action="{{ path('search_consultation2') }}" method="get">
-    <label for="id">Search by ID:</label>
-    <input type="text" id="id" name="id">
-    <button type="submit">Search</button>
-</form>
-
-<form action="{{ path('consultations_ordered_by_date2') }}" method="get">
-  <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
-</form>
-</div>
 
 <div class="consultation-cards">
     {% for consultation in consultations %}
         <div class="consultation-card">
             <div class="card-details">
-                <div class="card-detail">
-                    <span class="detail-label">Id consultation:</span>
-                    <span class="detail-value">{{ consultation.getid() }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Id fiche:</span>
-                    {% if consultation.getFichemedicale() is null %}
-                        {% set _ = consultation.setFichemedicale(fiche) %}
-                    {% endif %}
-                    <span class="detail-value">{{ consultation.getFichemedicale().id }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Id Patient:</span>
-                    <span class="detail-value">{{ consultation.getIdp() }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Id Thérapeute:</span>
-                    <span class="detail-value">{{ consultation.getIdt() }}</span>
-                </div>
                 <div class="card-detail">
                     <span class="detail-label">Date consultation:</span>
                     <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
@@ -189,19 +153,12 @@
                     <span class="detail-label">Remarques:</span>
                     <span class="detail-value">{{ consultation.getremarques }}</span>
                 </div>
-                <div class="card-detail">
-                    <span class="detail-label">Confirmation:</span>
-                    <span class="detail-value">{{ consultation.getConfirmation() ? 'True' : 'False' }}</span>
-                </div>
             </div>
-            {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
-                 <div class="warning-box">Non confimé</div>
-            {% endif %}
-            {% if consultation.getFichemedicale() is not null and consultation.getFichemedicale().id == 0 %}
-                 <div class="warning-box">Fiche Non Attribuée</div>
-            {% endif %}
+            <div class="action-links">
+                <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
+                <a href="{{ path('edit_consultation', {'id': consultation.getid()}) }}">Edit</a>
+            </div>
         </div>
     {% endfor %}
 </div>
-
 {% endblock %}

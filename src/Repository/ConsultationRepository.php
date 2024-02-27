@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Consultation;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -46,4 +47,41 @@ class ConsultationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findByPatientId(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.idp = :patientId')
+            ->setParameter('patientId', 5)
+            ->getQuery()
+            ->getResult();
+    }
+
+public function findByTherapistId(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.idt = :therapistId')
+            ->setParameter('therapistId', 5) // Change 5 to the desired therapist ID
+            ->getQuery()
+            ->getResult();
+    }
+
+public function findConsultationsBetweenDates(DateTime $startDate, DateTime $endDate): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.date_c BETWEEN :start_date AND :end_date')
+            ->setParameter('start_date', $startDate)
+            ->setParameter('end_date', $endDate)
+            ->getQuery()
+            ->getResult();
+    }
+    
+
+
+    public function findAllOrderedByDate(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.date_c', 'ASC') // Order by dateC in ascending order
+            ->getQuery()
+            ->getResult();
+    }
 }
