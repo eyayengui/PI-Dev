@@ -65,12 +65,14 @@ public function findByTherapistId(): array
             ->getResult();
     }
 
-public function findConsultationsBetweenDates(DateTime $startDate, DateTime $endDate): array
+public function findConsultationsBetweenDates(DateTime $startDate, DateTime $endDate, string $pathologie): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.date_c BETWEEN :start_date AND :end_date')
+            ->andWhere('c.pathologie = :pathologie')
             ->setParameter('start_date', $startDate)
             ->setParameter('end_date', $endDate)
+            ->setParameter('pathologie', $pathologie)
             ->getQuery()
             ->getResult();
     }

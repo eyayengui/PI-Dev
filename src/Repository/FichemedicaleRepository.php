@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+use DateTime;
 use App\Entity\Fichemedicale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -65,6 +65,16 @@ public function findAllFicheMedicaleOrderedByDateCreation(): array
         ->getResult();
 }
 
+public function findFichesBetweenDates(DateTime $startDate, DateTime $endDate): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.date_creation BETWEEN :start_date AND :end_date')
+            ->setParameter('start_date', $startDate)
+            ->setParameter('end_date', $endDate)
+            ->getQuery()
+            ->getResult();
+    }
+ 
 
 
 }

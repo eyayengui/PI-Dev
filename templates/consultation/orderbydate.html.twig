@@ -141,28 +141,31 @@
 
 <div class="consultation-cards">
     {% for consultation in consultations %}
-        <div class="consultation-card">
-            <div class="card-details">
-                <div class="card-detail">
-                    <span class="detail-label">Date consultation:</span>
-                    <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
+        {% if consultation.getIdP() == 5 %}
+            <div class="consultation-card">
+                <div class="card-details">
+                    <div class="card-detail">
+                        <span class="detail-label">Date consultation:</span>
+                        <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Pathologie:</span>
+                        <span class="detail-value">{{ consultation.getpathologie }}</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Remarques:</span>
+                        <span class="detail-value">{{ consultation.getremarques }}</span>
+                    </div>
                 </div>
-                <div class="card-detail">
-                    <span class="detail-label">Pathologie:</span>
-                    <span class="detail-value">{{ consultation.getpathologie }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Remarques:</span>
-                    <span class="detail-value">{{ consultation.getremarques }}</span>
+                <div class="action-links">
+                    <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
+                    <a href="{{ path('edit_consultation', {'id': consultation.getid()}) }}">Edit</a>
                 </div>
             </div>
-            <div class="action-links">
-                <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
-                <a href="{{ path('edit_consultation', {'id': consultation.getid()}) }}">Edit</a>
-            </div>
-        </div>
+        {% endif %}
     {% endfor %}
 </div>
+
 
 
 {% endblock %}

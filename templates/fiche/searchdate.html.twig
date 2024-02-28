@@ -153,34 +153,27 @@
     margin-bottom: 5px;
 }
 .search-form {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
+    margin-bottom: 20px; /* Add some spacing below the form */
+}
 
-    .search-form label {
-        font-weight: bold;
-        margin-right: 5px;
-        margin-bottom: 5px; /* Added margin bottom for stacking */
-    }
+.search-form label {
+    margin-right: 10px; /* Add spacing between label and input */
+}
 
-    .search-form input[type="text"],
-    .search-form input[type="date"] {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 200px; /* Adjust width as needed */
-    }
+.search-form input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 10px; /* Add spacing between input and button */
+}
 
-    .search-form button {
-    padding: 5px 10px;
+.search-form button {
+    padding: 6px 12px;
     background-color: #007bff;
     color: #fff;
     border: 1px solid #007bff; /* Add border */
-    border-radius: 5px;
+    border-radius: 3px;
     cursor: pointer;
-    align-self: flex-start; /* Align button to the start of the container */
 }
 
 .search-form button:hover {
@@ -188,32 +181,7 @@
     border-color: #0056b3; /* Change border color on hover */
 }
 
-.order-button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-.order-button:hover {
-        background-color: #0056b3; /* Change background color on hover */
-    }
 </style>
-<p><strong>Chercher par date de création</strong></p>
-<form action="{{ path('search_fichedate1') }}" method="get" class="search-form">
-    <div>
-        <label for="start_date">Date début:</label>
-        <input type="date" id="start_date" name="start_date">
-    </div>
-    <div>
-        <label for="end_date">Date limite:</label>
-        <input type="date" id="end_date" name="end_date">
-    </div>
-    <button type="submit">Chercher</button>
-</form>
-
 
 
 <form action="{{ path('search_fiche_medicale') }}" method="get" class="search-form">
@@ -222,8 +190,10 @@
     <button type="submit">Search</button>
 </form>
 <form action="{{ path('fiche_medicale_ordered_by_date_creation') }}" method="get">
-    <button type="submit" class="order-button">Trier par Date</button>
+    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date</button>
 </form>
+
+
 <div class="card-container">
     {% for fiche in fiches %}
     <div class="card">
@@ -254,44 +224,6 @@
 
     </div>
     {% endfor %}
-</div>
-
-
-
-<div class="form-container">
-    {{ form_start(formB, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div class="form-group">
-        {{ form_label(formB.id_p) }}
-        {{ form_widget(formB.id_p, {'attr': {'placeholder': 'Enter Id Patient'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_p) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.id_t) }}
-        {{ form_widget(formB.id_t, {'attr': {'placeholder': 'Enter Id Therapeute'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_t) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.date_creation) }}
-        {{ form_widget(formB.date_creation) }}
-        <div class="error-message">
-            {{ form_errors(formB.date_creation) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.derniere_maj) }}
-        {{ form_widget(formB.derniere_maj) }}
-        <div class="error-message">
-            {{ form_errors(formB.derniere_maj) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_widget(formB.Ajouter, {'label': 'Submit'}) }}
-    </div>
-    {{ form_end(formB) }}
 </div>
 
 {% endblock %}

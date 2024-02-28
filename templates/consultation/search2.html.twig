@@ -137,6 +137,7 @@
 
 
 <div class="consultation-cards">
+    {% for consultation in consultations %}
         <div class="consultation-card">
             <div class="card-details">
                 <div class="card-detail">
@@ -147,8 +148,10 @@
                     <span class="detail-label">Id fiche:</span>
                     {% if consultation.getFichemedicale() is null %}
                         {% set _ = consultation.setFichemedicale(fiche) %}
+                        <span class="detail-value">pas de fiche médicale</span>
+                    {% else %}
+                        <span class="detail-value">{{ consultation.getFichemedicale().id }}</span>
                     {% endif %}
-                    <span class="detail-value">{{ consultation.getFichemedicale().id }}</span>
                 </div>
                 <div class="card-detail">
                     <span class="detail-label">Id Patient:</span>
@@ -182,6 +185,6 @@
                  <div class="warning-box">Fiche Non Attribuée</div>
             {% endif %}
         </div>
+    {% endfor %}
 </div>
-
 {% endblock %}

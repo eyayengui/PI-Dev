@@ -140,17 +140,75 @@
 .completed-box i {
     margin-left: 5px; /* Add some space between text and icon */
 }
+.confirmed-box {
+    background-color: rgba(0, 128, 0, 0.7); /* Green with 70% opacity */
+    color: white;
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+    display: inline-block; /* Display as inline block */
+}
 
+.pending-box {
+    background-color: rgba(255, 165, 0, 0.7); /* Orange with 70% opacity */
+    color: white;
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+    display: inline-block; /* Display as inline block */
+}
+.search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+        margin-bottom: 5px; /* Added margin bottom for stacking */
+    }
+
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
+
+    .search-form button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff; /* Add border */
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3; /* Change border color on hover */
+}
 </style>
 
-<form action="{{ path('search_consultation_by_date') }}" method="get">
-    <label for="start_date">Start Date:</label>
-    <input type="date" id="start_date" name="start_date">
-    <label for="end_date">End Date:</label>
-    <input type="date" id="end_date" name="end_date">
-    <button type="submit">Search</button>
-</form>
+<form action="{{ path('search_consultation') }}" method="get" class="search-form">
+    <div>
+        <label for="Pathologie">Chercher par Pathologie:</label>
+        <input type="text" id="Pathologie" name="Pathologie">
+    </div>
 
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date" name="start_date">
+    </div>
+
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date" name="end_date">
+    </div>
+
+    <button type="submit">Chercher</button>
+</form>
 
 
 
@@ -171,12 +229,21 @@
                     <span class="detail-value">{{ consultation.getremarques }}</span>
                 </div>
                 <div class="card-detail">
-                {% if consultation.isCompleted() %}
-                    <div class="completed-box">
-                        <span>Achevée</span>
-                        <i class="fas fa-check"></i>
-                    </div>
-                {% endif %}
+                    {% if consultation.isCompleted() %}
+                        <div class="completed-box">
+                            <span>Achevée</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                    {% if consultation.getConfirmation() %}
+                        <div class="confirmed-box">
+                            <span>Confirmé</span>
+                        </div>
+                    {% else %}
+                        <div class="pending-box">
+                            <span>En attente</span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="action-links">
@@ -186,6 +253,7 @@
         </div>
     {% endfor %}
 </div>
+
 
 <form action="{{ path('consultations_ordered_by_date') }}" method="get">
   <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>

@@ -134,28 +134,76 @@
     margin-top: 5px;
 }
 
+.light-green-button {
+    background-color: limegreen;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
+.light-green-button:hover {
+    background-color: darkgreen;
+}
+.search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+        margin-bottom: 5px; /* Added margin bottom for stacking */
+    }
+
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
+
+    .search-form button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff; /* Add border */
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3; /* Change border color on hover */
+}
 </style>
-<form action="{{ path('search_consultation_by_date1') }}" method="get">
-    <label for="start_date">Start Date:</label>
-    <input type="date" id="start_date" name="start_date">
-    <label for="end_date">End Date:</label>
-    <input type="date" id="end_date" name="end_date">
-    <button type="submit">Search</button>
-</form>
 
+<div class="form-container">
+    <form action="{{ path('search_consultation1') }}" method="get" class="search-form">
+        <div>
+            <label for="Pathologie">Chercher by Pathologie:</label>
+            <input type="text" id="Pathologie" name="Pathologie">
+        </div>
 
-<form action="{{ path('search_consultation1') }}" method="get">
-    <label for="id">Search by ID:</label>
-    <input type="text" id="id" name="id">
-    <button type="submit">Search</button>
-</form>
+        <div>
+            <label for="start_date">Date début:</label>
+            <input type="date" id="start_date" name="start_date">
+        </div>
 
+        <div>
+            <label for="end_date">Date limite:</label>
+            <input type="date" id="end_date" name="end_date">
+        </div>
 
-<div style="display: flex; justify-content: space-between;">
-    <form action="{{ path('consultations_ordered_by_date1') }}" method="get">
-  <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
+        <button type="submit">Chercher</button>
+    </form>
 </div>
+
+
 
 <div class="consultation-cards">
     {% for consultation in consultations %}
@@ -205,6 +253,11 @@
             {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
                  <div class="warning-box">Non confimé</div>
             {% endif %}
+            {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == true %}
+                <form action="{{ path('send_emailconf') }}" method="post">
+                    <button id="send-email-btn" class="light-green-button" type="submit">Send Email</button>
+                </form>
+            {% endif %}
             {% if consultation.getFichemedicale() is not null and consultation.getFichemedicale().id == 0 %}
                  <div class="warning-box">Fiche Non Attribuée</div>
             {% endif %}
@@ -213,6 +266,10 @@
             </div>
         </div>
     {% endfor %}
+</div>
+<div style="display: flex; justify-content: space-between;">
+    <form action="{{ path('consultations_ordered_by_date1') }}" method="get">
+  <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
 </div>
 
 {% endblock %}

@@ -2,6 +2,7 @@
 
 
 namespace App\Controller;
+//require_once './vendor/autoload.php';
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,11 +14,11 @@ use App\Repository\ConsultationRepository;
 use App\Entity\Consultation;
 use App\Form\ConsultationType;
 use App\Form\ConsultationType1Type;
-use App\Services\MailerService;
 use App\Repository\FichemedicaleRepository;
-use App\Entity\Contact;
-use App\Form\ContactType;
-use App\Manager\ContactManager;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 class ConsultationController extends AbstractController
 {
     #[Route('/consultation', name: 'app_consultation')]
@@ -128,104 +129,62 @@ class ConsultationController extends AbstractController
     #[Route('/searchConsultation', name: 'search_consultation')]
     public function searchConsultation(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository): Response
     {
-        $id = $request->query->get('id'); 
-        $consultation = $consultationRepository->find($id); 
-        $fiche = $fichemedicaleRepository->find(0);
-        dump($consultation);
-        if (!$consultation) {
-            return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
-        }
-        return $this->render('consultation/search.html.twig', [
-            'consultation' => $consultation,
-            'fiche' => $fiche,
-        ]);
-    }
-
-    #[Route('/searchConsultationByDate', name: 'search_consultation_by_date')]
-    public function searchConsultationByDate(Request $request, ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository): Response
-    {
+        $p = $request->query->get('Pathologie'); 
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate);
+        $fiche = $fichemedicaleRepository->find(0);
+        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate,$p);
         if (!$consultations) {
             return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
         }
-        return $this->render('consultation/between.html.twig', [
+        return $this->render('consultation/search.html.twig', [
             'consultations' => $consultations,
+            'fiche' => $fiche,
         ]);
     }
-    
 
     #[Route('/searchConsultation1', name: 'search_consultation1')]
     public function searchConsultation1(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository): Response
     {
-        $id = $request->query->get('id'); 
-        $consultation = $consultationRepository->find($id); 
-        $fiche = $fichemedicaleRepository->find(0);
-        dump($consultation);
-        if (!$consultation) {
-            return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
-        }
-        return $this->render('consultation/search1.html.twig', [
-            'consultation' => $consultation,
-            'fiche' => $fiche,
-        ]);
-    }
-
-    #[Route('/searchConsultationByDate1', name: 'search_consultation_by_date1')]
-    public function searchConsultationByDate1(Request $request, ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository): Response
-    {
-        $fiche = $fichemedicaleRepository->find(0);
+        $p = $request->query->get('Pathologie'); 
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate);
+        $fiche = $fichemedicaleRepository->find(0);
+        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate,$p);
         if (!$consultations) {
             return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
         }
-        return $this->render('consultation/between1.html.twig', [
+        return $this->render('consultation/search1.html.twig', [
             'consultations' => $consultations,
             'fiche' => $fiche,
         ]);
     }
+
+
 
     #[Route('/searchConsultation2', name: 'search_consultation2')]
     public function searchConsultation2(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository): Response
     {
-        $id = $request->query->get('id'); 
-        $consultation = $consultationRepository->find($id); 
-        $fiche = $fichemedicaleRepository->find(0);
-        dump($consultation);
-        if (!$consultation) {
-            return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
-        }
-        return $this->render('consultation/search2.html.twig', [
-            'consultation' => $consultation,
-            'fiche' => $fiche,
-        ]);
-    }
-
-    #[Route('/searchConsultationByDate2', name: 'search_consultation_by_date2')]
-    public function searchConsultationByDate2(Request $request, ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository): Response
-    {
-        $fiche = $fichemedicaleRepository->find(0);
+        $p = $request->query->get('Pathologie'); 
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate);
+        $fiche = $fichemedicaleRepository->find(0);
+        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate,$p);
         if (!$consultations) {
             return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
         }
-        return $this->render('consultation/between2.html.twig', [
+        return $this->render('consultation/search2.html.twig', [
             'consultations' => $consultations,
             'fiche' => $fiche,
         ]);
     }
-
+    
     #[Route('/consultations_ordered_by_date', name: 'consultations_ordered_by_date')]
     public function consultationsOrderedByDate(ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository): Response
     {
@@ -260,5 +219,31 @@ class ConsultationController extends AbstractController
         ]);
     }
 
+    #[Route('/send_confirmation', name: 'send_emailconf')]
+    public function sendEmail(Request $request): Response
+    {         
+        $transport = Transport::fromDsn('smtp://brahemraed@gmail.com:xrvvnqxmpikopuvb@smtp.gmail.com:587');
+        $mailer = new Mailer($transport);
+        $email = (new Email());
+        $email->from('brahemraed@gmail.com');
+        $email->to('brahemraed6@gmail.com');
+        $email->subject('Consultation Confirmée');
+        $email->text('La consultation que vous avez réservée est confirmée pour le 27/9/2027');
+        $email->html('
+            <h1 style="color: #fff300; background-color: #0073ff; width: 500px; padding: 16px 0; text-align: center; border-radius: 50px;">
+            Consultation confirmée !.
+            </h1>
+            <h1 style="color: #ff0000; background-color: #5bff9c; width: 500px; padding: 16px 0; text-align: center; border-radius: 50px;">
+            27/9/2027
+            </h1>
+        ');
+        try {
+            $mailer->send($email);
+            return $this->redirectToRoute('Listaddconsultation1');
+        } catch (TransportExceptionInterface $e) {
+            return new Response('<h1>Error while sending email!</h1>');
+        }
+    }
 }
+
 

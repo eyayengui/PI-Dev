@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use DateTime;
 use App\Entity\Fichemedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FicheType;
+use App\Repository\ConsultationRepository;
 use App\Repository\FichemedicaleRepository;
 
 class FicheController extends AbstractController
@@ -136,8 +137,35 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
         'fiches' => $fiches,
     ]);
 }
-
-
-
+#[Route('/searchfichebetweendate', name: 'search_fichedate')]
+    public function searchConsultation(Request $request, FichemedicaleRepository $ficheMedicaleRepository): Response
+    {
+        $startDate = $request->query->get('start_date');
+        $endDate = $request->query->get('end_date');
+        $startDate = new DateTime($startDate);
+        $endDate = new DateTime($endDate);
+        $fiches = $ficheMedicaleRepository->findFichesBetweenDates($startDate, $endDate);
+        if (!$fiches) {
+            return new Response('Fiche not found.', Response::HTTP_NOT_FOUND);
+        }
+        return $this->render('fiche/searchdate.html.twig', [
+            'fiches' => $fiches,
+        ]);
+    }
+    #[Route('/searchfichebetweendate1', name: 'search_fichedate1')]
+    public function searchConsultation1(Request $request, FichemedicaleRepository $ficheMedicaleRepository): Response
+    {
+        $startDate = $request->query->get('start_date');
+        $endDate = $request->query->get('end_date');
+        $startDate = new DateTime($startDate);
+        $endDate = new DateTime($endDate);
+        $fiches = $ficheMedicaleRepository->findFichesBetweenDates($startDate, $endDate);
+        if (!$fiches) {
+            return new Response('Fiche not found.', Response::HTTP_NOT_FOUND);
+        }
+        return $this->render('fiche/searchdate1.html.twig', [
+            'fiches' => $fiches,
+        ]);
+    }
 
 }

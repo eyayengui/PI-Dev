@@ -156,16 +156,73 @@
     margin-bottom: 5px;
 }
 
+.order-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+.order-button:hover {
+        background-color: #0056b3; /* Change background color on hover */
+    }
+.search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+        margin-bottom: 5px; /* Added margin bottom for stacking */
+    }
 
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
+
+    .search-form button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff; /* Add border */
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start; /* Align button to the start of the container */
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3; /* Change border color on hover */
+}
 </style>
+<p><strong>Chercher par date de création</strong></p>
+<form action="{{ path('search_fichedate1') }}" method="get" class="search-form">
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date" name="start_date">
+    </div>
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date" name="end_date">
+    </div>
+    <button type="submit">Chercher</button>
+</form>
 <form action="{{ path('search_fiche_medicale1') }}" method="get">
     <label for="id">Search by ID:</label>
     <input type="text" id="id" name="id">
     <button type="submit">Search</button>
 </form>
 <form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
-    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date of Creation</button>
+    <button type="submit" class="order-button">Trier par Date</button>
 </form>
 <div class="card-container">
     {% for fiche in fiches %}

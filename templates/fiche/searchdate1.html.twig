@@ -1,4 +1,4 @@
-{% extends 'base-front.html.twig' %}
+{% extends 'base-back.html.twig' %}
 
 {% block body %}
 <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
@@ -57,6 +57,7 @@
     flex-wrap: wrap;
     gap: 20px;
 }
+
 .card {
     background-color: #f5f5f5;
     border-radius: 8px;
@@ -97,7 +98,8 @@
 .card-title {
     color: white;
 }
-    .error-message {
+
+.error-message {
     color: red;
     font-size: 14px;
     margin-top: 5px;
@@ -122,6 +124,7 @@
 .card-footer a.button:last-child {
     margin-right: 0; /* Remove margin from the last button */
 }
+
 .action-links a {
         margin-right: 5px;
     }
@@ -152,6 +155,19 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.order-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+.order-button:hover {
+        background-color: #0056b3; /* Change background color on hover */
+    }
 .search-form {
         display: flex;
         flex-direction: column;
@@ -187,22 +203,9 @@
     background-color: #0056b3;
     border-color: #0056b3; /* Change border color on hover */
 }
-
-.order-button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-.order-button:hover {
-        background-color: #0056b3; /* Change background color on hover */
-    }
 </style>
 <p><strong>Chercher par date de création</strong></p>
-<form action="{{ path('search_fichedate1') }}" method="get" class="search-form">
+<form action="{{ path('search_fichedate') }}" method="get" class="search-form">
     <div>
         <label for="start_date">Date début:</label>
         <input type="date" id="start_date" name="start_date">
@@ -213,15 +216,12 @@
     </div>
     <button type="submit">Chercher</button>
 </form>
-
-
-
-<form action="{{ path('search_fiche_medicale') }}" method="get" class="search-form">
+<form action="{{ path('search_fiche_medicale1') }}" method="get">
     <label for="id">Search by ID:</label>
     <input type="text" id="id" name="id">
     <button type="submit">Search</button>
 </form>
-<form action="{{ path('fiche_medicale_ordered_by_date_creation') }}" method="get">
+<form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
     <button type="submit" class="order-button">Trier par Date</button>
 </form>
 <div class="card-container">
@@ -246,52 +246,9 @@
                 {% endfor %}
             </ul>
         </div>
-
-        <div class="action-links">
-            <a href="{{ path('supp_fiche', {'id': fiche.getId()}) }}" class="button">Delete</a>
-            <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
-        </div>
-
     </div>
     {% endfor %}
 </div>
 
-
-
-<div class="form-container">
-    {{ form_start(formB, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div class="form-group">
-        {{ form_label(formB.id_p) }}
-        {{ form_widget(formB.id_p, {'attr': {'placeholder': 'Enter Id Patient'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_p) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.id_t) }}
-        {{ form_widget(formB.id_t, {'attr': {'placeholder': 'Enter Id Therapeute'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_t) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.date_creation) }}
-        {{ form_widget(formB.date_creation) }}
-        <div class="error-message">
-            {{ form_errors(formB.date_creation) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.derniere_maj) }}
-        {{ form_widget(formB.derniere_maj) }}
-        <div class="error-message">
-            {{ form_errors(formB.derniere_maj) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_widget(formB.Ajouter, {'label': 'Submit'}) }}
-    </div>
-    {{ form_end(formB) }}
-</div>
 
 {% endblock %}
