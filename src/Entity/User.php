@@ -62,12 +62,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isVerified = null;
 
+    #[ORM\OneToMany(targetEntity: Consultation::class, mappedBy: 'idp')]
+    private Collection $consultations;
+
     public function __construct()
     {
         $this->fichemedicales = new ArrayCollection();
         $this->publications = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->activites = new ArrayCollection();
+        $this->consultations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -361,6 +365,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(?bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Consultation>
+     */
+    public function getConsultations(): Collection
+    {
+        return $this->consultations;
+    }
+
+    public function addConsultation(Consultation $consultation): static
+    {
+        if (!$this->consultations->contains($consultation)) {
+            $this->consultations->add($consultation);
+            $consultation->setIdp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsultation(Consultation $consultation): static
+    {
+        if ($this->consultations->removeElement($consultation)) {
+            // set the owning side to null (unless already changed)
+            if ($consultation->getIdp() === $this) {
+                $consultation->setIdp(null);
+            }
+        }
 
         return $this;
     }

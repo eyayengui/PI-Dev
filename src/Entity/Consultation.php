@@ -30,6 +30,14 @@ class Consultation
     #[ORM\Column(nullable: true)]
     private ?bool $confirmation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'consultations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $idp = null;
+
+    #[ORM\ManyToOne(inversedBy: 'consultations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $idt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +99,30 @@ class Consultation
     public function setConfirmation(?bool $confirmation): static
     {
         $this->confirmation = $confirmation;
+
+        return $this;
+    }
+
+    public function getIdp(): ?User
+    {
+        return $this->idp;
+    }
+
+    public function setIdp(?User $idp): static
+    {
+        $this->idp = $idp;
+
+        return $this;
+    }
+
+    public function getIdt(): ?User
+    {
+        return $this->idt;
+    }
+
+    public function setIdt(?User $idt): static
+    {
+        $this->idt = $idt;
 
         return $this;
     }
