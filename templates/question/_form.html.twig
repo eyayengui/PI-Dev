@@ -1,21 +1,19 @@
-{{ form_start(form) }}
-    <br>
-    {{ form_row(form.title_question) }}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}    <br>
+    
+    {{ form_row(form.title_question)  }}
     <br>
     {{ form_row(form.questionnaires) }}
-
     <h3>Propositions</h3>
     <div id="propositions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
-        {% for propositionForm in form.questions %}
             <div class="proposition-item">
-                {{ form_row(propositionForm.title_proposition) }}
+                {{ form_row(form.questions) }}
                 <!-- Ajoutez ici d'autres champs de proposition si nécessaire -->
-                <button type="button" class="btn remove-proposition-button">Supprimer cette proposition</button>
+                <button type="button" class="btn" id="add-proposition-button">Ajouter une proposition</button>
+                {# <button type="button" class="btn remove-proposition-button">Supprimer cette proposition</button> #}
             </div>
-        {% endfor %}
+   
     </div>
 
-    <button type="button" class="btn" id="add-proposition-button">Ajouter une proposition</button>
     <button type="submit" class="btn btn-secondary">Enregistrer</button>
 {{ form_end(form) }}
 

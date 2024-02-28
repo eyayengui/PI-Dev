@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PhpParser\Node\Expr\Cast\String_;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
@@ -17,6 +18,10 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Regex(
+        pattern: "/\?$/",
+        message: "Le titre de la question doit se terminer par un point d'interrogation."
+    )]
     private ?string $title_question = null;
 
     #[ORM\OneToMany(targetEntity: Proposition::class, mappedBy: 'id_Q', cascade:["persist","remove"])]

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Proposition;
 use App\Entity\Question;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -18,8 +19,12 @@ class PropositionType extends AbstractType
                 ->add('title_proposition')
                 ->add('id_Q', HiddenType::class, [
                      'mapped' => false //si vous gérez cette propriété manuellement
+                ])
+                ->add('score', IntegerType::class, [
+                    'label' => 'Score',
+                    'required' => true,
                 ]);
-            
+
             
         }
 
