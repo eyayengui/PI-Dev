@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}">
+
+    <title>Doclinic - Registration</title>
+
+
+    <!-- Vendors Style-->
+    <link rel="stylesheet" href="{{ asset('back-office/main/css/vendors_css.css') }}">
+
+    <!-- Style-->
+    <link rel="stylesheet" href="{{ asset('back-office/main/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('back-office/main/css/skin_color.css') }}">
+
+</head>
+<body class="hold-transition theme-primary bg-img" style="background-image: url({{ asset('back-office/images/back.jpg') }})">
+
+    <div class="container">
+        <h2>User Registration</h2>
+
+        {{ form_start(registrationForm) }}
+
+        <div class="form-group">
+            {{ form_label(registrationForm.nom) }}
+            {{ form_errors(registrationForm.nom) }}
+            {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control', 'placeholder': 'Firstname'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(registrationForm.prenom) }}
+            {{ form_errors(registrationForm.prenom) }}
+            {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Lastname'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(registrationForm.email) }}
+            {{ form_errors(registrationForm.email) }}
+            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(registrationForm.plainPassword) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+
+        {{ form_end(registrationForm) }}
+
+        <p>Already have an account? <a href="{{ path('app_login') }}">Sign In</a></p>
+    </div>
+
+
+
+
+
+
+<!-- Vendor JS -->
+<script src="{{ asset('back-office/main/js/vendors.min.js') }}"></script>
+<script src="{{ asset('back-office/main/js/pages/chat-popup.js') }}"></script>
+<script src="../assets/icons/feather-icons/feather.min.js"></script>
+
+</body>
+
+</html>
