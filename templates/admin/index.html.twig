@@ -75,7 +75,9 @@
         {% endfor %}
         </tbody>
     </table>
-
+                <div class="text-center mt-4">
+                <a href="{{ path('app_generer_pdf_historique') }}" class="btn btn-primary">Télécharger PDF</a>
+            </div>
     <a href="{{ path('app_admin_new') }}">Create new</a>
    
 {% endblock %}

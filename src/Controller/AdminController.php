@@ -12,7 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class AdminController extends AbstractController
 {
@@ -132,5 +133,36 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_index');
        
     }
+    #[Route('/export-pdf', name: 'app_generer_pdf_historique')]
+public function exportPdf(): Response
+{
+    // Récupérez les données à afficher dans le PDF (utilisateurs dans votre cas)
+    $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+
+    // Créez une instance de Dompdf avec les options nécessaires
+    $pdfOptions = new Options();
+    $pdfOptions->set('defaultFont', 'Arial');
+
+    $dompdf = new Dompdf($pdfOptions);
+
+    // Générez le HTML pour représenter la table d'utilisateurs
+    $html = $this->renderView('admin/pdf.html.twig', ['users' => $users]);
+
+    // Chargez le HTML dans Dompdf et générez le PDF
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // Générer un nom de fichier pour le PDF
+    $filename = 'user_list.pdf';
+
+    // Streamer le PDF vers le navigateur
+    $response = new Response($dompdf->output());
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+
+    // Retournez la réponse
+    return $response;
+}
 }
  
