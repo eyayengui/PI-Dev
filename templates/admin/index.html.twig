@@ -30,8 +30,39 @@
                 <td>{{ user.nom }}</td>
                 <td>{{ user.prenom }}</td>
                 <td>{{ user.age }}</td>
-                <td>{{ user.isBanned ? 'Yes' : 'No' }}</td>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                {% if user.isBanned == 0 %}
+                                                    <td>
+                                                        <a href="{{ path('ban_user',{'id':user.id}) }}" type="button"
+                                                           class="btn btn-danger btn-icon-text" style="color: white">
+                                                            <i class="mdi mdi-lock-outline btn-icon-prepend"
+                                                               style="color: white"></i> Ban</a>
+                                                    </td>
+                                                {% else %}
+                                                    <td>
+                                                        <a href="{{ path('unban_user',{'id':user.id}) }}"
+                                                           type="button" class="btn btn-warning btn-icon-text"
+                                                           style="color: white">
+                                                            <i class="mdi mdi-lock-open-outline btn-icon-prepend"
+                                                               style="color: white"></i> Unban</a>
+                                                    </td>
+                                                {% endif %}
+            
+                 {% if user.isVerified == 0 %}
+                                                    <td class="text-center">
+                                                        <a href="{{ path('verify_user',{'id':user.id}) }}"
+                                                           type="button" class="btn btn-primary btn-icon-text"
+                                                           style="color: white">
+                                                            <i class="mdi mdi-check-outline btn-icon-prepend"
+                                                               style="color: white"></i> Verify</a>
+                                                    </td>
+                                                {% else %}
+                                                    <td class="text-center">
+                                                        <a type="button" class="btn btn-success btn-icon-text"
+                                                           style="color: white">
+                                                            <i class="mdi mdi-check-outline btn-icon-prepend"
+                                                               style="color: white"></i> Verified</a>
+                                                    </td>
+                                                {% endif %}
                 <td>
                     <a href="{{ path('app_admin_show', {'id': user.id}) }}">show</a>
                     <a href="{{ path('app_admin_edit', {'id': user.id}) }}">edit</a>

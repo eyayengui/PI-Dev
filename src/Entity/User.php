@@ -116,7 +116,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Assurez-vous de toujours inclure le rôle 'ROLE_USER' pour garantir un minimum de rôle
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }

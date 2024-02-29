@@ -7,6 +7,7 @@ use App\Form\User1Type;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,17 +83,54 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('app_admin_index', [], Response::HTTP_SEE_OTHER);
     }
-/*
-    #[Route('/ban/{id}', name: 'app_admin_banu', methods: ['POST'])]
-    public function ban(Request $request, User $user, EntityManagerInterface $entityManager): Response
+
+    #[Route('/ban/{id}', name: 'ban_user')]
+   
+    public function banUser($id): Response
     {
-        if ($this->isCsrfTokenValid('ban'.$user->getId(), $request->request->get('_token'))) {
-            // Ban the user by setting the isBanned property to true
+        $currentUser = $this->getUser();
+        
+        
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getDoctrine()->getRepository(User::class)->find($id);
             $user->setIsBanned(true);
-            $entityManager->flush();
-        }
-    
-        return $this->redirectToRoute('app_admin_index', [], Response::HTTP_SEE_OTHER);
+            $em->flush();
+
+            return $this->redirectToRoute('app_admin_index');
+        
     }
-    */
+    
+     
+     #[Route("/admin/unban/{id}",name:"unban_user")]
+     
+     public function UnbanUser($id): Response
+     {
+         $currentUser = $this->getUser();
+         
+         
+             $em = $this->getDoctrine()->getManager();
+             $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+             $user->setIsBanned(false);
+             $em->flush();
+ 
+             return $this->redirectToRoute('app_admin_index');
+         
+     }
+    
+     #[Route("/admin/verify/{id}", name:"verify_user")]
+     
+    public function verifyUserAccount($id): Response
+    {
+        $user = $this->getUser();
+       
+       
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+            $user->setIsVerified(true);
+            $em->flush();
+
+            return $this->redirectToRoute('app_admin_index');
+       
+    }
 }
+ 
