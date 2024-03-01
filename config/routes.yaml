@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app_generate_qr_code:
+    path: '/generate/qr-code'
+    controller: App\Controller\LogementController::generateQrCode
+    methods: ['GET'] # Ajoutez cette ligne si nécessaire

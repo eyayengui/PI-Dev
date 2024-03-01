@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 use DateTime;
+require "../vendor/autoload.php";
 use App\Entity\Fichemedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,9 +11,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FicheType;
-use App\Repository\ConsultationRepository;
 use App\Repository\FichemedicaleRepository;
-
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentLeft;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCodeBundle\Response\QrCodeResponse;
+use Endroid\QrCode\Builder\BuilderRegistryInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Endroid\QrCode\Label\LabelAlignment;
 class FicheController extends AbstractController
 {
     #[Route('/fiche', name: 'app_fiche')]
@@ -89,43 +104,12 @@ class FicheController extends AbstractController
     return $this->redirectToRoute('listaddfiche');    
 }
 
-
-#[Route('/searchFicheMedicale', name: 'search_fiche_medicale')]
-public function searchFicheMedicale(Request $request, FichemedicaleRepository $fichemedicaleRepository): Response
-{
-    $id = $request->query->get('id'); 
-    $ficheMedicale = $fichemedicaleRepository->find($id); 
-
-    if (!$ficheMedicale) {
-        return new Response('Fiche medicale not found.', Response::HTTP_NOT_FOUND);
-    }
-
-    return $this->render('fiche/search.html.twig', [
-        'fiche' => $ficheMedicale,
-    ]);
-}
-
 #[Route('/ficheMedicaleOrderedByDateCreation', name: 'fiche_medicale_ordered_by_date_creation')]
 public function ficheMedicaleOrderedByDateCreation(FicheMedicaleRepository $ficheMedicaleRepository): Response
 {
     $fiches = $ficheMedicaleRepository->findAllFicheMedicaleOrderedByDateCreation();
     return $this->render('fiche/orderbydate.html.twig', [
         'fiches' => $fiches,
-    ]);
-}
-
-#[Route('/searchFicheMedicale1', name: 'search_fiche_medicale1')]
-public function searchFicheMedicale1(Request $request, FichemedicaleRepository $fichemedicaleRepository): Response
-{
-    $id = $request->query->get('id'); 
-    $ficheMedicale = $fichemedicaleRepository->find($id); 
-
-    if (!$ficheMedicale) {
-        return new Response('Fiche medicale not found.', Response::HTTP_NOT_FOUND);
-    }
-
-    return $this->render('fiche/search1.html.twig', [
-        'fiche' => $ficheMedicale,
     ]);
 }
 
@@ -142,9 +126,13 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
     {
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
+        $startDate1 = $request->query->get('start_date1');
+        $endDate1 = $request->query->get('end_date1');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        $fiches = $ficheMedicaleRepository->findFichesBetweenDates($startDate, $endDate);
+        $startDate1 = new DateTime($startDate1);
+        $endDate1 = new DateTime($endDate1);
+        $fiches = $ficheMedicaleRepository->findFichesBetweenDates($startDate, $endDate,$startDate1, $endDate1);
         if (!$fiches) {
             return new Response('Fiche not found.', Response::HTTP_NOT_FOUND);
         }
@@ -155,11 +143,16 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
     #[Route('/searchfichebetweendate1', name: 'search_fichedate1')]
     public function searchConsultation1(Request $request, FichemedicaleRepository $ficheMedicaleRepository): Response
     {
+       
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
+        $startDate1 = $request->query->get('start_date1');
+        $endDate1 = $request->query->get('end_date1');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        $fiches = $ficheMedicaleRepository->findFichesBetweenDates($startDate, $endDate);
+        $startDate1 = new DateTime($startDate1);
+        $endDate1 = new DateTime($endDate1);
+        $fiches = $ficheMedicaleRepository->findFichesBetweenDates($startDate, $endDate,$startDate1, $endDate1);
         if (!$fiches) {
             return new Response('Fiche not found.', Response::HTTP_NOT_FOUND);
         }
@@ -168,4 +161,47 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
         ]);
     }
 
+    #[Route('/export-pdf/{id}', name: 'app_generer_pdf_historique')]
+    public function exportPdf($id,FichemedicaleRepository $ficheMedicaleRepository): Response
+    {
+        $fiches = $ficheMedicaleRepository->find($id);
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('fiche/pdf.html.twig', ['fiche' => $fiches]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $filename = 'fiches_list.pdf';
+        $response = new Response($dompdf->output());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        return $response;
+    }
+    #[Route('/generate_qr_code', name: 'generate_qr_code', methods: ['POST'])]
+    public function generateQrCode(Request $request): Response
+    {
+        $text = $request->request->get('text');
+        $qrCode = QrCode::create($text)
+            ->setSize(600)
+            ->setMargin(40)
+            ->setForegroundColor(new Color(0, 0, 128)) // Dark blue foreground color
+            ->setBackgroundColor(new Color(153, 204, 255))
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::High); // Set error correction level to HIGH
+
+        // Create label
+        $label = Label::create("IJA NAHKIW")
+            ->setTextColor(new Color(255, 0, 0)) // Red text color
+            ->setAlignment(LabelAlignment::Left); // Align label to left
+
+        // Create PNG writer
+        $writer = new PngWriter();
+
+        // Write QR code to PNG image with label
+        $result = $writer->write($qrCode, label: $label);
+
+        // Output QR code image to the browser
+        return new Response($result->getString(), Response::HTTP_OK, ['Content-Type' => $result->getMimeType()]);
+    }
 }
+   

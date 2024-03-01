@@ -1,16 +1,9 @@
-{% extends 'base-back.html.twig' %}
-
-{% block body %}
-<TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
-    <TR>
-        <TD BACKGROUND="fade.gif">
-            &middot;
-                <A HREF="medical-admin-template.multipurposethemes.com/main/index9142.html">
-                </A>       
-        </TD>
-    </TR>
-</TABLE>
 <style>
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
 .card {
     background-color: #f5f5f5;
     border-radius: 8px;
@@ -51,8 +44,7 @@
 .card-title {
     color: white;
 }
-
-.error-message {
+    .error-message {
     color: red;
     font-size: 14px;
     margin-top: 5px;
@@ -77,7 +69,6 @@
 .card-footer a.button:last-child {
     margin-right: 0; /* Remove margin from the last button */
 }
-
 .action-links a {
         margin-right: 5px;
     }
@@ -108,16 +99,48 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
-
-
 </style>
+<!DOCTYPE html>
+<html lang="fr">
 
-<form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
-    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date of Creation</button>
-</form>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des Utilisateurs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ffc0cb; /* Rose clair */
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
 <div class="card-container">
-    {% for fiche in fiches %}
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
@@ -138,9 +161,13 @@
                 {% endfor %}
             </ul>
         </div>
+        <div class="action-links">
+            <a href="{{ path('supp_fiche', {'id': fiche.getId()}) }}" class="button">Delete</a>
+            <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
+        </div>
+
     </div>
-    {% endfor %}
 </div>
+</body>
 
-
-{% endblock %}
+</html>

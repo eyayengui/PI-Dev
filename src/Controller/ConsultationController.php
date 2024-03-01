@@ -44,6 +44,29 @@ class ConsultationController extends AbstractController
     }
 
 
+    #[Route('/Calendar', name: 'calendar')]
+public function calendar(ConsultationRepository $consultationRepository): Response
+{
+    $consultations = $consultationRepository->findByPatientId();
+    $events = [];
+
+    foreach ($consultations as $consultation) {
+        $events[] = [
+            'id' => $consultation->getId(),
+            'title' => sprintf('Pathologie: %s Therapeute: %s', $consultation->getPathologie(), $consultation->getIdt()),
+            'start' => $consultation->getDateC()->format('Y-m-d'), // Formatting the date for FullCalendar
+        ];
+    }
+
+    $data = json_encode($events);
+
+    return $this->render('consultation/calendar.html.twig', [
+        'data' => $data,
+    ]);
+}
+
+
+
 
     #[Route('/listaddconsultation1', name: 'Listaddconsultation1')]
     public function Listaddconsultation1(ConsultationRepository $CRepo, Request $request,FichemedicaleRepository $fichemedicaleRepository): Response
@@ -237,6 +260,8 @@ class ConsultationController extends AbstractController
             27/9/2027
             </h1>
         ');
+        //$email->embed(fopen('image_1.png', 'r'), 'Image_Name_1');
+        //$email->embed(fopen('image_2.jpg', 'r'), 'Image_Name_2');
         try {
             $mailer->send($email);
             return $this->redirectToRoute('Listaddconsultation1');

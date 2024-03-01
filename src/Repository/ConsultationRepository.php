@@ -77,12 +77,17 @@ public function findConsultationsBetweenDates(DateTime $startDate, DateTime $end
             ->getResult();
     }
     
-
-
     public function findAllOrderedByDate(): array
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.date_c', 'ASC') // Order by dateC in ascending order
+            ->getQuery()
+            ->getResult();
+    }
+    public function findAllOrderedByDateDesc(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.date_c', 'DESC') // Order by dateC in ascending order
             ->getQuery()
             ->getResult();
     }

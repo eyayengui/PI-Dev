@@ -114,13 +114,6 @@
 
 </style>
 
-
-
-<form action="{{ path('search_fiche_medicale') }}" method="get" style="margin-bottom: 20px;">
-    <label for="id" style="font-weight: bold;">Search by ID:</label>
-    <input type="text" id="id" name="id" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc;">
-    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Search</button>
-</form>
 <form action="{{ path('fiche_medicale_ordered_by_date_creation') }}" method="get">
     <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date</button>
 </form>

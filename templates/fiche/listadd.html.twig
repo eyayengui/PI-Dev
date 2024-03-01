@@ -200,6 +200,69 @@
 .order-button:hover {
         background-color: #0056b3; /* Change background color on hover */
     }
+
+    .submit-button {
+    background-color: #0f4c75; /* Dark Blue */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.submit-button:hover {
+    background-color: #003366; /* Darker shade of blue on hover */
+}
+.generate-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.generate-button:hover {
+    background-color: #45a049;
+}
+.qr-code-form-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.qr-code-form {
+    display: inline-block;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.qr-code-form input[type="hidden"] {
+    display: none;
+}
+
+.generate-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.generate-button:hover {
+    background-color: #45a049;
+}
 </style>
 <p><strong>Chercher par date de création</strong></p>
 <form action="{{ path('search_fichedate1') }}" method="get" class="search-form">
@@ -211,16 +274,18 @@
         <label for="end_date">Date limite:</label>
         <input type="date" id="end_date" name="end_date">
     </div>
+    <p><strong>et par date de dérniere mise a jour</strong></p>
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date1" name="start_date1">
+    </div>
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date1" name="end_date1">
+    </div>
     <button type="submit">Chercher</button>
 </form>
 
-
-
-<form action="{{ path('search_fiche_medicale') }}" method="get" class="search-form">
-    <label for="id">Search by ID:</label>
-    <input type="text" id="id" name="id">
-    <button type="submit">Search</button>
-</form>
 <form action="{{ path('fiche_medicale_ordered_by_date_creation') }}" method="get">
     <button type="submit" class="order-button">Trier par Date</button>
 </form>
@@ -252,6 +317,28 @@
             <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
         </div>
 
+<div class="qr-code-form-container">
+    <form method="get" action="{{ path('app_generer_pdf_historique', {'id': fiche.getId()}) }}" class="qr-code-form">
+        <input type="hidden" name="text" value="
+            ID de fiche: {{ fiche.getId() }}
+            ID de patient: {{ fiche.getIdP() }}
+            ID de Thérapeute: {{ fiche.getIdT() }}
+            Date de création: {{ fiche.getDateCreation()|date('Y-m-d') }}
+            Dernière mise à jour: {{ fiche.getDerniereMaj()|date('Y-m-d') }}
+        ">
+        <button type="submit" class="generate-button">Generate PDF</button>
+    </form>
+    <form method="post" action="{{ path('generate_qr_code', {'id': fiche.getId()}) }}" class="qr-code-form">
+        <input type="hidden" name="text" value="
+            ID de fiche: {{ fiche.getId() }}
+            ID de patient: {{ fiche.getIdP() }}
+            ID de Thérapeute: {{ fiche.getIdT() }}
+            Date de création: {{ fiche.getDateCreation()|date('Y-m-d') }}
+            Dernière mise à jour: {{ fiche.getDerniereMaj()|date('Y-m-d') }}
+        ">
+        <button type="submit" class="generate-button">Genérer un code QR</button>
+    </form>
+</div>
     </div>
     {% endfor %}
 </div>
@@ -289,7 +376,7 @@
         </div>
     </div>
     <div class="form-group">
-        {{ form_widget(formB.Ajouter, {'label': 'Submit'}) }}
+        {{ form_widget(formB.Ajouter, {'label': 'Submit', 'attr': {'class': 'submit-button'}}) }}
     </div>
     {{ form_end(formB) }}
 </div>

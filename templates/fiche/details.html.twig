@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fiche Details</title>
+</head>
+<body>
+    <h1>Fiche Details</h1>
+
+    <h2>ID: {{ fiche.id }}</h2>
+    <p>ID Patient: {{ fiche.idP }}</p>
+    <p>ID Thérapeute: {{ fiche.idT }}</p>
+    <p>Date de Création: {{ fiche.dateCreation|date('Y-m-d') }}</p>
+    <p>Dernière Mise à Jour: {{ fiche.derniereMaj|date('Y-m-d') }}</p>
+
+    <h3>Consultations:</h3>
+    <ul>
+        {% for consultation in fiche.consultations %}
+            <li>
+                ID Consultation: {{ consultation.id }}
+                <br>
+                Date Consultation: {{ consultation.dateC ? consultation.dateC|date('Y-m-d') : 'N/A' }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('edit_fiche', {'id': fiche.id}) }}">Edit</a>
+    <a href="{{ path('delete_fiche', {'id': fiche.id}) }}">Delete</a>
+</body>
+</html>

@@ -230,6 +230,7 @@
                     <span class="detail-label">Confirmation:</span>
                     <span class="detail-value">{{ consultation.getConfirmation() ? 'True' : 'False' }}</span>
                 </div>
+               
             </div>
             {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
                  <div class="warning-box">Non confimé</div>

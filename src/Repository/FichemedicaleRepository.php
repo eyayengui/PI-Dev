@@ -65,12 +65,15 @@ public function findAllFicheMedicaleOrderedByDateCreation(): array
         ->getResult();
 }
 
-public function findFichesBetweenDates(DateTime $startDate, DateTime $endDate): array
+public function findFichesBetweenDates(DateTime $startDate, DateTime $endDate,DateTime $startDate1, DateTime $endDate1): array
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.date_creation BETWEEN :start_date AND :end_date')
             ->setParameter('start_date', $startDate)
             ->setParameter('end_date', $endDate)
+            ->andWhere('f.derniere_maj BETWEEN :start_date1 AND :end_date1')
+            ->setParameter('start_date1', $startDate1)
+            ->setParameter('end_date1', $endDate1)
             ->getQuery()
             ->getResult();
     }
