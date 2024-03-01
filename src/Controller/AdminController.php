@@ -134,8 +134,8 @@ class AdminController extends AbstractController
        
     }
     #[Route('/export-pdf', name: 'app_generer_pdf_historique')]
-public function exportPdf(): Response
-{
+    public function exportPdf(): Response
+    {
     // Récupérez les données à afficher dans le PDF (utilisateurs dans votre cas)
     $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 

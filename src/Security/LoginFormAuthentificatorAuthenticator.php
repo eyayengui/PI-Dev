@@ -113,7 +113,7 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
         }
     
         // Replace 'app_home' with the actual route name for your home page
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        return new RedirectResponse($this->urlGenerator->generate('afterlogin'));
     }
     
     protected function getLoginUrl(Request $request): string

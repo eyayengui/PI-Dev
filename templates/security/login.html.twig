@@ -75,25 +75,6 @@
         </div><!-- /.stricky-header -->
 
 
-        <!--Page Header Start-->
-        <section class="page-header">
-            <div class="page-header-bg" style="background-image: url(front-office/images/backgrounds/page-header-bg.jpg)">
-            </div>
-            <
-            <div class="container">
-                <div class="page-header__inner">
-                    
-                    <!--
-                    <ul class="thm-breadcrumb list-unstyled">
-                        <li><a href="{{ path('app_home') }}">Home</a></li>
-                        <li><span>/</span></li>
-                        <li>Login</li>
-                    </ul>
-                </div>
-            </div>
-            --!>
-                </section>
-        <!--Page Header End-->
 
         <!--Login Page Start-->
 <section class="login-page">
@@ -104,7 +85,7 @@
                         <h3 class="login-page__title">Login</h3>
 
                         {# Include the second Twig content here #}
-                        <form class="login-page__form" method="post">
+                        <form action="{{ path('app_login') }}" method="post">
                             {% if error %}
                                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                             {% endif %}
@@ -124,7 +105,7 @@
                             <input type="hidden" name="_csrf_token"
                                    value="{{ csrf_token('authenticate') }}"
                             >
-
+                            <input type="hidden" name="afterlogin" value="/index">
                             <button class="btn btn-lg btn-primary" type="submit">
                                 Sign in
                             </button>
