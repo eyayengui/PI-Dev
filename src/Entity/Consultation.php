@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use DateTime;
 use App\Repository\ConsultationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -91,7 +91,7 @@ class Consultation
         return $this;
     }
 
-    public function isConfirmation(): ?bool
+    public function getConfirmation(): ?bool
     {
         return $this->confirmation;
     }
@@ -125,5 +125,11 @@ class Consultation
         $this->idt = $idt;
 
         return $this;
+    }
+    
+    public function isCompleted(): bool
+    {
+        $currentDate = new DateTime();
+        return $this->date_c < $currentDate;
     }
 }

@@ -1,0 +1,336 @@
+{% extends 'base-front.html.twig' %}
+
+{% block body %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .action-links a {
+        margin-right: 5px;
+    }
+
+    form label {
+        display: inline-block;
+        width: 150px; 
+        text-align: center;
+    }
+
+    .submit-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #005F6B; 
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #005F6B; 
+    }
+
+    .consultation-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
+    }
+
+    .consultation-card {
+        background-color: #f5f5f5; 
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: calc(33.33% - 20px);
+        color: black; 
+    }
+
+    .card-header {
+        background-color: #0f4c75; 
+        color: white; 
+        font-size: 18px; 
+        padding: 10px; 
+        border-radius: 8px 8px 0 0; 
+        width: 100%; 
+        text-align: center; 
+        margin-bottom: 10px; 
+    }
+
+    .card-details {
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+
+    .action-links a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: black; 
+    }
+
+    .action-links a:hover {
+        text-decoration: underline;
+    }
+
+    .consultation-card .consultation-id {
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        background-color: #0f4c75;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .consultation-card .consultation-details {
+        font-size: 16px;
+    }
+    .error-message {
+    color: red;
+    }
+    .consultation-card:hover {
+        background-color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+
+    .action-links a {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #0f4c75;
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .action-links a:hover {
+        background-color: #1b6ca8;
+    }
+.completed-box {
+    background-color: #6cb2eb; /* Light blue background color */
+    color: #fff; /* White text color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+    display: inline-block; /* Display as inline block */
+}
+
+.completed-box span {
+    font-weight: bold; /* Bold text */
+}
+
+.completed-box i {
+    margin-left: 5px; /* Add some space between text and icon */
+}
+.confirmed-box {
+    background-color: rgba(0, 128, 0, 0.7); /* Green with 70% opacity */
+    color: white;
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+    display: inline-block; /* Display as inline block */
+}
+
+.pending-box {
+    background-color: rgba(255, 165, 0, 0.7); /* Orange with 70% opacity */
+    color: white;
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding */
+    display: inline-block; /* Display as inline block */
+}
+.search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+        margin-bottom: 5px; /* Added margin bottom for stacking */
+    }
+
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
+
+    .search-form button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff; /* Add border */
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3; /* Change border color on hover */
+}
+</style>
+
+<form action="{{ path('search_consultation') }}" method="get" class="search-form">
+    <div>
+        <label for="Pathologie">Chercher par Pathologie:</label>
+        <input type="text" id="Pathologie" name="Pathologie">
+    </div>
+
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date" name="start_date">
+    </div>
+
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date" name="end_date">
+    </div>
+
+    <button type="submit">Chercher</button>
+</form>
+
+
+
+<div class="consultation-cards">
+    {% for consultation in consultations %}
+        <div class="consultation-card">
+            <div class="card-details">
+                <div class="card-detail">
+                    <span class="detail-label">Date consultation:</span>
+                    <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Pathologie:</span>
+                    <span class="detail-value">{{ consultation.getpathologie }}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="detail-label">Remarques:</span>
+                    <span class="detail-value">{{ consultation.getremarques }}</span>
+                </div>
+                <div class="card-detail">
+                    {% if consultation.isCompleted() %}
+                        <div class="completed-box">
+                            <span>Achevée</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                    {% if consultation.getConfirmation() %}
+                        <div class="confirmed-box">
+                            <span>Confirmé</span>
+                        </div>
+                    {% else %}
+                        <div class="pending-box">
+                            <span>En attente</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="action-links">
+                <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
+                <a href="{{ path('edit_consultation', {'id': consultation.getid()}) }}">Edit</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<form action="{{ path('consultations_ordered_by_date') }}" method="get">
+  <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
+</form>
+
+
+<form action="{{ path('calendar') }}" method="get">
+    <button type="submit" style="background-color: #cc6666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">View Calendar</button>
+</form>
+<section class="make-appointment">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="make-appointment__left">
+                    <div class="section-title text-left">
+                        <span class="section-title__tagline">contact with us</span>
+                        <h2 class="section-title__title">Let's book <span>Your</span> <br> Appointment</h2>
+                    </div>
+                    <div class="make-appointment__form-box">
+                        {{ form_start(formA, {'attr': {'class': 'make-appointment__form contact-form-validated', 'novalidate': 'novalidate'}}) }}
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formA.date_c.vars.id }}">Date Consultation:</label>
+                                        {{ form_widget(formA.date_c, {'attr': {'placeholder': 'Date Consultation', 'class': 'form-control', 'min': 'now'|date('Y-m-d')}}) }}
+                                        {{ form_errors(formA.date_c) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formA.pathologie.vars.id }}">Pathologie:</label>
+                                        {{ form_widget(formA.pathologie, {'attr': {'placeholder': 'Pathologie', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formA.pathologie) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formA.remarques.vars.id }}">Remarques:</label>
+                                        {{ form_widget(formA.remarques, {'attr': {'placeholder': 'Remarques', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formA.remarques) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formA.idp.vars.id }}">Id Patient:</label>
+                                        {{ form_widget(formA.idp, {'attr': {'placeholder': 'Id Patient', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formA.idp) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formA.idt.vars.id }}">Id Thérapeute:</label>
+                                        {{ form_widget(formA.idt, {'attr': {'placeholder': 'Id Thérapeute', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formA.idt) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-btn-box">
+                                        {{ form_row(formA.Ajouter, {'attr': {'class': 'thm-btn make-appointment__form-btn'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {{ form_end(formA) }}
+                        <div class="result"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="make-appointment__right">
+                    <!-- Add images or other content as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

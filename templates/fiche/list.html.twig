@@ -1,0 +1,259 @@
+{% extends 'base-back.html.twig' %}
+
+{% block body %}
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
+    <TR>
+        <TD BACKGROUND="fade.gif">
+            &middot;
+                <A HREF="medical-admin-template.multipurposethemes.com/main/index9142.html">
+                </A>       
+        </TD>
+    </TR>
+</TABLE>
+<style>
+    .form-container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .form-group input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: calc(33.33% - 20px);
+    transition: background-color 0.3s ease; /* Add transition effect */
+}
+
+.card:hover {
+    background-color: #e0e0e0; /* Darken the background color on hover */
+}
+
+.card-header {
+    background-color: #0f4c75;
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-body,
+.card-footer {
+    padding: 10px;
+    color: black;
+}
+
+.card-footer a {
+    color: black;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.card-footer a:hover {
+    text-decoration: underline;
+}
+
+.card-title {
+    color: white;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.card-footer a.button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.card-footer a.button:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+}
+
+.card-footer a.button:last-child {
+    margin-right: 0; /* Remove margin from the last button */
+}
+
+.action-links a {
+        margin-right: 5px;
+    }
+.action-links a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: black; 
+    }
+
+    .action-links a:hover {
+        text-decoration: underline;
+    }
+.action-links a {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #0f4c75;
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .action-links a:hover {
+        background-color: #1b6ca8;
+    }
+    .consultation-line {
+    border-top: 3px solid #333; /* Increase thickness and darken the color for better visibility */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.order-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+.order-button:hover {
+        background-color: #0056b3; /* Change background color on hover */
+    }
+.search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+        margin-bottom: 5px; /* Added margin bottom for stacking */
+    }
+
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
+
+    .search-form button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff; /* Add border */
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start; /* Align button to the start of the container */
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3; /* Change border color on hover */
+}
+</style>
+<p><strong>Chercher par date de création</strong></p>
+<form action="{{ path('search_fichedate1') }}" method="get" class="search-form">
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date" name="start_date">
+    </div>
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date" name="end_date">
+    </div>
+    <p><strong>et par date de dérniere mise a jour</strong></p>
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date1" name="start_date1">
+    </div>
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date1" name="end_date1">
+    </div>
+    <button type="submit">Chercher</button>
+</form>
+
+<form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
+    <button type="submit" class="order-button">Trier par Date de creation</button>
+</form>
+<div class="card-container">
+    {% for fiche in fiches %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Patient:</strong> {{ fiche.getIdP().username }}</p>
+            <p><strong>Thérapeute:</strong> {{ fiche.getidT().username }}</p>
+            <p><strong>Date Creation:</strong> {{ fiche.getDateCreation()|date('Y-m-d') }}</p>
+            <p><strong>Derniere Mise a jour:</strong> {{ fiche.getDerniereMaj()|date('Y-m-d') }}</p>
+        </div>
+        <div class="card-footer">
+            <h5>Consultations:</h5>
+            <ul>
+                {% for consultation in fiche.getConsultations() %}
+                    <li>Id Consultation: {{ consultation.getId() }}</li>
+                    <li>Date Consultation: {{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : 'N/A' }}</li>
+                    <hr class="consultation-line"> 
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

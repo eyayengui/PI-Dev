@@ -1,0 +1,164 @@
+{% extends 'base-front.html.twig' %}
+
+{% block body %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .action-links a {
+        margin-right: 5px;
+    }
+    /* Add custom styles for form labels */
+    form label {
+        display: inline-block;
+        width: 150px; /* Adjust the width as needed */
+        text-align: center;
+    }
+    .submit-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #005F6B; /* Blue color */
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .submit-button:hover {
+        background-color: #005F6B; /* Darker blue color on hover */
+    }
+    .consultation-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust the gap between cards */
+}
+
+.consultation-card {
+    background-color: #f5f5f5; /* Adjust the background color */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: calc(33.33% - 20px); /* Adjust the width of each card */
+}
+
+
+
+.card-details {
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    font-weight: bold;
+}
+
+.action-links a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #007bff; /* Adjust link color */
+}
+
+.action-links a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<section class="make-appointment">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="make-appointment__left">
+                    <div class="section-title text-left">
+                        <span class="section-title__tagline">contact with us</span>
+                        <h2 class="section-title__title">Edit <span>Your</span> <br> Appointment</h2>
+                    </div>
+                    <div class="make-appointment__form-box">
+                        {{ form_start(formC, {'attr': {'class': 'make-appointment__form contact-form-validated', 'novalidate': 'novalidate'}}) }}
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formC.fichemedicale.vars.id }}">Id Fiche:</label>
+                                        {{ form_widget(formC.fichemedicale, {'attr': {'placeholder': 'Id fiche medicale', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formC.fichemedicale) }} {# Display errors for this field #}
+                                        {% if formC.fichemedicale.vars.id == 0 %}
+                                            <p style="color: red;">fiche non attribuée</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formC.date_c.vars.id }}">Date Consultation:</label>
+                                        {{ form_widget(formC.date_c, {'attr': {'placeholder': 'Date Consultation', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formC.date_c) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formC.pathologie.vars.id }}">Pathologie:</label>
+                                        {{ form_widget(formC.pathologie, {'attr': {'placeholder': 'Pathologie', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formC.pathologie) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formC.remarques.vars.id }}">Remarques:</label>
+                                        {{ form_widget(formC.remarques, {'attr': {'placeholder': 'Remarques', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formC.remarques) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formC.idp.vars.id }}">Id Patient:</label>
+                                        {{ form_widget(formC.idp, {'attr': {'placeholder': 'Id Patient', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formC.idp) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="make-appointment__form-input-box">
+                                        <label for="{{ formC.idt.vars.id }}">Id Thérapeute:</label>
+                                        {{ form_widget(formC.idt, {'attr': {'placeholder': 'Id Thérapeute', 'class': 'form-control'}}) }}
+                                        {{ form_errors(formC.idt) }} {# Display errors for this field #}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                <div class="make-appointment__form-input-box">
+                                    <label for="{{ formC.confirmation.vars.id }}">Confirmation:</label>
+                                    {{ form_widget(formC.confirmation, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_errors(formC.confirmation) }}
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="make-appointment__form-btn-box">
+                                        {{ form_row(formC.Ajouter, {'attr': {'class': 'thm-btn make-appointment__form-btn'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {{ form_end(formC) }}
+                        <div class="result"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="make-appointment__right">
+                    <!-- Add images or other content as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

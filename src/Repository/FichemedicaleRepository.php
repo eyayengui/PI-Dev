@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+use DateTime;
 use App\Entity\Fichemedicale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,4 +45,39 @@ class FichemedicaleRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findAllExcept0(): array
+{
+    return $this->createQueryBuilder('f')
+        ->andWhere('f.id != :id')
+        ->setParameter('id', 0)
+        ->getQuery()
+        ->getResult();
+}
+
+
+public function findAllFicheMedicaleOrderedByDateCreation(): array
+{
+    return $this->createQueryBuilder('f')
+        ->where('f.id != :id')
+        ->setParameter('id', 0)
+        ->orderBy('f.date_creation', 'ASC') 
+        ->getQuery()
+        ->getResult();
+}
+
+public function findFichesBetweenDates(DateTime $startDate, DateTime $endDate,DateTime $startDate1, DateTime $endDate1): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.date_creation BETWEEN :start_date AND :end_date')
+            ->setParameter('start_date', $startDate)
+            ->setParameter('end_date', $endDate)
+            ->andWhere('f.derniere_maj BETWEEN :start_date1 AND :end_date1')
+            ->setParameter('start_date1', $startDate1)
+            ->setParameter('end_date1', $endDate1)
+            ->getQuery()
+            ->getResult();
+    }
+ 
+
+
 }
