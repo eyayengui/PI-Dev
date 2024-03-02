@@ -50,8 +50,11 @@
             {{ form_errors(registrationForm.plainPassword) }}
             {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
         </div>
+       
 
-        <button type="submit" class="btn btn-primary">Register</button>
+       {{ form_row(registrationForm.agreeTerms) }}
+
+    {{ form_row(registrationForm.submit) }}
 
         {{ form_end(registrationForm) }}
 

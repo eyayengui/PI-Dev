@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -38,17 +39,9 @@ class RegistrationFormType extends AbstractType
         ->add('email',EmailType::class,array(
             'label'=>false,
             'required'=>false,
-        ))/*
-        ->add('roles', ChoiceType::class, [
-            'label' => false,
-            'required' => false,
-            'multiple' => true, // Gardez cela si vous voulez permettre la sélection de plusieurs rôles
-            'choices' => [
-                'Patient' => 'ROLE_ADMIN',
-                'Patient' => 'ROLE_PATIENT',
-                'Thérapeute' => 'ROLE_THERAPEUTE',
-            ]
-        ])*/
+        ))
+       
+        
         ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -77,6 +70,9 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
                 'label' => 'En n\'inscrivant à ce cite, j\'accepte les termes d\'utilisation'
+            ])
+            ->add('submit', SubmitType::class, [
+                'attr' => ['class' => 'btn'],
             ])
             /*
             ->add('certificat', FileType::class,[
