@@ -35,9 +35,13 @@ class Publication
     #[ORM\JoinColumn(nullable: false)]
     private ?User $ID_User = null;
 
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'Publication')]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->Commentaires = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,6 +135,36 @@ class Publication
     public function setIDUser(?User $ID_User): static
     {
         $this->ID_User = $ID_User;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setPublication($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getPublication() === $this) {
+                $like->setPublication(null);
+            }
+        }
 
         return $this;
     }

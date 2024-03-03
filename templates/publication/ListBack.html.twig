@@ -1,0 +1,178 @@
+{% extends 'base-back.html.twig' %}
+{% block title %}gestion publications{% endblock %}
+{% block body %}
+<style>
+.box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.box-body {
+    margin-top: 15px;
+}
+
+.carousel-indicators li {
+    background-color: #007bff;
+}
+
+.carousel-item img {
+    display: block;
+    margin: 0 auto;
+}
+
+.nav.nav-dot-separated {
+    list-style-type: none;
+    padding: 0;
+}
+
+.nav.nav-dot-separated li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.nav.nav-dot-separated li::after {
+    content: "•";
+    margin-left: 10px;
+}
+
+.nav.nav-dot-separated li:last-child::after {
+    content: "";
+}
+
+h4 a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+h4 a:hover {
+    text-decoration: underline;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.edit-link {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #17a2b8;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid #17a2b8;
+}
+
+.edit-link:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+hr {
+    border-top: 1px solid #ddd;
+}
+
+
+ </style>
+
+ <div class="container">
+        <h1 class="mt-4 mb-4">Ajouter une publication</h1>
+       <div class="row">
+    <div class="col-md-8 offset-md-2">
+        {{ form_start(formA, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="form-group">
+            {{ form_label(formA.Titre_P) }}
+            {{ form_widget(formA.Titre_P, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(formA.Titre_P) }}
+        </div>
+
+                <div class="form-group">
+                    {{ form_label(formA.Description_P) }}
+                    {{ form_widget(formA.Description_P, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(formA.Description_P) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.imageFile) }}
+                    {{ form_widget(formA.imageFile, {'attr': {'class': 'form-control-file'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.Date_P) }}
+                    {{ form_widget(formA.Date_P, {'attr': {'class': 'form-control'}}) }}
+                     {{ form_errors(formA.Date_P) }}
+                </div>
+            
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(formA) }}
+            </div>
+        </div>
+    </div>
+ <hr> 
+         <h1 class="mt-4 mb-4">List des  publication</h1>
+
+ 
+    <div class="box overflow-hidden">
+        {% for publication in publications %}
+            <div id="blog-slide1" class="carousel slide" data-bs-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#blog-slide1" data-bs-slide-to="0" class="active"></li>
+                    <li data-bs-target="#blog-slide1" data-bs-slide-to="1"></li>
+                    <li data-bs-target="#blog-slide1" data-bs-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ asset('/upload-images/' ~ publication.getImageP()) }}" alt="Publication Image" style="max-width: 50%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <ul class="nav nav-dot-separated g-0 mb-1">
+                    {{ publication.getDateP()|date('Y-m-d ') }}
+                </ul>
+                <h4><a class="hover-primary" href="#">pub n°{{ publication.id }}:{{ publication.getTitreP() }}</a></h4>
+                added by :{{ publication.IDUser.nom }}
+                <p>{{ publication.getDescriptionP() }}</p>
+                <p class="text-end">
+                    <a class="btn btn-sm btn-bold btn-primary" href="{{ path('publication_details', {'id': publication.id}) }}">Read more</a>
+                </p>
+                  <p>
+    <a href="{{ path('edit_publication', {'id': publication.id}) }}" class="edit-link">Edit</a>
+</p>
+
+                    <p>
+                        <form method="post" action="{{ path('delete_publication', {'id': publication.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_method" value="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publication.id) }}">
+                            <button type="submit"  class="delete-btn">Delete</button>
+                        </form>
+                    </p>
+            </div>
+            <hr>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

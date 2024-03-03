@@ -1,0 +1,139 @@
+{# templates/publication/editPublication.html.twig #}
+
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Modifier une publication{% endblock %}
+
+{% block body %}
+<style> h1 {
+    text-align: center;
+    color: #5D93E1; /* Couleur du titre */
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase; /* Mettre le texte en majuscules */
+    letter-spacing: 2px; /* Espacer les lettres */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Ombre portée pour donner de la profondeur */
+    background: -webkit-linear-gradient(45deg, #5D93E1, #f8ceec); /* Dégradé de couleur */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Effet de dégradé sur le texte */
+    animation: shine 2s linear infinite; /* Animation pour ajouter un effet brillant */
+}
+
+@keyframes shine {
+    0% {
+        background-position: top right;
+    }
+    50% {
+        background-position: bottom left;
+    }
+    100% {
+        background-position: top right;
+    }
+}
+
+form {
+    background: white;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.form-row {
+    margin-bottom: 20px;
+    background: #ffffff; /* Fond blanc pour un look épuré */
+    padding: 15px; /* Espace intérieur plus grand */
+    border-radius: 10px; /* Coins plus arrondis */
+    border: 1px solid #e1e1e1; /* Bordure subtile */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Ombre douce pour la profondeur */
+    transition: box-shadow 0.3s, border-color 0.3s; /* Transition douce pour l'interaction */
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+textarea,
+select {
+    width: 100%; /* Pleine largeur */
+    padding: 12px; /* Padding confortable */
+    border-radius: 8px; /* Coins arrondis */
+    border: 1px solid #e1e1e1; /* Bordure harmonisée */
+    font-size: 1rem; /* Taille de police lisible */
+    transition: border-color 0.3s; /* Transition pour border color */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #5D93E1; /* Couleur de bordure au focus */
+    box-shadow: 0 0 0 3px rgba(93, 147, 225, 0.3); /* Ombre extérieure pour l'accentuation */
+    outline: none; /* Supprime l'outline par défaut */
+}
+label {
+    display: block;
+    margin-bottom: .5rem;
+    color: #333;
+    font-weight: bold; /* Rendre le texte en gras */
+    text-transform: uppercase; /* En majuscules */
+    letter-spacing: 0.05em; /* Espacement des lettres pour l'esthétique */
+}
+button[type="submit"] {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    background-color: #5D93E1; /* Bouton bleu */
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #4a7ab7; /* Couleur bleue plus foncée au survol */
+    transform: translateY(-2px); /* Légère élévation au survol */
+}
+
+</style>
+    
+
+    {{ form_start(form) }}
+     <h1>Modifier La Publication</h1>
+<div class="form-row">
+    {{ form_row(form.Titre_P) }}
+     
+    
+    {{ form_errors(form.Titre_P, {'attr': {'class': 'form-error'}}) }}
+</div>
+    <div class="form-row">
+    {{ form_row(form.Description_P) }}
+</div>
+
+{# Display the current image if it exists #}
+{% if form.vars.value.imageP %}
+    <div class="form-row">
+        <img src="{{ asset('/images/' ~ form.vars.value.imageP) }}" alt="Current Image" style="max-width: 200px; max-height: 200px;">
+    </div>
+{% endif %}
+
+{# Allow uploading a new image #}
+<div class="form-row">
+    {{ form_row(form.imageFile) }}
+</div>
+
+<div class="form-row">
+    {{ form_row(form.Date_P) }}
+</div>
+
+<div class="form-row">
+    {{ form_row(form.ID_User) }}
+</div>
+
+    <button type="submit">Modifier</button>
+    
+    {{ form_end(form) }}
+{% endblock %}
