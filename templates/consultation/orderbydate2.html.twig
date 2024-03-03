@@ -133,22 +133,58 @@
     font-weight: bold;
     margin-top: 5px;
 }
+
+.search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
+
+    .search-form button {
+        padding: 5px 10px;
+        background-color: #004080;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
 </style>
-<form action="{{ path('search_consultation_by_date2') }}" method="get">
-    <label for="start_date">Start Date:</label>
-    <input type="date" id="start_date" name="start_date">
-    <label for="end_date">End Date:</label>
-    <input type="date" id="end_date" name="end_date">
-    <button type="submit">Search</button>
+<form action="{{ path('search_consultation2') }}" method="get" class="search-form">
+    <div>
+        <label for="Pathologie">Chercher par Pathologie:</label>
+        <input type="text" id="Pathologie" name="Pathologie">
+    </div>
+
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date" name="start_date">
+    </div>
+
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date" name="end_date">
+    </div>
+
+    <button type="submit">Chercher</button>
 </form>
-
-
-<form action="{{ path('search_consultation2') }}" method="get">
-    <label for="id">Search by ID:</label>
-    <input type="text" id="id" name="id">
-    <button type="submit">Search</button>
-</form>
-
 
 
 <div class="consultation-cards">

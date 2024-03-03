@@ -5,13 +5,11 @@
 </head>
 <body>
     <h1>Fiche Details</h1>
-
     <h2>ID: {{ fiche.id }}</h2>
-    <p>ID Patient: {{ fiche.idP }}</p>
-    <p>ID Thérapeute: {{ fiche.idT }}</p>
+    <p>Patient: {{ fiche.idP.nom }}</p>
+    <p>Thérapeute: {{ fiche.idT.nom }}</p>
     <p>Date de Création: {{ fiche.dateCreation|date('Y-m-d') }}</p>
     <p>Dernière Mise à Jour: {{ fiche.derniereMaj|date('Y-m-d') }}</p>
-
     <h3>Consultations:</h3>
     <ul>
         {% for consultation in fiche.consultations %}
@@ -22,7 +20,6 @@
             </li>
         {% endfor %}
     </ul>
-
     <a href="{{ path('edit_fiche', {'id': fiche.id}) }}">Edit</a>
     <a href="{{ path('delete_fiche', {'id': fiche.id}) }}">Delete</a>
 </body>

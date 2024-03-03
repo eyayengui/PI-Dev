@@ -236,8 +236,8 @@
             <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
         </div>
         <div class="card-body">
-            <p><strong>Patient:</strong> {{ fiche.getIdP().username }}</p>
-            <p><strong>Thérapeute:</strong> {{ fiche.getidT().username }}</p>
+            <p><strong>Patient:</strong> {{ fiche.getIdP().nom }}</p>
+            <p><strong>Thérapeute:</strong> {{ fiche.getidT().nom }}</p>
             <p><strong>Date Creation:</strong> {{ fiche.getDateCreation()|date('Y-m-d') }}</p>
             <p><strong>Derniere Mise a jour:</strong> {{ fiche.getDerniereMaj()|date('Y-m-d') }}</p>
         </div>

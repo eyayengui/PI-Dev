@@ -114,7 +114,7 @@
 </style>
 
 <form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
-    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date of Creation</button>
+    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Trier par date de creation</button>
 </form>
 <div class="card-container">
     {% for fiche in fiches %}
@@ -123,8 +123,8 @@
             <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
         </div>
         <div class="card-body">
-            <p><strong>Patient:</strong> {{ fiche.getIdP().username }}</p>
-            <p><strong>Thérapeute:</strong> {{ fiche.getidT().username }}</p>
+            <p><strong>Patient:</strong> {{ fiche.getIdP().nom }}</p>
+            <p><strong>Thérapeute:</strong> {{ fiche.getidT().nom }}</p>
             <p><strong>Date Creation:</strong> {{ fiche.getDateCreation()|date('Y-m-d') }}</p>
             <p><strong>Derniere Mise a jour:</strong> {{ fiche.getDerniereMaj()|date('Y-m-d') }}</p>
         </div>
