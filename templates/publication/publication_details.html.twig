@@ -1,6 +1,9 @@
 {% extends 'base-front.html.twig' %}
 	{% block title %}Détails de  la publication{% endblock %}
-
+{% block sidebar %}
+ <li class="dropdown">
+  <a href="{{ listPublicationUrl }}">Publications</a>
+ </li>{% endblock %}
 {% block body %}
 
   <!--Page Header Start-->
@@ -58,11 +61,14 @@
             <i class="fas fa-thumbs-down"></i> Dislike (<span class="dislike-count">{{ dislikesCount }}</span>)
         </a>
     </div>
+ 
                                 <div class="blog-details__bottom">
                                     <p class="blog-details__tags">
-                                        <span>Tags</span>
-                                        <a href="#">Depression</a>
-                                        <a href="#">Addict</a>
+                                        <span>Top Publications</span>
+                                     
+                                        <a href="{{ listPublicationUrl }}">Retour à la liste des publications</a>
+
+
                                     </p>
                                     <div class="blog-details__social-list">
                                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -72,31 +78,24 @@
                                     </div>
                                 </div>
                                 <div class="blog-details__pagenation">
-                                    <div class="blog-details__pagenation-left">
-                                        <div class="blog-details__pagenation-left-img">
-                                           <img src="{{ asset('front-office/images/blog/blog-details-pagenation-img-1.jpg') }}" alt="">
-
-                                        </div>
-                                        <div class="blog-details__pagenation-left-content">
-                                            <p class="blog-details__pagenation-left-date"><i class="fas fa-clock"></i>
-                                                23 Mar, 2023</p>
-                                            <h4 class="blog-details__pagenation-left-title"><a href="#">Get Deep
-                                                    Knowledge
-                                                    of Bipolar Disorder</a></h4>
-                                        </div>
-                                    </div>
-                                    <div class="blog-details__pagenation-right">
+                                     {% for publication in topPublications %}
+                                    <div  class="blog-details__pagenation-right" data-href="{{ path('publication_details', {'id': publication.id}) }}">
                                         <div class="blog-details__pagenation-right-content">
                                             <p class="blog-details__pagenation-right-date"><i class="fas fa-clock"></i>
-                                                23 Mar, 2023</p>
-                                            <h4 class="blog-details__pagenation-right-title"><a href="#">How to Ensure
-                                                    Direct Treatment Hassle</a></h4>
+                                                {{ publication.getDateP()|date('Y-m-d') }}</p>
+                                            <h4 class="blog-details__pagenation-right-title">
+                                             {{ publication.getTitreP() }}
+                                             <span class="sidebar__post-content-meta"><i class="fa fa-comments"></i>{{ commentairesParPublication[publication.id] }} 
+                                                    </span>
+                                            
+                                            </h4>
                                         </div>
                                         <div class="blog-details__pagenation-right-img">
-                                            <img src="{{ asset('front-office/images/blog/blog-details-pagenation-img-2.jpg') }}" alt="">
+                                             <img src="{{ asset('/upload-images/' ~ publication.getImageP()) }}" alt="Publication Image">
 
                                         </div>
                                     </div>
+                                    {% endfor %}
                                 </div>
                                 <h3 class="comment-one__title">{{ commentairesParPublication[publication.id] }} Comments</h3>
                                 {% for commentaire in commentaires %}
@@ -125,7 +124,7 @@
                                 <div class="comment-form">
                                 <h3 class="comment-form__title">Leave a Comment</h3>
                                                     {# Assuming 'form' represents the Commentaire form #}
-                            <form action="{{ path('publication_details', {'id': publication.id}) }}" method="post" class="comment-one__form contact-form-validated" novalidate>
+                            <form action="{{ path('add_comment', {'id': publication.id}) }}" method="post" class="comment-one__form contact-form-validated" novalidate>
                                 {{ form_start(formB) }}
                                 <div class="row">
                                     <div class="col-xl-12">
@@ -179,15 +178,22 @@
                                 </ul>
                                 {% endfor %}
                             </div>
-                          
-                          
-                       
+                            <div class="top-publications">
+</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <!--Blog Details End-->
+        <script>
+    document.querySelectorAll('.blog-details__pagenation-right').forEach(function(div) {
+        div.addEventListener('click', function() {
+            window.location.href = this.getAttribute('data-href');
+        });
+    });
+</script>
+
 
 {% endblock %}
 

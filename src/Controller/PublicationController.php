@@ -257,18 +257,52 @@ public function delete(EntityManagerInterface $manager, int $id): Response
 //     ]);
 // }
     
-
-
 #[Route("/publication/{id}", name: "publication_details")]
-public function showPublicationDetails($id, PublicationRepository $publicationRepo, CommentaireRepository $commentaireRepo, LikeRepository $likeRepo, EntityManagerInterface $em, Request $request): Response
+public function showPublicationDetails($id, PublicationRepository $publicationRepo, CommentaireRepository $commentaireRepo, LikeRepository $likeRepo): Response
 {
     $publication = $publicationRepo->find($id);
-
     if (!$publication) {
         throw $this->createNotFoundException('La publication n\'existe pas.');
     }
 
     $commentaires = $commentaireRepo->findBy(['publication' => $publication]);
+    $form = $this->createForm(CommentaireType::class);
+
+    // Récupération de toutes les publications et calcul du nombre de commentaires pour chaque publication
+    $publications = $publicationRepo->findAll();
+    $commentairesParPublication = [];
+    foreach ($publications as $pub) {
+        $commentairesParPublication[$pub->getId()] = count($commentaireRepo->findBy(['publication' => $pub]));
+    }
+
+    // Compter les likes et dislikes pour la publication
+    $likesCount = $likeRepo->countLikesByPublication($publication->getId());
+    $dislikesCount = $likeRepo->countDislikesByPublication($publication->getId());
+
+    // Récupérer les publications avec le plus de commentaires
+    $topPublications = $publicationRepo->findPublicationsWithMostComments();
+    $listPublicationUrl = $this->generateUrl('ListPublication');
+
+    return $this->render('publication/publication_details.html.twig', [
+        'formB' => $form->createView(),
+        'publication' => $publication,
+        'commentaires' => $commentaires,
+        'commentairesParPublication' => $commentairesParPublication,
+        'publications' => $publications,
+        'likesCount' => $likesCount,
+        'dislikesCount' => $dislikesCount,
+        'topPublications' => $topPublications,
+        'listPublicationUrl' => $listPublicationUrl,
+    ]);
+}
+
+#[Route("/publication/{id}/add-comment", name: "add_comment")]
+public function addComment($id, Request $request, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response
+{
+    $publication = $publicationRepo->find($id);
+    if (!$publication) {
+        throw $this->createNotFoundException('La publication n\'existe pas.');
+    }
 
     $commentaire = new Commentaire();
     $form = $this->createForm(CommentaireType::class, $commentaire);
@@ -290,26 +324,7 @@ public function showPublicationDetails($id, PublicationRepository $publicationRe
         }
     }
 
-    // Récupération de toutes les publications et calcul du nombre de commentaires pour chaque publication
-    $publications = $publicationRepo->findAll();
-    $commentairesParPublication = [];
-    foreach ($publications as $pub) {
-        $commentairesParPublication[$pub->getId()] = count($commentaireRepo->findBy(['publication' => $pub]));
-    }
-
-    // Compter les likes et dislikes pour la publication
-    $likesCount = $likeRepo->countLikesByPublication($publication->getId());
-    $dislikesCount = $likeRepo->countDislikesByPublication($publication->getId());
-
-    return $this->render('publication/publication_details.html.twig', [
-        'formB' => $form->createView(),
-        'publication' => $publication,
-        'commentaires' => $commentaires,
-        'commentairesParPublication' => $commentairesParPublication,
-        'publications' => $publications,
-        'likesCount' => $likesCount,
-        'dislikesCount' => $dislikesCount,
-    ]);
+    return $this->redirectToRoute('publication_details', ['id' => $id]);
 }
 
 #[Route("/like/{id}", name: "like_publication")]

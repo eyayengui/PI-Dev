@@ -21,6 +21,19 @@ class PublicationRepository extends ServiceEntityRepository
         parent::__construct($registry, Publication::class);
     }
 
+    public function findPublicationsWithMostComments()
+{
+    return $this->createQueryBuilder('p')
+        ->select('p, COUNT(c.id) AS HIDDEN commentCount')
+        ->leftJoin('p.Commentaires', 'c') 
+        ->groupBy('p.id')
+        ->orderBy('commentCount', 'DESC')
+        ->setMaxResults(2)
+        ->getQuery()
+        ->getResult();
+}
+
+
 //    /**
 //     * @return Publication[] Returns an array of Publication objects
 //     */
