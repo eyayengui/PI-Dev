@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
@@ -19,9 +21,21 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'questions')]
     private ?Questionnaire $questionnaire = null;
 
+    #[ORM\OneToMany(targetEntity: Proposition::class, mappedBy: 'question')]
+    private Collection $propositions;
+
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
+    private Collection $answers;
+
+    public function __construct()
+    {
+        $this->propositions = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+    }
+/*
     #[ORM\ManyToOne(inversedBy: 'id_Q')]
     private ?Proposition $proposition = null;
-
+*/
     public function getId(): ?int
     {
         return $this->id;
@@ -50,7 +64,7 @@ class Question
 
         return $this;
     }
-
+/*
     public function getProposition(): ?Proposition
     {
         return $this->proposition;
@@ -62,4 +76,65 @@ class Question
 
         return $this;
     }
+    */
+
+/**
+ * @return Collection<int, Proposition>
+ */
+public function getPropositions(): Collection
+{
+    return $this->propositions;
+}
+
+public function addProposition(Proposition $proposition): static
+{
+    if (!$this->propositions->contains($proposition)) {
+        $this->propositions->add($proposition);
+        $proposition->setQuestion($this);
+    }
+
+    return $this;
+}
+
+public function removeProposition(Proposition $proposition): static
+{
+    if ($this->propositions->removeElement($proposition)) {
+        // set the owning side to null (unless already changed)
+        if ($proposition->getQuestion() === $this) {
+            $proposition->setQuestion(null);
+        }
+    }
+
+    return $this;
+}
+
+/**
+ * @return Collection<int, Answer>
+ */
+public function getAnswers(): Collection
+{
+    return $this->answers;
+}
+
+public function addAnswer(Answer $answer): static
+{
+    if (!$this->answers->contains($answer)) {
+        $this->answers->add($answer);
+        $answer->setQuestion($this);
+    }
+
+    return $this;
+}
+
+public function removeAnswer(Answer $answer): static
+{
+    if ($this->answers->removeElement($answer)) {
+        // set the owning side to null (unless already changed)
+        if ($answer->getQuestion() === $this) {
+            $answer->setQuestion(null);
+        }
+    }
+
+    return $this;
+}
 }

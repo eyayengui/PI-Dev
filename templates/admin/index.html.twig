@@ -78,6 +78,9 @@
                 <div class="text-center mt-4">
                <a href="{{ path('app_generer_pdf_historique') }}" class="btn btn-primary" onclick="printTable()">Télécharger PDF</a>
             </div>
+            <div class="navigation.flex.justify-content.mb-8">
+             {{ knp_pagination_render(users) }}
+             </div>
     <a href="{{ path('app_admin_new') }}">Create new</a>
    
 {% endblock %}

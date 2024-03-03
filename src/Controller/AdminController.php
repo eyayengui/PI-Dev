@@ -18,10 +18,16 @@ use Dompdf\Options;
 class AdminController extends AbstractController
 {
     #[Route('/index', name: 'app_admin_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, PaginatorInterface $paginatorInterface,Request $request): Response
     {
+        $data = $userRepository->findAll();
+        $users = $paginatorInterface->paginate(
+            $data,
+            $request->query->getInt('page',1),
+            9
+        );
         return $this->render('admin/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
         ]);
     }
 

@@ -318,7 +318,7 @@
         </div>
 
 <div class="qr-code-form-container">
-    <form method="get" action="{{ path('app_generer_pdf_historique', {'id': fiche.getId()}) }}" class="qr-code-form">
+    <form method="get" action="{{ path('app_generer_pdf_historiquee', {'id': fiche.getId()}) }}" class="qr-code-form">
         <input type="hidden" name="text" value="
             ID de fiche: {{ fiche.getId() }}
             ID de patient: {{ fiche.getIdP().prenom }}

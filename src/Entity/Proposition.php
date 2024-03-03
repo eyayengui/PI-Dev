@@ -18,14 +18,20 @@ class Proposition
     #[ORM\Column(length: 255)]
     private ?string $title_proposition = null;
 
+    #[ORM\ManyToOne(inversedBy: 'propositions')]
+    private ?Question $question = null;
+
+    #[ORM\Column]
+    private ?int $score = null;
+/*
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'proposition')]
     private Collection $id_Q;
-
+*//*
     public function __construct()
     {
         $this->id_Q = new ArrayCollection();
     }
-
+*/
     public function getId(): ?int
     {
         return $this->id;
@@ -42,10 +48,11 @@ class Proposition
 
         return $this;
     }
-
+/*
     /**
      * @return Collection<int, Question>
      */
+    /*
     public function getIdQ(): Collection
     {
         return $this->id_Q;
@@ -69,6 +76,31 @@ class Proposition
                 $idQ->setProposition(null);
             }
         }
+
+        return $this;
+    }
+*/
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): static
+    {
+        $this->question = $question;
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): static
+    {
+        $this->score = $score;
 
         return $this;
     }

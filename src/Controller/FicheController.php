@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 use DateTime;
-require "../vendor/autoload.php";
 use App\Entity\Fichemedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -167,7 +166,7 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
 
 
 
-    #[Route('/export-pdf/{id}', name: 'app_generer_pdf_historique')]
+    #[Route('/export-pdf/{id}', name: 'app_generer_pdf_historiquee')]
     public function exportPdf($id, FichemedicaleRepository $ficheMedicaleRepository): Response
 {
     // Load the Fiche from the repository
@@ -206,15 +205,6 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
     
     return $response;
 }
-
-
-
-
-
-
-
-
-
 
     #[Route('/generate_qr_code', name: 'generate_qr_code', methods: ['POST'])]
     public function generateQrCode(Request $request): Response
