@@ -1,0 +1,55 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Questionnaires index{% endblock %}
+
+{% block body %}
+<div class="col-12">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">Questionnaires BD</h1>
+            <div class="box-controls pull-right">
+                <div class="lookup lookup-circle lookup-right">
+                    <input type="text" name="s">
+                </div>
+            </div>
+        </div>
+        <div class="box-body no-padding">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Questionnaires</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for questionnaire in questionnaires %}
+                        <tr>
+                            <td>{{ questionnaire.id }}</td>
+                            <td>{{ questionnaire.titleQuestionnaires }}</td>
+                            <td>{{ questionnaire.date ? questionnaire.date|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ questionnaire.description }}</td>
+           
+                            <td>
+                                <a href="{{ path('app_questionnaire_show', {'id': questionnaire.id}) }}">Afficher</a> |
+                                <a href="{{ path('app_questionnaire_edit', {'id': questionnaire.id}) }}">Editer</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3">No records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                &ensp;&ensp;&ensp;&ensp;&ensp;<a href="{{ path('app_questionnaire_new') }}" class ="btn btn-primary"> Ajouter</a>
+                </div>
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock %}

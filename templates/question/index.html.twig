@@ -30,7 +30,11 @@
                             <td>{{ question.questionnaires.id }}</td>
                             <td>{{ question.titleQuestion }}</td>
                             <td>
+<<<<<<< Updated upstream
                                 {% for proposition in question.questions %}
+=======
+                                {% for proposition in question.proposition %}
+>>>>>>> Stashed changes
                                     {{ proposition.titleProposition }}<br>
                                 {% else %}
                                     Pas de propositions

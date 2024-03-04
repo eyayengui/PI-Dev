@@ -1,0 +1,11 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Nouveau Questionnaire{% endblock %}
+
+{% block body %}
+    <h1>Ajouter Questionnaire</h1>
+
+    {{ include('questionnaire/_form.html.twig') }}
+
+    <a href="{{ path('app_questionnaire_index') }}">Retourner</a>
+{% endblock %}

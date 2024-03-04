@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+<<<<<<< Updated upstream
 use App\Form\Question1Type;
 use App\Entity\Proposition;
+=======
+use App\Form\QuestionType;
+>>>>>>> Stashed changes
 use App\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +34,11 @@ class QuestionController extends AbstractController
         $question = new Question();
 
         // Créez le formulaire en utilisant Question1Type, qui inclut maintenant les propositions
+<<<<<<< Updated upstream
         $form = $this->createForm(Question1Type::class, $question);
+=======
+        $form = $this->createForm(QuestionType::class, $question);
+>>>>>>> Stashed changes
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,6 +61,7 @@ class QuestionController extends AbstractController
         ]);
     }
 
+<<<<<<< Updated upstream
 //     #[Route('/new', name: 'app_question_new', methods: ['GET', 'POST'])]
 // public function new(Request $request, EntityManagerInterface $entityManager): Response
 // {
@@ -77,6 +86,8 @@ class QuestionController extends AbstractController
 //     ]);
 // }
 
+=======
+>>>>>>> Stashed changes
     #[Route('/{id}', name: 'app_question_show', methods: ['GET'])]
     public function show(Question $question): Response
     {
@@ -85,6 +96,7 @@ class QuestionController extends AbstractController
         ]);
     }
 
+<<<<<<< Updated upstream
     // #[Route('/{id}/edit', name: 'app_question_edit', methods: ['GET', 'POST'])]
     // public function edit(Request $request, Question $question, EntityManagerInterface $entityManager): Response
     // {
@@ -103,6 +115,8 @@ class QuestionController extends AbstractController
     //     ]);
     // }
 
+=======
+>>>>>>> Stashed changes
     #[Route('/question/{id}/edit', name: 'app_question_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Question $question, EntityManagerInterface $entityManager): Response
     {
@@ -110,7 +124,11 @@ class QuestionController extends AbstractController
         // Cela devrait être le cas si vous utilisez Doctrine et que vos relations sont correctement configurées
 
         // Créez le formulaire pour la question, qui inclut une collection de propositions
+<<<<<<< Updated upstream
         $form = $this->createForm(Question1Type::class, $question);
+=======
+        $form = $this->createForm(QuestionType::class, $question);
+>>>>>>> Stashed changes
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -129,6 +147,7 @@ class QuestionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+<<<<<<< Updated upstream
     
     // #[Route('/delete/{id}', name: 'app_question_delete', methods: ['POST'])]
     // public function delete(Request $request, Question $question, EntityManagerInterface $entityManager): Response
@@ -165,4 +184,43 @@ public function afficher(int $id, EntityManagerInterface $entityManager): Respon
         'question' => $question,
     ]);
 }
+=======
+
+
+    #[Route('/{id}', name: 'app_question_delete', methods: ['POST'])]
+    public function delete(Request $request, Question $question, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$question->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($question);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_question_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/delete/{id}', name: 'app_question_delete')]
+    public function deleteQuestion($id, QuestionRepository $arepo, ManagerRegistry $doctrine): Response
+    {
+
+        $em=$doctrine->getManager();
+        $question=$arepo->find($id) ;
+        $em->remove($question) ;
+        $em->flush();
+
+    return $this->redirectToRoute(('app_question_index'));
+    }
+
+    #[Route('/question/{id}', name: 'app_question_show')]
+    public function afficher(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $question = $entityManager->getRepository(Question::class)->find($id);
+
+        if (!$question) {
+            throw $this->createNotFoundException('La question demandée n\'existe pas.');
+        }
+
+        return $this->render('question/afficher.html.twig', [
+            'question' => $question,
+        ]);
+    }
+>>>>>>> Stashed changes
 }

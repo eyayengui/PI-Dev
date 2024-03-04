@@ -1,20 +1,14 @@
-{% extends 'front.html.twig' %}
-
-{% block title %}{{ question.titleQuestion }}{% endblock %}
+{% extends 'base-front.html.twig' %}
 
 {% block body %}
-
 <body class="custom-cursor">
 
     <div class="custom-cursor__cursor"></div>
     <div class="custom-cursor__cursor-two"></div>
     <div class="page-wrapper">
-    
-
         <div class="stricky-header stricked-menu main-menu">
             <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
         </div><!-- /.stricky-header -->
-
 
         <!--Page Header Start-->
         <section class="page-header">
@@ -22,10 +16,10 @@
             </div>
             <div class="container">
                 <div class="page-header__inner">
-                    <h2>notre formulaire</h2>
+                    <h2>Notre Questionnaire</h2>
                     <ul class="thm-breadcrumb list-unstyled">
-                  
-                        <li>20 questions</li>
+                    
+                        <li>5 Questions</li>
                     </ul>
                 </div>
             </div>
@@ -40,7 +34,7 @@
                         <img src="assets/images/shapes/faq-search-shape-1.png" alt="">
                     </div>
                     <div class="faq-search-box__left">
-                        <h3 class="faq-search-box__title">formulaire de question</h3>
+                        <h3 class="faq-search-box__title">Formulaire de question</h3>
                         <p class="faq-search-box__text">
                             Voici un formulaire de questions pour déterminer si quelqu'un 
                             pourrait bénéficier de consulter un psychiatre</p>
@@ -76,50 +70,27 @@
                             </div>
                         </div>
                     </div>
-                <div class="col-xl-9 col-lg-8">
-                    <div class="faq-page__right">
-                        <div class="question">
-                        <h2>{{ question.titleQuestion }}</h2>
-                        {% if question.questions|length > 0 %}
-                            <form action="{{ path('app_proposition_show', {'id': question.id}) }}" method="POST">
-<<<<<<< Updated upstream
-                             {% for proposition in question.questions %}
-=======
-                             {% for proposition in question.proposition %}
->>>>>>> Stashed changes
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="proposition" id="proposition{{ proposition.id }}" value="{{ proposition.id }}">
-                                    <label class="form-check-label" for="proposition{{ proposition.id }}">
-                                        {{ proposition.titleProposition }}
-                                    </label>
-                                </div>
-                             {% endfor %}
-                            <button type="submit" class="btn btn-primary">Soumettre</button>
-                            </form>
-                        {% else %}
-                            <p>Aucune proposition disponible pour cette question.</p>
-                        {% endif %}
+                    <div class="col-xl-9 col-lg-8">
+                        <div class="faq-page__right">
+                            <h2>Question {{ questionIndex + 1 }}/{{ totalQuestions }}</h2>
+                                <h2>{{ question.titleQuestion }}</h2>
+                                <form id="question-form" action="{{ path('questionnaire_show_question', {'questionnaireId': questionnaire.id, 'questionIndex': questionIndex }) }}" method="post">
+                                    {% for proposition in question.proposition %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="propositionId" id="proposition{{ proposition.id }}" value="{{ proposition.id }}">
+                                            <label class="form-check-label" for="proposition{{ proposition.id }}">
+                                                {{ proposition.titleProposition }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    <button type="submit" class="btn btn-secondary">Suivant</button>
+                                </form>
+
+                                
+                        </div>
                     </div>
-                  </div>
                 </div>
             </div>
-        </div>
         </section>
-        <!--Faq Page End-->
-
-
-    </div><!-- /.page-wrapper -->
-
-<<<<<<< Updated upstream
-
-
-
-
-
-
-=======
->>>>>>> Stashed changes
-    
-</body>
-
+          
 {% endblock %}

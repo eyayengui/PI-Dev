@@ -12,6 +12,10 @@
 			<th scope="col">#</th>
             <th scope="col">Question</th>
 			<th scope="col">Propositions</th>
+<<<<<<< Updated upstream
+=======
+            <th scope="col">Score</th>
+>>>>>>> Stashed changes
 			<th scope="col">Action</th>
 				
 		</tr>
@@ -22,15 +26,31 @@
             <th scope="row">1</th>
             <td>{{ question.titleQuestion }}</td>
             <td>
+<<<<<<< Updated upstream
                 {% for proposition in question.questions %} {# Assurez-vous que vous utilisez le bon nom de propriété pour accéder aux propositions #}
+=======
+                {% for proposition in question.proposition %} {# Assurez-vous que vous utilisez le bon nom de propriété pour accéder aux propositions #}
+>>>>>>> Stashed changes
                     {{ proposition.titleProposition }}<br>
                 {% else %}
                     Pas de propositions
                 {% endfor %}
             </td>
             <td>
+<<<<<<< Updated upstream
                 <a href="{{ path('question_update', {'id': question.id}) }}">Update</a> |
                 <a href="{{ path('question_delete', {'id': question.id}) }}">Delete</a>
+=======
+                {% for proposition in question.proposition %} {# Assurez-vous que vous utilisez le bon nom de propriété pour accéder aux propositions #}
+                    {{ proposition.Score}}<br>
+                {% else %}
+                    Pas de Score
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{{ path('question_update', {'id': question.id}) }}">Update</a> |
+                <a href="{{ path('question_delete', {'id': question.id}) }}">Supprimer</a>
+>>>>>>> Stashed changes
             </td>
         </tr>
         {% endfor %}

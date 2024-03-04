@@ -22,6 +22,7 @@ class PropositionController extends AbstractController
         ]);
     }
 
+<<<<<<< Updated upstream
     // #[Route('/new', name: 'app_proposition_new', methods: ['GET', 'POST'])]
     // public function new(Request $request, EntityManagerInterface $entityManager): Response
     // {
@@ -41,6 +42,8 @@ class PropositionController extends AbstractController
     //         'form' => $form,
     //     ]);
     // }
+=======
+>>>>>>> Stashed changes
 
     #[Route('/{id}', name: 'app_proposition_show', methods: ['GET'])]
     public function show(Proposition $proposition): Response
@@ -64,7 +67,11 @@ class PropositionController extends AbstractController
 
         return $this->renderForm('proposition/edit.html.twig', [
             'proposition' => $proposition,
+<<<<<<< Updated upstream
             'formP' => $form,
+=======
+            'form' => $form,
+>>>>>>> Stashed changes
         ]);
     }
 

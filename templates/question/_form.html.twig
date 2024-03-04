@@ -2,11 +2,19 @@
     
     {{ form_row(form.title_question)  }}
     <br>
+<<<<<<< Updated upstream
     {{ form_row(form.questionnaires) }}
     <h3>Propositions</h3>
     <div id="propositions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
             <div class="proposition-item">
                 {{ form_row(form.questions) }}
+=======
+    {{ form_row(form.questionnaire) }}
+    <h3>Propositions</h3>
+    <div id="propositions-container" data-prototype="{{ form_widget(form.proposition.vars.prototype)|e('html_attr') }}">
+            <div class="proposition-item">
+                {{ form_row(form.proposition) }}
+>>>>>>> Stashed changes
                 <!-- Ajoutez ici d'autres champs de proposition si nécessaire -->
                 <button type="button" class="btn" id="add-proposition-button">Ajouter une proposition</button>
                 {# <button type="button" class="btn remove-proposition-button">Supprimer cette proposition</button> #}
