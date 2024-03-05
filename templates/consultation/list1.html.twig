@@ -1,6 +1,13 @@
 {% extends 'base-back.html.twig' %}
 
+{%block javascript%}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        {{ gc_draw(piechart, 'div_chart') }}
+</script>
+{%endblock%}
 {% block body %}
+
 <style>
     table {
         width: 100%;
@@ -166,6 +173,7 @@
     .search-form button:hover {
         background-color: #0056b3;
     }
+    
 </style>
 
 <div>
@@ -187,7 +195,6 @@
 
     <button type="submit">Chercher</button>
 </form>
-
 
 <div class="consultation-cards">
     {% for consultation in consultations %}
@@ -230,7 +237,6 @@
                     <span class="detail-label">Confirmation:</span>
                     <span class="detail-value">{{ consultation.getConfirmation() ? 'True' : 'False' }}</span>
                 </div>
-               
             </div>
             {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
                  <div class="warning-box">Non confimé</div>
@@ -245,5 +251,10 @@
   <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
 </form>
 </div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        {{ gc_draw(piechart, 'div_chart') }}
+    </script>
+<div id="div_chart"></div>
 
 {% endblock %}

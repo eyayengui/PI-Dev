@@ -229,6 +229,10 @@
                     <span class="detail-value">{{ consultation.getremarques }}</span>
                 </div>
                 <div class="card-detail">
+                    <span class="detail-label">Therapeute:</span>
+                    <span class="detail-value">{{ consultation.getidt.nom }}</span>
+                </div>
+                <div class="card-detail">
                     {% if consultation.isCompleted() %}
                         <div class="completed-box">
                             <span>Achevée</span>
@@ -295,20 +299,6 @@
                                         <label for="{{ formA.remarques.vars.id }}">Remarques:</label>
                                         {{ form_widget(formA.remarques, {'attr': {'placeholder': 'Remarques', 'class': 'form-control'}}) }}
                                         {{ form_errors(formA.remarques) }} {# Display errors for this field #}
-                                    </div>
-                                </div>
-                                <div class="col-xl-12">
-                                    <div class="make-appointment__form-input-box">
-                                        <label for="{{ formA.idp.vars.id }}">Id Patient:</label>
-                                        {{ form_widget(formA.idp, {'attr': {'placeholder': 'Id Patient', 'class': 'form-control'}}) }}
-                                        {{ form_errors(formA.idp) }} {# Display errors for this field #}
-                                    </div>
-                                </div>
-                                <div class="col-xl-12">
-                                    <div class="make-appointment__form-input-box">
-                                        <label for="{{ formA.idt.vars.id }}">Id Thérapeute:</label>
-                                        {{ form_widget(formA.idt, {'attr': {'placeholder': 'Id Thérapeute', 'class': 'form-control'}}) }}
-                                        {{ form_errors(formA.idt) }} {# Display errors for this field #}
                                     </div>
                                 </div>
                             </div>

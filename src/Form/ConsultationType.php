@@ -13,14 +13,6 @@ class ConsultationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('idp', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'nom', // Use the username property as the choice label
-            ])
-            ->add('idt', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'nom', // Use the username property as the choice label
-            ])
             ->add('date_c', null, [
                 'label' => 'Date Consultation:',
             ])

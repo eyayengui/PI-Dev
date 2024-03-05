@@ -1,0 +1,117 @@
+{% extends 'base-front.html.twig' %}
+
+{% block body %}
+<style>
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+   .therapist-name {
+    background-color: #134b5f; /* Updated color */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.therapist-name h5 {
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 0;
+    text-transform: capitalize;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+.btn-primary {
+    background-color: #134b5f; /* Updated color */
+    border-color: #134b5f; /* Updated color */
+}
+
+.btn-primary:hover {
+    background-color: #0f3f4f; /* Darker shade on hover */
+    border-color: #0f3f4f; /* Darker shade on hover */
+}
+    .card-subtitle,
+    .card-text {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+        opacity: 1; /* Set opacity to 1 */
+    }
+
+    .card-text {
+        margin-bottom: 1rem;
+        opacity: 1; /* Set opacity to 1 */
+    }
+
+    .attribute-container {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center; /* Moved alignment here */
+}
+
+.attribute-container .card-subtitle {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.attribute-container .card-text {
+    margin-bottom: 0;
+}
+
+.attribute-label {
+    margin-right: 0.5rem;
+    color: #666;
+    opacity: 1; /* Set opacity to 1 */
+}
+
+.attribute-value {
+    color: #777;
+    opacity: 1; /* Set opacity to 1 */
+}
+</style>
+
+
+
+
+
+<div class="container mt-4">
+    <div class="row">
+        {% for user in users %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="therapist-name">
+                        <h5>{{ user.nom }} {{ user.prenom }}</h5>
+                    </div>
+                    <div class="attribute-container">
+                        <span class="attribute-label">Email:</span>
+                        <span class="attribute-value">{{ user.email }}</span>
+                    </div>
+                    <div class="attribute-container">
+                        <span class="attribute-label">Age:</span>
+                        <span class="attribute-value">{{ user.age }}</span>
+                    </div>
+                    <a href="{{ path('addconsultation', {'id': user.id}) }}" class="btn btn-primary">Réserver Consultation</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}

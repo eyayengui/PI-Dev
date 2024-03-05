@@ -15,12 +15,24 @@ use App\Entity\Consultation;
 use App\Form\ConsultationType;
 use App\Form\ConsultationType1Type;
 use App\Repository\FichemedicaleRepository;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Security\Core\Security;
+use App\Repository\UserRepository;
 class ConsultationController extends AbstractController
 {
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
+
     #[Route('/consultation', name: 'app_consultation')]
     public function index(): Response
     {
@@ -29,10 +41,16 @@ class ConsultationController extends AbstractController
         ]);
     }
     #[Route('/listaddconsultation', name: 'Listaddconsultation')]
-    public function Listaddconsultation(EntityManagerInterface $em,ConsultationRepository $CRepo, Request $request ): Response
+    public function Listaddconsultation(EntityManagerInterface $em,ConsultationRepository $CRepo, Request $request,Security $security ): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $con =New Consultation;
-    $cons =$CRepo->findByPatientId();
+    $con->setIdp($user);
+    $cons =$CRepo->findByPatientId($user);
     $form=$this->createform(ConsultationType::class,$con);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()){
@@ -44,12 +62,46 @@ class ConsultationController extends AbstractController
     }
 
 
-    #[Route('/Calendar', name: 'calendar')]
-public function calendar(ConsultationRepository $consultationRepository): Response
-{
-    $consultations = $consultationRepository->findByPatientId();
-    $events = [];
 
+
+
+
+    #[Route('/addconsultation/{id}', name: 'addconsultation')]
+    public function Addconsultation($id,EntityManagerInterface $em,ConsultationRepository $CRepo, Request $request,Security $security,UserRepository $urepo): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+    $con =New Consultation;
+    $con->setIdp($user);
+    $therap=$urepo->find($id);
+    $con->setIdt($therap);
+    $form=$this->createform(ConsultationType::class,$con);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()){
+    $em->persist($con);
+    $em->flush();
+    return $this->redirectToRoute('app_therap_index');
+    }
+    return $this->render('consultation/add.html.twig',['formA' =>$form->createView()]);
+    }
+
+
+
+
+
+
+    #[Route('/Calendar', name: 'calendar')]
+public function calendar(ConsultationRepository $consultationRepository,Security $security): Response
+{
+    $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+    $consultations = $consultationRepository->findByPatientId($user);
     foreach ($consultations as $consultation) {
         $events[] = [
             'id' => $consultation->getId(),
@@ -57,19 +109,22 @@ public function calendar(ConsultationRepository $consultationRepository): Respon
             'start' => $consultation->getDateC()->format('Y-m-d'),
         ];
     }
-
     $data = json_encode($events);
-
     return $this->render('consultation/calendar.html.twig', [
         'data' => $data,
     ]);
 }
 
     #[Route('/listaddconsultation1', name: 'Listaddconsultation1')]
-    public function Listaddconsultation1(ConsultationRepository $CRepo, Request $request,FichemedicaleRepository $fichemedicaleRepository): Response
+    public function Listaddconsultation1(ConsultationRepository $CRepo,FichemedicaleRepository $fichemedicaleRepository,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $fiche = $fichemedicaleRepository->find(0);
-    $cons = $CRepo->findByTherapistId();
+    $cons = $CRepo->findByTherapistId($user);
     return $this->render('consultation/list.html.twig', [
         'consultations' => $cons,
         'fiche' => $fiche,
@@ -82,9 +137,32 @@ public function calendar(ConsultationRepository $consultationRepository): Respon
     {
     $fiche = $fichemedicaleRepository->find(0);
     $cons = $CRepo->findAll();
+    $confirmedCount = $CRepo->countConfirmedConsultations();
+    $unconfirmedCount = $CRepo->countUnconfirmedConsultations();
+
+    // Create a new PieChart instance
+    $pieChart = new PieChart();
+
+    // Define chart data
+    $pieChart->getData()->setArrayToDataTable([
+        ['Status', 'Count'],
+        ['Confirmed', $confirmedCount],
+        ['Unconfirmed', $unconfirmedCount],
+    ]);
+
+    // Set chart options
+    $pieChart->getOptions()->setTitle('état de confirmation des consultations');
+    $pieChart->getOptions()->setHeight(500);
+    $pieChart->getOptions()->setWidth(900);
+    $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
+    $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+    $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
     return $this->render('consultation/list1.html.twig', [
         'consultations' => $cons,
         'fiche' => $fiche,
+        'piechart' => $pieChart,
     ]);
     }
 
@@ -239,24 +317,33 @@ public function calendar(ConsultationRepository $consultationRepository): Respon
         ]);
     }
 
-    #[Route('/send_confirmation', name: 'send_emailconf')]
-    public function sendEmail(Request $request): Response
+    #[Route('/send_confirmation/{id}', name: 'send_emailconf')]
+    public function sendEmail($id,Request $request,Security $security,UserRepository $urepo,ConsultationRepository $crepo): Response
     {         
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+        $c=$crepo->find($id);
+        $s = $urepo->find($user);
+        $sendto=$s->getEmail();
         $transport = Transport::fromDsn('smtp://brahemraed@gmail.com:xrvvnqxmpikopuvb@smtp.gmail.com:587');
         $mailer = new Mailer($transport);
         $email = (new Email());
         $email->from('brahemraed@gmail.com');
-        $email->to('brahemraed6@gmail.com');
+        $email->to($sendto);
         $email->subject('Consultation Confirmée');
-        $email->text('La consultation que vous avez réservée est confirmée pour le 27/9/2027');
-        $email->html('
+        $email->text('La consultation que vous avez réservée est confirmée pour le ' . $c->getDateC()->format('Y-m-d'));
+
+       /* $email->html('
             <h1 style="color: #fff300; background-color: #0073ff; width: 500px; padding: 16px 0; text-align: center; border-radius: 50px;">
             Consultation confirmée !.
             </h1>
             <h1 style="color: #ff0000; background-color: #5bff9c; width: 500px; padding: 16px 0; text-align: center; border-radius: 50px;">
             27/9/2027
             </h1>
-        ');
+        ');*/
         //$email->embed(fopen('image_1.png', 'r'), 'Image_Name_1');
         //$email->embed(fopen('image_2.jpg', 'r'), 'Image_Name_2');
         try {
@@ -265,6 +352,7 @@ public function calendar(ConsultationRepository $consultationRepository): Respon
         } catch (TransportExceptionInterface $e) {
             return new Response('<h1>Error while sending email!</h1>');
         }
+    
     }
 }
 

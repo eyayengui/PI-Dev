@@ -16,14 +16,7 @@ class ConsultationType1Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
 {
     $builder
-        ->add('idp', EntityType::class, [
-            'class' => User::class,
-            'choice_label' => 'nom', // Use the username property as the choice label
-        ])
-        ->add('idt', EntityType::class, [
-            'class' => User::class,
-            'choice_label' => 'nom', // Use the username property as the choice label
-        ])
+
         ->add('fichemedicale', EntityType::class, [
             'class' => Fichemedicale::class,
             'choice_label' => 'id',
@@ -61,4 +54,5 @@ class ConsultationType1Type extends AbstractType
             'data_class' => Consultation::class,
         ]);
     }
+    
 }

@@ -47,20 +47,20 @@ class ConsultationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-public function findByPatientId(): array
+public function findByPatientId($id): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.idp = :patientId')
-            ->setParameter('patientId', 5)
+            ->setParameter('patientId',$id)
             ->getQuery()
             ->getResult();
     }
 
-public function findByTherapistId(): array
+public function findByTherapistId($id): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.idt = :therapistId')
-            ->setParameter('therapistId', 5) // Change 5 to the desired therapist ID
+            ->setParameter('therapistId',$id) // Change 5 to the desired therapist ID
             ->getQuery()
             ->getResult();
     }
@@ -90,5 +90,24 @@ public function findConsultationsBetweenDates(DateTime $startDate, DateTime $end
             ->orderBy('c.date_c', 'DESC') // Order by dateC in ascending order
             ->getQuery()
             ->getResult();
+    }
+    public function countConfirmedConsultations(): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->andWhere('c.confirmation = :confirmed')
+            ->setParameter('confirmed', true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countUnconfirmedConsultations(): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->andWhere('c.confirmation = :confirmed')
+            ->setParameter('confirmed', false)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

@@ -254,7 +254,7 @@
                  <div class="warning-box">Non confimé</div>
             {% endif %}
             {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == true %}
-                <form action="{{ path('send_emailconf') }}" method="post">
+                <form action="{{ path('send_emailconf', {'id': consultation.getid()}) }}" method="post">
                     <button id="send-email-btn" class="light-green-button" type="submit">Send Email</button>
                 </form>
             {% endif %}

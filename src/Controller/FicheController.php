@@ -27,8 +27,20 @@ use Knp\Component\Pager\PaginatorInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Endroid\QrCode\Label\LabelAlignment;
+use Symfony\Component\Security\Core\Security;
+
 class FicheController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
+
+
+    
     #[Route('/fiche', name: 'app_fiche')]
     public function index(): Response
     {
@@ -61,13 +73,6 @@ class FicheController extends AbstractController
         $fs = $fRepo->findAllExcept0();
         return $this->render('fiche/list.html.twig', ['fiches' => $fs]);
     }
-
-
-
-
-
-
-
 
 
     #[Route('/editfiche/{id}', name: 'edit_fiche')]

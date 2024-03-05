@@ -118,20 +118,7 @@
                                         {{ form_errors(formC.remarques) }} {# Display errors for this field #}
                                     </div>
                                 </div>
-                                <div class="col-xl-6 col-lg-6">
-                                    <div class="make-appointment__form-input-box">
-                                        <label for="{{ formC.idp.vars.id }}">Id Patient:</label>
-                                        {{ form_widget(formC.idp, {'attr': {'placeholder': 'Id Patient', 'class': 'form-control'}}) }}
-                                        {{ form_errors(formC.idp) }} {# Display errors for this field #}
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6">
-                                    <div class="make-appointment__form-input-box">
-                                        <label for="{{ formC.idt.vars.id }}">Id Thérapeute:</label>
-                                        {{ form_widget(formC.idt, {'attr': {'placeholder': 'Id Thérapeute', 'class': 'form-control'}}) }}
-                                        {{ form_errors(formC.idt) }} {# Display errors for this field #}
-                                    </div>
-                                </div>
+
                                 <div class="col-xl-6 col-lg-6">
                                 <div class="make-appointment__form-input-box">
                                     <label for="{{ formC.confirmation.vars.id }}">Confirmation:</label>

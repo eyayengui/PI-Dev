@@ -31,6 +31,36 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/listtherap', name: 'app_therap_index', methods: ['GET'])]
+    public function indext(UserRepository $userRepository, PaginatorInterface $paginatorInterface,Request $request): Response
+    {
+        $data = $this->findAllTherapists($userRepository);
+        $users = $paginatorInterface->paginate(
+            $data,
+            $request->query->getInt('page',1),
+            9
+        );
+        return $this->render('admin/therapists.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+        public function findAllTherapists(UserRepository $userRepository): array
+    {
+        $users = $userRepository->findAll(); // Retrieve all users
+
+        $therapists = [];
+        foreach ($users as $user) {
+            if (in_array('ROLE_THERAPEUTE', $user->getRoles(), true)) { // Ensure strict comparison
+                $therapists[] = $user;
+            }
+        }
+
+        return $therapists;
+    }
+
+
+
     #[Route('/new', name: 'app_admin_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
