@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questionnaire Summary</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1, h2 { color: #333; }
+        .summary { margin-top: 20px; }
+        .question { margin-top: 15px; }
+        .response { margin-left: 20px; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Questionnaire Summary</h1>
+    <h2>{{ questionnaire.titleQuestionnaire }}</h2>
+    <div class="summary">
+        <p>Health Status: {{ healthStatus }}</p>
+        {% for question in questionnaire.questions %}
+            <div class="question">
+                <strong>Q: {{ question.titleQuestion }}</strong>
+                {% for answer in question.answers %}
+                    <div class="response">Response: {{ answer.propositionChoisie.titleProposition }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

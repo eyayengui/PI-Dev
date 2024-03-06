@@ -1,0 +1,82 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}New Question{% endblock %}
+
+{% block body %}
+<div class="col-12">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Ajouter Question</h3>
+            <br>
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}    <br>
+               <div class="form-group">
+                <h5>Title Question <span class="text-danger">*</span></h5>
+                    <div class="controls">
+                        {{ form_row(form.title_question, {
+                            'attr': {'class': 'form-control', 'required': 'required'},
+                            'label': false
+                        }) }}
+                    </div>
+                </div>
+               <div class="form-group">
+                    <h5>Questionnaire <span class="text-danger">*</span></h5>
+                    <div class="controls">
+                        {{ form_row(form.questionnaire, {
+                            'attr': {'class': 'form-control', 'required': 'required'},
+                            'label': false
+                        }) }}
+                    </div>
+                </div>
+               <div class="form-group">
+                    <h5>Propositions <span class="text-danger">*</span></h5>
+                    <div class="controls" id="propositions-container"  data-prototype="{{ form_widget(form.propositions.vars.prototype)|e('html_attr') }}">
+                        <!-- Existing propositions will be inserted here -->
+                    </div>
+                    <button type="button" class="btn btn-info" id="add-proposition-button">Ajouter une proposition</button>
+                </div>
+                
+                <button type="submit" class="btn btn-secondary">Enregistrer</button>
+                <a href="{{ path('app_question_index') }}" class="btn">Retourner</a>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>   
+      
+   
+<script>
+document.getElementById('add-proposition-button').addEventListener('click', function() {
+    const container = document.getElementById('propositions-container');
+    let index = container.querySelectorAll('.proposition-item').length;
+    let newForm = container.getAttribute('data-prototype');
+    newForm = newForm.replace(/__name__/g, index);
+
+    const formGroupDiv = document.createElement('div');
+    formGroupDiv.classList.add('form-group');
+
+    const newFormDiv = document.createElement('div');
+    newFormDiv.classList.add('proposition-item', 'controls');
+    newFormDiv.innerHTML = newForm;
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = 'Supprimer cette proposition';
+    removeButton.classList.add('btn', 'btn-danger', 'remove-proposition-button');
+    removeButton.addEventListener('click', function() {
+        formGroupDiv.remove();
+    });
+
+    newFormDiv.appendChild(removeButton);
+    formGroupDiv.appendChild(newFormDiv);
+    container.appendChild(formGroupDiv);
+});
+
+// Attach event listeners to existing remove buttons
+document.querySelectorAll('.remove-proposition-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        button.closest('.form-group').remove();
+    });
+});
+</script>
+
+
+{% endblock %}

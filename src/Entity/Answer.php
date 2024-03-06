@@ -21,6 +21,9 @@ class Answer
     #[ORM\JoinColumn(nullable: false)]
     private ?Proposition $proposition_Choisie = null;
 
+    #[ORM\ManyToOne(inversedBy: 'answers')]
+    private ?User $ID_User = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +49,18 @@ class Answer
     public function setPropositionChoisie(Proposition $proposition_Choisie): static
     {
         $this->proposition_Choisie = $proposition_Choisie;
+
+        return $this;
+    }
+
+    public function getIDUser(): ?User
+    {
+        return $this->ID_User;
+    }
+
+    public function setIDUser(?User $ID_User): static
+    {
+        $this->ID_User = $ID_User;
 
         return $this;
     }

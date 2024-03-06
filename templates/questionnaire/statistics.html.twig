@@ -1,0 +1,51 @@
+
+{# templates/questionnaire/statistics.html.twig #}
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Questionnaire Statistics{% endblock %}
+
+
+{% block body %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h2>Statistiques du Questionnaire</h2>
+<h4>Statistiques pour compter combien d'utilisateurs ont répondu à nos questionnaires</h4>
+<section class="content">
+					<div class="box">
+						<div class="box-body">
+							<h4 class="box-title">Bar Chart</h4>
+							<div>
+								<canvas id="userStatisticsChart" width="400" height="200"></canvas>
+
+							</div>
+						</div>
+					</div>
+<script>
+    var ctx = document.getElementById('userStatisticsChart').getContext('2d');
+    var userStatisticsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ questionnaireIds|json_encode|raw }},
+            datasets: [{
+                label: '# of Users',
+                data: {{ userCounts|json_encode|raw }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+    <script src="{{ asset('back-office/assets/assets/vendor_components/chart.js-master/Chart.min.js') }}"></script>
+	<script src="{{ asset('back-office/js/pages/widget-charts2.js') }}"></script>
+	
+{% endblock %}

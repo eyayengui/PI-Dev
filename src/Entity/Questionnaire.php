@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionnaireRepository::class)]
-class Questionnaire
+class Questionnaire  
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,9 +19,9 @@ class Questionnaire
     #[ORM\Column(length: 255)]
     private ?string $title_questionnaire = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $id_U = null;
+    // #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?User $ID_User = null;
 
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'questionnaire')]
     private Collection $questions;
@@ -31,6 +31,10 @@ class Questionnaire
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\ManyToOne(inversedBy: 'questionnaires')]
+    private ?User $ID_User = null;
+
 
     public function __construct()
     {
@@ -54,17 +58,17 @@ class Questionnaire
         return $this;
     }
 
-    public function getIdU(): ?User
-    {
-        return $this->id_U;
-    }
+    // public function getIDUser(): ?User
+    // {
+    //     return $this->ID_User;
+    // }
 
-    public function setIdU(User $id_U): static
-    {
-        $this->id_U = $id_U;
+    // public function setIDUser(User $ID_User): static
+    // {
+    //     $this->ID_User = $ID_User;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Question>
@@ -116,6 +120,18 @@ class Questionnaire
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getIDUser(): ?User
+    {
+        return $this->ID_User;
+    }
+
+    public function setIDUser(?User $ID_User): static
+    {
+        $this->ID_User = $ID_User;
 
         return $this;
     }

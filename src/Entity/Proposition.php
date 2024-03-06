@@ -23,6 +23,9 @@ class Proposition
 
     #[ORM\Column]
     private ?int $score = null;
+
+    #[ORM\ManyToOne(inversedBy: 'propositions')]
+    private ?User $ID_User = null;
 /*
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'proposition')]
     private Collection $id_Q;
@@ -104,4 +107,21 @@ class Proposition
 
         return $this;
     }
+
+    public function getIDUser(): ?User
+    {
+        return $this->ID_User;
+    }
+
+    public function setIDUser(?User $ID_User): static
+    {
+        $this->ID_User = $ID_User;
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+    return $this->title_proposition;
+    }
+
 }

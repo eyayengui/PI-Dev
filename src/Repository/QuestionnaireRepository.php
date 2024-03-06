@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Answer;
 use App\Entity\Questionnaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,6 +21,29 @@ class QuestionnaireRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Questionnaire::class);
     }
+
+    public function countByUser($questionnaireId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('COUNT(DISTINCT ans.ID_User)')
+        ->from(Answer::class, 'ans')
+        ->innerJoin('ans.question', 'q')
+        ->where('q.questionnaire = :questionnaireId')
+        ->setParameter('questionnaireId', $questionnaireId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+    public function findAllQuestionnairesWithUserCount()
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->select('q.id AS questionnaireId, COUNT(DISTINCT a.ID_User) AS userCount')
+            ->leftJoin('q.questions', 'qs')
+            ->leftJoin('qs.answers', 'a')
+            ->groupBy('q.id');
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return Questionnaire[] Returns an array of Questionnaire objects

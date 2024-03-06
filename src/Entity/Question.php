@@ -21,11 +21,14 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'questions')]
     private ?Questionnaire $questionnaire = null;
 
-    #[ORM\OneToMany(targetEntity: Proposition::class, mappedBy: 'question')]
+    #[ORM\OneToMany(targetEntity: Proposition::class, mappedBy: 'question', cascade:["persist","remove"])]
     private Collection $propositions;
 
     #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
     private Collection $answers;
+
+    #[ORM\ManyToOne(inversedBy: 'questions')]
+    private ?User $ID_User = null;
 
     public function __construct()
     {
@@ -134,6 +137,18 @@ public function removeAnswer(Answer $answer): static
             $answer->setQuestion(null);
         }
     }
+
+    return $this;
+}
+
+public function getIDUser(): ?User
+{
+    return $this->ID_User;
+}
+
+public function setIDUser(?User $ID_User): static
+{
+    $this->ID_User = $ID_User;
 
     return $this;
 }
