@@ -18,6 +18,8 @@ use App\Repository\CommentaireRepository;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Like;
 use App\Repository\LikeRepository;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 
 class PublicationController extends AbstractController
 {
@@ -296,8 +298,9 @@ public function showPublicationDetails($id, PublicationRepository $publicationRe
     ]);
 }
 
+
 #[Route("/publication/{id}/add-comment", name: "add_comment")]
-public function addComment($id, Request $request, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response
+public function addComment($id, Request $request, PublicationRepository $publicationRepo, EntityManagerInterface $em, HubInterface $hub): Response
 {
     $publication = $publicationRepo->find($id);
     if (!$publication) {
@@ -316,6 +319,13 @@ public function addComment($id, Request $request, PublicationRepository $publica
             $em->persist($commentaire);
             $em->flush();
 
+            // Publier une mise à jour Mercure
+            $update = new Update(
+                'publication/' . $id,
+                json_encode(['user' => $user->getUsername(), 'message' => $commentaire->getContenuC()])
+            );
+            $hub->publish($update);
+
             $this->addFlash('success', 'Commentaire ajouté avec succès!');
             return $this->redirectToRoute('publication_details', ['id' => $id]);
         } else {
@@ -326,6 +336,37 @@ public function addComment($id, Request $request, PublicationRepository $publica
 
     return $this->redirectToRoute('publication_details', ['id' => $id]);
 }
+
+// #[Route("/publication/{id}/add-comment", name: "add_comment")]
+// public function addComment($id, Request $request, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response
+// {
+//     $publication = $publicationRepo->find($id);
+//     if (!$publication) {
+//         throw $this->createNotFoundException('La publication n\'existe pas.');
+//     }
+
+//     $commentaire = new Commentaire();
+//     $form = $this->createForm(CommentaireType::class, $commentaire);
+//     $form->handleRequest($request);
+//     if ($form->isSubmitted() && $form->isValid()) {
+//         $user = $this->getUser();
+//         if ($user) {
+//             $commentaire->setIDUser($user);
+//             $commentaire->setPublication($publication);
+
+//             $em->persist($commentaire);
+//             $em->flush();
+
+//             $this->addFlash('success', 'Commentaire ajouté avec succès!');
+//             return $this->redirectToRoute('publication_details', ['id' => $id]);
+//         } else {
+//             $this->addFlash('error', 'Vous devez être connecté pour ajouter un commentaire.');
+//             return $this->redirectToRoute('app_login');
+//         }
+//     }
+
+//     return $this->redirectToRoute('publication_details', ['id' => $id]);
+// }
 
 #[Route("/like/{id}", name: "like_publication")]
 public function likePublication($id, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response

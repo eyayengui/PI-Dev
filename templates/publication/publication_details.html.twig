@@ -98,33 +98,29 @@
                                     {% endfor %}
                                 </div>
                                 <h3 class="comment-one__title">{{ commentairesParPublication[publication.id] }} Comments</h3>
-                                {% for commentaire in commentaires %}
-                                <div class="comment-one">
-                                    
-                                    <div class="comment-one__single">
-                                        <div class="comment-one__image">
-                                            <img src="{{ asset('front-office/images/blog/comment-1-1.jpg') }}" alt="">
+                             <div id="comment-section">
+    {% for commentaire in commentaires %}
+        <div class="comment-one">
+            <div class="comment-one__single">
+                <div class="comment-one__image">
+                    <img src="{{ asset('front-office/images/blog/comment-1-1.jpg') }}" alt="">
+                </div>
+                <div class="comment-one__content">
+                    <h3>user: {{ commentaire.IDUser.nom }}</h3>
+                    <p>{{ commentaire.getContenuC() }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
-                                        </div>
-                                        <div class="comment-one__content">
-                                            <h3>user:{{ commentaire.IDUser.nom }}</h3>
-                                            <p>{{ commentaire. getContenuC() }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                                                    <a href="{{ path('edit_commentaire', {'id': commentaire.id}) }}">Edit</a>
-                                            <form method="post" action="{{ path('delete_commentaire', {'id': commentaire.id}) }}" style="display: inline;">
-                                                <input type="hidden" name="_method" value="POST">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
-                                                <button type="submit" style="border: none; background: none; padding: 0; color: pink; text-decoration: underline; cursor: pointer;">Delete</button>
-                                                </form>
+<div id="new-comment-section"></div>
 
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
+
                                 <div class="comment-form">
                                 <h3 class="comment-form__title">Leave a Comment</h3>
                                                     {# Assuming 'form' represents the Commentaire form #}
-                            <form action="{{ path('add_comment', {'id': publication.id}) }}" method="post" class="comment-one__form contact-form-validated" novalidate>
+                            <form action="{{ path('add_comment', {'id': publication.id}) }}" method="post" class="comment-one__form contact-form-validated" nov alidate>
                                 {{ form_start(formB) }}
                                 <div class="row">
                                     <div class="col-xl-12">
@@ -192,6 +188,31 @@
             window.location.href = this.getAttribute('data-href');
         });
     });
+</script>
+<script>
+    const url = new URL('http://localhost:3000/.well-known/mercure');
+    url.searchParams.append('topic', 'publication/{{ publication.id }}');
+
+    const eventSource = new EventSource(url);
+    eventSource.onmessage = event => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+
+        // Ajouter le nouveau commentaire à la liste des commentaires
+        const commentSection = document.getElementById('comment-section');
+        const newComment = document.createElement('div');
+        newComment.classList.add('comment-one__single');
+        newComment.innerHTML = `
+            <div class="comment-one__image">
+                <img src="{{ asset('front-office/images/blog/comment-1-1.jpg') }}" alt="">
+            </div>
+            <div class="comment-one__content">
+                <h3>user: ${data.user}</h3>
+                <p>${data.message}</p>
+            </div>
+        `;
+        commentSection.appendChild(newComment);
+    };
 </script>
 
 

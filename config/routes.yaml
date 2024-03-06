@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+add_comment:
+    path: /publication/{id}/add-comment
+    controller: App\Controller\PublicationController::addComment
+    methods: [GET, POST]
