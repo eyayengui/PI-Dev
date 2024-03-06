@@ -17,13 +17,13 @@ class ConsultationType1Type extends AbstractType
 {
     $builder
 
-        ->add('fichemedicale', EntityType::class, [
+        /*->add('fichemedicale', EntityType::class, [
             'class' => Fichemedicale::class,
             'choice_label' => 'id',
             'multiple' => false,
             'expanded' => false,
             'label' => 'Id fiche medicale:',
-        ])
+        ])*/
         ->add('date_c', null, [
             'label' => 'Date Consultation:', 
             'disabled' => true, // Disable the label

@@ -22,16 +22,16 @@ use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Core\Security;
 use App\Repository\UserRepository;
+use Knp\Component\Pager\PaginatorInterface;
+
 class ConsultationController extends AbstractController
 {
 
     private $security;
-
     public function __construct(Security $security)
     {
         $this->security = $security;
     }
-
 
     #[Route('/consultation', name: 'app_consultation')]
     public function index(): Response
@@ -51,19 +51,9 @@ class ConsultationController extends AbstractController
     $con =New Consultation;
     $con->setIdp($user);
     $cons =$CRepo->findByPatientId($user);
-    $form=$this->createform(ConsultationType::class,$con);
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()){
-    $em->persist($con);
-    $em->flush();
-    return $this->redirectToRoute('Listaddconsultation');
+
+    return $this->render('consultation/listadd.html.twig', ['consultations' => $cons]);
     }
-    return $this->render('consultation/listadd.html.twig',['formA' =>$form->createView(),'consultations'=>$cons]);
-    }
-
-
-
-
 
 
     #[Route('/addconsultation/{id}', name: 'addconsultation')]
@@ -133,17 +123,18 @@ public function calendar(ConsultationRepository $consultationRepository,Security
 
 
     #[Route('/listaddconsultation2', name: 'Listaddconsultation2')]
-    public function Listaddconsultation2(ConsultationRepository $CRepo, Request $request,FichemedicaleRepository $fichemedicaleRepository): Response
+    public function Listaddconsultation2(ConsultationRepository $CRepo, Request $request,FichemedicaleRepository $fichemedicaleRepository,PaginatorInterface $paginatorInterface): Response
     {
     $fiche = $fichemedicaleRepository->find(0);
     $cons = $CRepo->findAll();
     $confirmedCount = $CRepo->countConfirmedConsultations();
     $unconfirmedCount = $CRepo->countUnconfirmedConsultations();
-
-    // Create a new PieChart instance
+    $cons = $paginatorInterface->paginate(
+        $cons,
+        $request->query->getInt('page', 1),
+        4
+    );
     $pieChart = new PieChart();
-
-    // Define chart data
     $pieChart->getData()->setArrayToDataTable([
         ['Status', 'Count'],
         ['Confirmed', $confirmedCount],

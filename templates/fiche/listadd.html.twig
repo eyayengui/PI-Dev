@@ -341,42 +341,4 @@
 </div>
     </div>
     {% endfor %}
-</div>
-
-<div class="form-container">
-    {{ form_start(formB, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div class="form-group">
-        {{ form_label(formB.id_p) }}
-        {{ form_widget(formB.id_p, {'attr': {'placeholder': 'Enter Id Patient'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_p) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.id_t) }}
-        {{ form_widget(formB.id_t, {'attr': {'placeholder': 'Enter Id Therapeute'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_t) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.date_creation) }}
-        {{ form_widget(formB.date_creation) }}
-        <div class="error-message">
-            {{ form_errors(formB.date_creation) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.derniere_maj) }}
-        {{ form_widget(formB.derniere_maj) }}
-        <div class="error-message">
-            {{ form_errors(formB.derniere_maj) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_widget(formB.Ajouter, {'label': 'Submit', 'attr': {'class': 'submit-button'}}) }}
-    </div>
-    {{ form_end(formB) }}
-</div>
-
 {% endblock %}

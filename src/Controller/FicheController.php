@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FicheType;
+use App\Repository\ConsultationRepository;
 use App\Repository\FichemedicaleRepository;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
@@ -28,6 +29,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Endroid\QrCode\Label\LabelAlignment;
 use Symfony\Component\Security\Core\Security;
+use App\Repository\UserRepository;
 
 class FicheController extends AbstractController
 {
@@ -37,8 +39,6 @@ class FicheController extends AbstractController
     {
         $this->security = $security;
     }
-
-
 
     
     #[Route('/fiche', name: 'app_fiche')]
@@ -51,33 +51,81 @@ class FicheController extends AbstractController
 
 
     #[Route('/listaddfiche', name: 'listaddfiche')]
-    public function ListaddFiche(EntityManagerInterface $em,FichemedicaleRepository $fRepo, Request $request ): Response
-    {
+    public function ListaddFiche(EntityManagerInterface $em,FichemedicaleRepository $fRepo, Request $request,Security $security ): Response
+    {$user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $f =New Fichemedicale;
-    $fs =$fRepo->findAllExcept0();
+    $f->setidp($user);
+    $fs =$fRepo->findByTherapistId($user);
     $form=$this->createform(FicheType::class,$f);
     $form->handleRequest($request);
     if ($form->isSubmitted()&& $form->isValid()){
     $em->persist($f);
     $em->flush();
-    return $this->redirectToRoute('listaddfiche');
+    return $this->redirectToRoute('listaddconsultation');
     }
     return $this->render('fiche/listadd.html.twig',['formB' =>$form->createView(),'fiches'=>$fs]);
     }
 
 
-
-    #[Route('/listaddfiche1', name: 'listaddfiche1')]
-    public function ListaddFiche1(EntityManagerInterface $em, FichemedicaleRepository $fRepo, Request $request): Response
-    {
-        $fs = $fRepo->findAllExcept0();
-        return $this->render('fiche/list.html.twig', ['fiches' => $fs]);
+    #[Route('/addfiche/{id}', name: 'addfiche')]
+    public function addFiche($id,EntityManagerInterface $em,FichemedicaleRepository $fRepo, Request $request,Security $security,UserRepository $urepo): Response
+    {$user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+    $p=$urepo->find($id);
+    $f =New Fichemedicale;
+    $f->setidp($user);
+    $f->setIdT($p);
+    $fs =$fRepo->findByTherapistId($user);
+    $form=$this->createform(FicheType::class,$f);
+    $form->handleRequest($request);
+    if ($form->isSubmitted()&& $form->isValid()){
+    $em->persist($f);
+    $em->flush();
+    return $this->redirectToRoute('Listaddconsultation1');
+    }
+    return $this->render('fiche/add.html.twig',['formB' =>$form->createView(),'fiches'=>$fs]);
     }
 
 
+
+    #[Route('/listaddfiche1', name: 'listaddfiche1')]
+public function ListaddFiche1(EntityManagerInterface $em, FichemedicaleRepository $fRepo, Request $request, Security $security, PaginatorInterface $paginatorInterface): Response
+{
+    $user = $security->getUser();
+    if (!$user) {
+        $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+        return $this->redirectToRoute('app_login');
+    }
+    
+    // Fetch all fiches except those with ID 0
+    $fs = $fRepo->findAllExcept0();
+
+    // Paginate the results
+    $fiches = $paginatorInterface->paginate(
+        $fs,
+        $request->query->getInt('page', 1),
+        4
+    );
+    return $this->render('fiche/list.html.twig', ['fiches' => $fiches]);
+}
+
+
+
     #[Route('/editfiche/{id}', name: 'edit_fiche')]
-    public function editFiche($id, FicheMedicaleRepository $frepo, Request $request, EntityManagerInterface $em): Response
+    public function editFiche($id, FicheMedicaleRepository $frepo, Request $request, EntityManagerInterface $em,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $f = $frepo->find($id);
     if (!$f) {
         return new Response("fiche introuvable", Response::HTTP_NOT_FOUND);
@@ -96,8 +144,13 @@ class FicheController extends AbstractController
 
 
     #[Route('/deletefiche/{id}', name: 'supp_fiche')]
-    public function deletefiche($id, FicheMedicaleRepository $arepo, ManagerRegistry $doctrine): Response
+    public function deletefiche($id, FicheMedicaleRepository $arepo, ManagerRegistry $doctrine,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $em = $doctrine->getManager();
     $f = $arepo->find($id);
     if (!$f) {
@@ -109,8 +162,13 @@ class FicheController extends AbstractController
 }
 
 #[Route('/ficheMedicaleOrderedByDateCreation', name: 'fiche_medicale_ordered_by_date_creation')]
-public function ficheMedicaleOrderedByDateCreation(FicheMedicaleRepository $ficheMedicaleRepository): Response
+public function ficheMedicaleOrderedByDateCreation(FicheMedicaleRepository $ficheMedicaleRepository,Security $security): Response
 {
+    $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $fiches = $ficheMedicaleRepository->findAllFicheMedicaleOrderedByDateCreation();
     return $this->render('fiche/orderbydate.html.twig', [
         'fiches' => $fiches,
@@ -118,16 +176,26 @@ public function ficheMedicaleOrderedByDateCreation(FicheMedicaleRepository $fich
 }
 
 #[Route('/ficheMedicaleOrderedByDateCreation1', name: 'fiche_medicale_ordered_by_date_creation1')]
-public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $ficheMedicaleRepository): Response
+public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $ficheMedicaleRepository,Security $security): Response
 {
+    $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $fiches = $ficheMedicaleRepository->findAllFicheMedicaleOrderedByDateCreation();
     return $this->render('fiche/orderbydate1.html.twig', [
         'fiches' => $fiches,
     ]);
 }
 #[Route('/searchfichebetweendate', name: 'search_fichedate')]
-    public function searchConsultation(Request $request, FichemedicaleRepository $ficheMedicaleRepository): Response
+    public function searchConsultation(Request $request, FichemedicaleRepository $ficheMedicaleRepository,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate1 = $request->query->get('start_date1');
@@ -145,9 +213,13 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
         ]);
     }
     #[Route('/searchfichebetweendate1', name: 'search_fichedate1')]
-    public function searchConsultation1(Request $request, FichemedicaleRepository $ficheMedicaleRepository): Response
+    public function searchConsultation1(Request $request, FichemedicaleRepository $ficheMedicaleRepository,Security $security): Response
     {
-       
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate1 = $request->query->get('start_date1');
@@ -172,8 +244,13 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
 
 
     #[Route('/export-pdf/{id}', name: 'app_generer_pdf_historiquee')]
-    public function exportPdf($id, FichemedicaleRepository $ficheMedicaleRepository): Response
+    public function exportPdf($id, FichemedicaleRepository $ficheMedicaleRepository,Security $security): Response
 {
+    $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     // Load the Fiche from the repository
     $fiche = $ficheMedicaleRepository->find($id);
 
@@ -212,8 +289,13 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
 }
 
     #[Route('/generate_qr_code', name: 'generate_qr_code', methods: ['POST'])]
-    public function generateQrCode(Request $request): Response
+    public function generateQrCode(Request $request,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $text = $request->request->get('text');
         $qrCode = QrCode::create($text)
             ->setSize(600)
@@ -227,6 +309,27 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
         $writer = new PngWriter();
         $result = $writer->write($qrCode, label: $label);
         return new Response($result->getString(), Response::HTTP_OK, ['Content-Type' => $result->getMimeType()]);
+    }
+
+
+
+
+
+
+    #[Route('/attribuerfiche/{id}', name: 'attribuerfiche')]
+    public function attribuerfiche(EntityManagerInterface $em,$id,Request $request, FichemedicaleRepository $ficheMedicaleRepository,Security $security,ConsultationRepository $crepo): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+        $con=$crepo->find($id);
+        $p=$con->getIdp();
+        $fiche=$ficheMedicaleRepository->findByTherapistAndPatientId($user, $p);
+        $con->setFichemedicale($fiche);
+        $em->flush();
+        return $this->redirectToRoute('Listaddconsultation1');
     }
 }
    

@@ -107,7 +107,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historique des Utilisateurs</title>
+    <title>Fiche medicale</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -161,11 +161,6 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="action-links">
-            <a href="{{ path('supp_fiche', {'id': fiche.getId()}) }}" class="button">Delete</a>
-            <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
-        </div>
-
     </div>
 </div>
 <img src="{{ absolute_url(asset('back-office/images/logo-letter.png')) }}" alt="logo">

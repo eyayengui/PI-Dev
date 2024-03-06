@@ -251,6 +251,10 @@
   <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>    </form>
 </form>
 </div>
+<div class="navigation.flex.justify-content.mb-8">
+             {{ knp_pagination_render(consultations) }}
+             </div>
+</div>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         {{ gc_draw(piechart, 'div_chart') }}

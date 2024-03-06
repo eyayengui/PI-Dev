@@ -87,15 +87,15 @@
                     <div class="make-appointment__form-box">
                         {{ form_start(formC, {'attr': {'class': 'make-appointment__form contact-form-validated', 'novalidate': 'novalidate'}}) }}
                             <div class="row">
-                                <div class="col-xl-6 col-lg-6">
+                    {#            <div class="col-xl-6 col-lg-6">
                                     <div class="make-appointment__form-input-box">
                                         <label for="{{ formC.fichemedicale.vars.id }}">Id Fiche:</label>
                                         {{ form_widget(formC.fichemedicale, {'attr': {'placeholder': 'Id fiche medicale', 'class': 'form-control'}}) }}
                                         {{ form_errors(formC.fichemedicale) }} {# Display errors for this field #}
-                                        {% if formC.fichemedicale.vars.id == 0 %}
+                                     {#   {% if formC.fichemedicale.vars.id == 0 %}
                                             <p style="color: red;">fiche non attribuée</p>
                                         {% endif %}
-                                    </div>
+                                    </div>#}
                                 </div>
                                 <div class="col-xl-6 col-lg-6">
                                     <div class="make-appointment__form-input-box">

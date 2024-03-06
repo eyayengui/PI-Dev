@@ -15,14 +15,6 @@ class FicheType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id_p', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'nom', // Use the username property as the choice label
-            ])
-            ->add('id_t', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'nom', // Use the username property as the choice label
-            ])
             ->add('date_creation')
             ->add('derniere_maj', null, [
                 'label' => 'Date de derniére mise à jour:',

@@ -4,6 +4,7 @@ namespace App\Repository;
 use DateTime;
 use App\Entity\Fichemedicale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -79,5 +80,28 @@ public function findFichesBetweenDates(DateTime $startDate, DateTime $endDate,Da
     }
  
 
-
+    public function findByTherapistId($id): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id_t = :therapistId')
+            ->setParameter('therapistId',$id) 
+            ->getQuery()
+            ->getResult();
+    }
+    public function findByTherapistAndPatientId($therapistId, $patientId)
+{
+    try {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id_t = :therapistId')
+            ->andWhere('f.id_p = :patientId')
+            ->setParameter('therapistId', $therapistId)
+            ->setParameter('patientId', $patientId)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    } catch (NoResultException $e) {
+        return null;
+    }
 }
+}
+
