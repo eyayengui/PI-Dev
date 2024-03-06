@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\User1Type;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,8 +27,27 @@ class AdminController extends AbstractController
             $request->query->getInt('page',1),
             9
         );
+        $nbtherapeutes = $userRepository->countTherapists();
+        $nbpatients = $userRepository->countPatients();
+        $pieChart = new PieChart();
+        $pieChart->getData()->setArrayToDataTable([
+        ['Status', 'Count'],
+        ['Confirmed', $nbtherapeutes],
+        ['Unconfirmed', $nbpatients],
+    ]);
+
+    // Set chart options
+    $pieChart->getOptions()->setTitle('utilisateurs');
+    $pieChart->getOptions()->setHeight(500);
+    $pieChart->getOptions()->setWidth(900);
+    $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
+    $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+    $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
         return $this->render('admin/index.html.twig', [
             'users' => $users,
+            'piechart' => $pieChart,
         ]);
     }
 
@@ -108,7 +128,7 @@ class AdminController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    
 
     #[Route('/delete/{id}', name: 'app_admin_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response

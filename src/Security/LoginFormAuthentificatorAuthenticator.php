@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Security;
-
+use App\Repository\UserRepository;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Passport\PassportInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,15 +36,22 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
     private $urlGenerator;
     private $csrfTokenManager;
     private $passwordEncoder;
+    private $userBanChecker;
+    private $customUserService;
+    private $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
+
+    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder,UserRepository $userRepository)
     
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
+        
     }
+    
     public function supports(Request $request): bool
     {
         return self::LOGIN_ROUTE === $request->attributes->get('_route') && $request->isMethod('POST');
@@ -93,6 +101,19 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
+        // Change $this->UserRepository to $this->userRepository
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+
+
+        // Check if the user is banned
+        if ($user && $user->isIsBanned()) {
+            $error = new CustomUserMessageAuthenticationException('You are banned from accessing this site, If you believe this is an error or would like to appeal the ban, please contact the site administrator');
+            $error->setSafeMessage('You are banned from accessing this site. If you believe this is an error or would like to appeal the ban, please contact the site administrator');
+
+            throw $error;
+        }
+
+        $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
@@ -109,7 +130,7 @@ class LoginFormAuthentificatorAuthenticator extends AbstractLoginFormAuthenticat
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
+            return new RedirectResponse($this->urlGenerator->generate('profile'));
         }
     
         // Replace 'app_home' with the actual route name for your home page

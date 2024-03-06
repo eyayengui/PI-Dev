@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,7 +16,18 @@ class UserType extends AbstractType
             ->add('email')
             ->add('password')
             ->add('nom')
-            ->add('prenom')/*
+            ->add('prenom')
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Roles',
+                'multiple' => true, // Allow selecting multiple roles
+                'expanded' => true, // Render checkboxes/radios for each role
+                'choices' => [
+                    'Therapeute' => 'ROLE_THERAPEUTE',
+                    'Patient' => 'ROLE_PATIENT',
+                ],
+                'required' => false, // Set to true if the field is required
+            ])
+            /*
             ->add('certificat')
 */
         ;

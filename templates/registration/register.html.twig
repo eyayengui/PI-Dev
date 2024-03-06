@@ -50,7 +50,16 @@
             {{ form_errors(registrationForm.plainPassword) }}
             {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
         </div>
-       
+        <div class="form-group">
+            {{ form_label(registrationForm.profile_picture) }}
+            {{ form_errors(registrationForm.profile_picture) }}
+            {{ form_widget(registrationForm.profile_picture, {'attr': {'class': 'form-control', 'placeholder': 'photo'}}) }}
+        </div>
+       <div class="form-group">
+            {{ form_label(registrationForm.age) }}
+            {{ form_errors(registrationForm.age) }}
+            {{ form_widget(registrationForm.age, {'attr': {'class': 'form-control', 'placeholder': 'age'}}) }}
+        </div>
 
        <button type="submit" class="btn btn-primary btn-lg my-4">S'inscrire</button>
     

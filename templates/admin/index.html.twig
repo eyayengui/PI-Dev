@@ -81,6 +81,11 @@
             <div class="navigation.flex.justify-content.mb-8">
              {{ knp_pagination_render(users) }}
              </div>
-    <a href="{{ path('app_admin_new') }}">Create new</a>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        {{ gc_draw(piechart, 'div_chart') }}
+    </script>
+<div id="div_chart"></div>
+<a href="{{ path('app_admin_new') }}">Create new</a>
    
 {% endblock %}

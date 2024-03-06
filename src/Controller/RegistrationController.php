@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Bridge\Google\Transport\GmailSmtpTransport;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,6 +23,9 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
+
 
 class RegistrationController extends AbstractController
 {
@@ -63,13 +67,22 @@ public function register(Request $request, UserPasswordHasherInterface $userPass
         */
         return $authenticatedUser;
     }
-
+    $this->sendEmail();
     return $this->render('registration/register.html.twig', [
         'registrationForm' => $form->createView(),
     ]);
 }
 
-
+public function sendEmail(){
+    $email=(new Email())
+        ->from('yenguieya6@gmail.com')
+        ->to('eyayengui562@gmail.com')
+        ->subject('User')
+        ->text('A new user has been created, you should check it');
+    $transport= new GmailSmtpTransport('yenguieya6@gmail.com','ytsldgfvwimtxxfq');
+    $mailer=new Mailer($transport);
+    $mailer->send($email);
+}
 
 
 
@@ -92,9 +105,14 @@ public function register(Request $request, UserPasswordHasherInterface $userPass
 
         return $this->redirectToRoute('app_register');
     }
+    
     #[Route('/profile', name: 'app_profile')]
-    public function profile(Request $request ) : Response
+    public function profile(): Response
     {
+        // Check if user is not authenticated
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
 
         return $this->render('registration/profile.html.twig', [
 

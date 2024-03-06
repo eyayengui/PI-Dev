@@ -76,21 +76,15 @@
                         <div class="main-menu__logo">
                             <a href="index.html"><img src="front-office/images/resources/logo-1.png" alt=""></a>
                         </div>
-                        <div class="main-menu__btn-box">
-                            <a href="make-appointment.html">Réserver Consultation</a>
-                        </div>
                         <div class="main-menu__wrapper-inner-content">
                             <div class="main-menu__top">
                                 <div class="main-menu__top-inner">
                                     <div class="main-menu__top-left">
-                                    
                                         <ul class="list-unstyled main-menu__top-menu">
                                             <li><a href="about.html">About</a></li>
                                             <li><a href="faq.html">Faqs</a></li>
-                                            <li><a href="contact.html">Contact</a></li>
                                         </ul>
                                     </div>
-                        
                                 </div>
                             </div>
                              <div class="main-menu__bottom">
@@ -120,9 +114,17 @@
                                                 <a href="ListPublication">Publications</a>
                                                
                                             </li>
-                                            <li>
-                                                <a href="contact.html">Contact</a>
+                                            <li class="dropdown">
+                                                <a href="#">List consultation</a>
+                                                <ul class="sub-menu">
+                                                    <li><a href="listaddconsultation1">Liste consultations pour therapeute</a></li>
+                                                    <li><a href="listaddconsultation">Liste consultations pour patient</a></li>
+                                                    <li><a href="listaddfiche">Liste des fiches</a></li>
+                                                </ul>
                                             </li>
+                                            <li>
+								                <a href="{{ path('app_profile') }}">Profile</a>
+							                </li>
                                         </ul>
                                     </div>
                                     <div class="main-menu__right">
@@ -170,9 +172,8 @@
                             <p class="main-slider__sub-title">Quality therapy starts from here</p>
                             <h2 class="main-slider__title">Ija Nahkiw <br>“Connecter, Se Soigner, S'épanouir”</h2>
                             <div class="main-slider__btn-box">
-                                <a href="make-appointment.html" class="main-slider__btn-one thm-btn">Make an
-                                    Appointment</a>
-                                <a href="about.html" class="main-slider__btn-two thm-btn">Discover More</a>
+                                <a href="login" class="main-slider__btn-one thm-btn">login</a>
+                                <a href="register" class="main-slider__btn-two thm-btn">Register</a>
                             </div>
                         </div>
                     </div>
@@ -187,9 +188,8 @@
                             <p class="main-slider__sub-title">Quality therapy starts from here</p>
                             <h2 class="main-slider__title">Ija Nahkiw <br>“Connecter, Se Soigner, S'épanouir”</h2>
                             <div class="main-slider__btn-box">
-                                <a href="make-appointment.html" class="main-slider__btn-one thm-btn">Make an
-                                    Appointment</a>
-                                <a href="about.html" class="main-slider__btn-two thm-btn">Discover More</a>
+                                <a href="login" class="main-slider__btn-one thm-btn">login</a>
+                                <a href="register" class="main-slider__btn-two thm-btn">Register</a>
                             </div>
                         </div>
                     </div>
@@ -204,9 +204,8 @@
                             <p class="main-slider__sub-title">Quality therapy starts from here</p>
                             <h2 class="main-slider__title">Ija Nahkiw <br>“Connecter, Se Soigner, S'épanouir”</h2>
                             <div class="main-slider__btn-box">
-                                <a href="make-appointment.html" class="main-slider__btn-one thm-btn">Make an
-                                    Appointment</a>
-                                <a href="about.html" class="main-slider__btn-two thm-btn">Discover More</a>
+                                <a href="login" class="main-slider__btn-one thm-btn">login</a>
+                                <a href="register" class="main-slider__btn-two thm-btn">Register</a>
                             </div>
                         </div>
                     </div>
@@ -992,11 +991,18 @@
                                 </div>
                                 <ul class="footer-widget__link-list list-unstyled">
                                     <li><a href="about.html">à propos</a></li>
-                                    <li><a href="make-appointment.html">Réservation</a></li>
+                                    <li><a href="listtherap">Réservation</a></li>
                                     <li><a href="ListPublication">Publications</a></li>
                                     <li><a href="team.html">Nos Thérapeutes</a></li>
                                     <li><a href="faq.html">Formulaire</a></li>
-                                    <li><a href="contact.html">Contacte</a></li>
+                                    <li class="dropdown">
+                                                <a href="#">List consultation</a>
+                                                <ul class="sub-menu">
+                                                    <li><a href="listaddconsultation1">Liste consultations pour therapeute</a></li>
+                                                    <li><a href="listaddconsultation">Liste consultations pour patient</a></li>
+                                                    <li><a href="listaddfiche">Liste des fiches</a></li>
+                                                </ul>
+                                            </li>
                                 </ul>
                             </div>
                         </div>
