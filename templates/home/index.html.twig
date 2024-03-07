@@ -3,6 +3,8 @@
 {% block title %}Home{% endblock %}
 
 {% block login %}
+{% include 'chat.html.twig' %}
+
     {% if app.user == null %}
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -13,6 +15,7 @@
             You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
+
     <section class="ftco-section ftco-no-pb ftco-no-pt">
         <div class="container">
             <div class="row">

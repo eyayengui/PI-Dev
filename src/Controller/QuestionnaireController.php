@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Service\FastAPIService;
-#[Route('/questionnaire')]
+
 class QuestionnaireController extends AbstractController
 {
     private $security;
@@ -35,7 +35,7 @@ class QuestionnaireController extends AbstractController
     }
 
     
-    #[Route('/', name: 'app_questionnaire_index', methods: ['GET'])]
+    #[Route('/questionnaire', name: 'app_questionnaire_index', methods: ['GET'])]
     public function index(QuestionnaireRepository $questionnaireRepository, Security $security): Response
     {
         $user = $security->getUser();
@@ -49,7 +49,7 @@ class QuestionnaireController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_questionnaire_new', methods: ['GET', 'POST'])]
+    #[Route('questionnaire/new', name: 'app_questionnaire_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user = $security->getUser();
@@ -77,7 +77,7 @@ class QuestionnaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_questionnaire_show', methods: ['GET'])]
+    #[Route('questionnaire/{id}', name: 'app_questionnaire_show', methods: ['GET'])]
     public function show(Questionnaire $questionnaire): Response
     {
         return $this->render('questionnaire/show.html.twig', [
@@ -85,7 +85,7 @@ class QuestionnaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_questionnaire_edit', methods: ['GET', 'POST'])]
+    #[Route('questionnaire/{id}/edit', name: 'app_questionnaire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Questionnaire $questionnaire, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(QuestionnaireType::class, $questionnaire);
@@ -103,7 +103,7 @@ class QuestionnaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_questionnaire_delete', methods: ['POST'])]
+    #[Route('questionnaire/{id}', name: 'app_questionnaire_delete', methods: ['POST'])]
     public function delete(Request $request, Questionnaire $questionnaire, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$questionnaire->getId(), $request->request->get('_token'))) {
@@ -113,7 +113,7 @@ class QuestionnaireController extends AbstractController
 
         return $this->redirectToRoute('app_questionnaire_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/{questionnaireId}/question/{questionIndex}', name: 'questionnaire_show_question', methods: ['GET', 'POST'])]
+    #[Route('questionnaire/{questionnaireId}/question/{questionIndex}', name: 'questionnaire_show_question', methods: ['GET', 'POST'])]
     public function showQuestion(Request $request, EntityManagerInterface $entityManager, int $questionnaireId, int $questionIndex = 0): Response
     {   
         $user = $this->security->getUser();
@@ -214,14 +214,13 @@ private function getQuestionnaireFeatures(int $questionnaireId): array
 
     return $features;
 }
-#[Route('/{questionnaireId}/summary', name: 'questionnaire_summary', methods: ['GET'])]
+#[Route('questionnaire/{questionnaireId}/summary', name: 'questionnaire_summary', methods: ['GET'])]
 public function summary(int $questionnaireId): Response
 {
 $questionnaire = $this->getDoctrine()->getRepository(Questionnaire::class)->find($questionnaireId);
     if (!$questionnaire) {
         throw $this->createNotFoundException('The questionnaire does not exist.');
     }
-
     $features = $this->getQuestionnaireFeatures($questionnaireId);
     $result = $this->fastAPIService->predict($features);
 
@@ -230,63 +229,12 @@ $questionnaire = $this->getDoctrine()->getRepository(Questionnaire::class)->find
     } else {
         $healthStatus = 'unknown'; // Handle error or provide default
     }
-
-    // Generate the HTML for the PDF
-    $html = $this->renderView('questionnaire/pdf_summary.html.twig', [
-        'questionnaire' => $questionnaire,
-        'healthStatus' => $healthStatus,
-    ]);
-
-    // Generate PDF from the HTML
-    $pdfContent = $this->snappy->getOutputFromHtml($html);
-
-    // Return the PDF as a response
-    return new Response(
-        $pdfContent,
-        200,
-        [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="questionnaire_summary.pdf"'
-        ]
-    );
+    return $this->render('questionnaire/summary.html.twig',  [
+        'questionnaireId' => $questionnaireId,
+        'healthStatus' => $healthStatus,   ]);
 }
 
-
-    //  #[Route('/{questionnaireId}/summary', name: 'questionnaire_summary', methods: ['GET'])]
-    // public function summary(int $questionnaireId): Response
-    // {
-    //     // Assuming you have a method to retrieve answers/features for the questionnaire
-    //     $features = $this->getQuestionnaireFeatures($questionnaireId);
-
-    //     // Convert features to the format expected by your FastAPI endpoint
-    //     // This is a placeholder; adjust based on your actual feature extraction logic
-    //     $inputData = ['features' => $features];
-
-    //     try {
-    //         $response = $this->client->request('POST', 'http://localhost:8000/fastapi/', [
-    //             'headers' => [
-    //                 'Accept' => 'application/json',
-    //                 'Content-Type' => 'application/json',
-    //             ],
-    //             'json' => $inputData,
-    //         ]);
-
-    //         $content = $response->toArray();
-    //         $healthStatus = $content['prediction'];
-    //     } catch (\Exception $e) {
-    //         $this->addFlash('error', 'Could not determine health status.');
-    //         // Handle error or set a default health status
-    //         $healthStatus = 'Unknown'; // Placeholder
-    //     }
-
-    //     // Render the summary view
-    //     return $this->render('questionnaire/summary.html.twig', [
-    //         'healthStatus' => $healthStatus,
-    //         'questionnaireId' => $questionnaireId,
-    //     ]);
-    // }
-
-    #[Route('/{questionnaireId}/pdf', name: 'questionnaire_generate_pdf', methods: ['GET'])]
+    #[Route('questionnaire/{questionnaireId}/pdf', name: 'questionnaire_generate_pdf', methods: ['GET'])]
     public function generateQuestionnairePdf(int $questionnaireId): Response
     {
         $questionnaire = $this->getDoctrine()->getRepository(Questionnaire::class)->find($questionnaireId);
@@ -318,7 +266,7 @@ $questionnaire = $this->getDoctrine()->getRepository(Questionnaire::class)->find
     }
 
     
-    #[Route('/{questionnaireId}/statistics', name: 'questionnaire_statistics')]
+    #[Route('questionnaire/{questionnaireId}/statistics', name: 'questionnaire_statistics')]
     public function questionnaireStatistics(QuestionnaireRepository $questionnaireRepository): Response
     {
         $data = $questionnaireRepository->findAllQuestionnairesWithUserCount();

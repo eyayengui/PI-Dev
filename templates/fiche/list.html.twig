@@ -1,6 +1,7 @@
 {% extends 'base-back.html.twig' %}
 
 {% block body %}
+
 <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
     <TR>
         <TD BACKGROUND="fade.gif">
@@ -204,6 +205,9 @@
     border-color: #0056b3;
 }
 </style>
+
+<div class="container">
+            <div class="row">
 <p><strong>Chercher par date de création</strong></p>
 <form action="{{ path('search_fichedate1') }}" method="get" class="search-form">
     <div>
@@ -225,10 +229,22 @@
     </div>
     <button type="submit">Chercher</button>
 </form>
+</div>
+</div>
 
+
+<div class="container">
+            <div class="row">
 <form action="{{ path('fiche_medicale_ordered_by_date_creation1') }}" method="get">
     <button type="submit" class="order-button">Trier par Date de creation</button>
 </form>
+</div>
+</div>
+
+
+
+<div class="container">
+            <div class="row">
 <div class="card-container">
     {% for fiche in fiches %}
     <div class="card">
@@ -259,5 +275,6 @@
     {{ knp_pagination_render(fiches) }}
 </div>
 </div>
-
+</div>
+</div>
 {% endblock %}

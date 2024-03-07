@@ -1,6 +1,8 @@
 {% extends 'base-front.html.twig' %}
 
 {% block body %}
+{% include 'chat.html.twig' %}
+
 <style>
     table {
         width: 100%;
@@ -181,7 +183,8 @@
     border-color: #0056b3; /* Change border color on hover */
 }
 </style>
-
+<div class="container">
+            <div class="row">
 <div class="form-container">
     <form action="{{ path('search_consultation1') }}" method="get" class="search-form">
         <div>
@@ -202,9 +205,11 @@
         <button type="submit">Chercher</button>
     </form>
 </div>
+</div>
+</div>
 
-
-
+<div class="container">
+            <div class="row">
 <div class="consultation-cards">
     {% for consultation in consultations %}
     <div class="consultation-card">
@@ -279,10 +284,17 @@
     </div>
     {% endfor %}
 </div>
+</div>
+</div>
+<div class="container">
+            <div class="row">
 <div style="display: flex; justify-content: space-between;">
     <form action="{{ path('consultations_ordered_by_date1') }}" method="get">
         <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Order by Date</button>
     </form>
+</div>
+
+</div>
 </div>
 
 {% endblock %}

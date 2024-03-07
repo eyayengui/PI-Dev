@@ -1,6 +1,8 @@
 {% extends 'base-front.html.twig' %}
 
 {% block body %}
+{% include 'chat.html.twig' %}
+
 <style>
     table {
         width: 100%;
@@ -192,7 +194,9 @@
     border-color: #0056b3; /* Change border color on hover */
 }
 </style>
-
+<br>
+<div class="container">
+<div class="row">
 <form action="{{ path('search_consultation') }}" method="get" class="search-form">
     <div>
         <label for="Pathologie">Chercher par Pathologie:</label>
@@ -208,66 +212,77 @@
         <label for="end_date">Date limite:</label>
         <input type="date" id="end_date" name="end_date">
     </div>
+<br>
 
     <button type="submit">Chercher</button>
 </form>
-
-
-
-<div class="consultation-cards">
-    {% for consultation in consultations %}
-        <div class="consultation-card">
-            <div class="card-details">
-                <div class="card-detail">
-                    <span class="detail-label">Date consultation:</span>
-                    <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Pathologie:</span>
-                    <span class="detail-value">{{ consultation.getpathologie }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Remarques:</span>
-                    <span class="detail-value">{{ consultation.getremarques }}</span>
-                </div>
-                <div class="card-detail">
-                    <span class="detail-label">Therapeute:</span>
-                    <span class="detail-value">{{ consultation.getidt.nom }}</span>
-                </div>
-                <div class="card-detail">
-                    {% if consultation.isCompleted() %}
-                        <div class="completed-box">
-                            <span>Achevée</span>
-                            <i class="fas fa-check"></i>
-                        </div>
-                    {% endif %}
-                    {% if consultation.getConfirmation() %}
-                        <div class="confirmed-box">
-                            <span>Confirmé</span>
-                        </div>
-                    {% else %}
-                        <div class="pending-box">
-                            <span>En attente</span>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="action-links">
-                <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
-                <a href="{{ path('edit_consultation', {'id': consultation.getid()}) }}">Edit</a>
-            </div>
-        </div>
-    {% endfor %}
 </div>
-
-
+</div>
+<div class="container">
+            <div class="row">
+                        <div class="consultation-cards">
+                            {% for consultation in consultations %}
+                                <div class="consultation-card">
+                                    <div class="card-details">
+                                        <div class="card-detail">
+                                            <span class="detail-label">Date consultation:</span>
+                                            <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
+                                        </div>
+                                        <div class="card-detail">
+                                            <span class="detail-label">Pathologie:</span>
+                                            <span class="detail-value">{{ consultation.getpathologie }}</span>
+                                        </div>
+                                        <div class="card-detail">
+                                            <span class="detail-label">Remarques:</span>
+                                            <span class="detail-value">{{ consultation.getremarques }}</span>
+                                        </div>
+                                        <div class="card-detail">
+                                            <span class="detail-label">Therapeute:</span>
+                                            <span class="detail-value">{{ consultation.getidt.nom }}</span>
+                                        </div>
+                                        <div class="card-detail">
+                                            {% if consultation.isCompleted() %}
+                                                <div class="completed-box">
+                                                    <span>Achevée</span>
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                            {% endif %}
+                                            {% if consultation.getConfirmation() %}
+                                                <div class="confirmed-box">
+                                                    <span>Confirmé</span>
+                                                </div>
+                                            {% else %}
+                                                <div class="pending-box">
+                                                    <span>En attente</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="action-links">
+                                        <a href="{{ path('supp_consultation', {'id': consultation.getid()}) }}">Delete</a>
+                                        <a href="{{ path('edit_consultation', {'id': consultation.getid()}) }}">Edit</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>    
+            </div>
+</div>
+<br>
+<div class="container">
+            <div class="row">
 <form action="{{ path('consultations_ordered_by_date') }}" method="get">
   <button type="submit" style="background-color: #004080; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Trier par Date</button>    </form>
 </form>
-
-
+</div>
+</div>
+<br>
+<div class="container">
+            <div class="row">
 <form action="{{ path('calendar') }}" method="get">
     <button type="submit" style="background-color: #cc6666; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">Voir Calendrier</button>
 </form>
-
+</div>
+</div>
 {% endblock %}

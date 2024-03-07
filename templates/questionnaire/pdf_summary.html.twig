@@ -15,7 +15,7 @@
     <h1>Questionnaire Summary</h1>
     <h2>{{ questionnaire.titleQuestionnaire }}</h2>
     <div class="summary">
-        <p>Health Status: {{ healthStatus }}</p>
+        <p>Sante Mentale: {{ healthStatus }}</p>
         {% for question in questionnaire.questions %}
             <div class="question">
                 <strong>Q: {{ question.titleQuestion }}</strong>

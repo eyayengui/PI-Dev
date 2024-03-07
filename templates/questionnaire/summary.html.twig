@@ -3,6 +3,7 @@
 {% block title %}Results{% endblock %}
 
 {% block body %}
+{% include 'chat.html.twig' %}
 
 <body class="custom-cursor">
 
@@ -25,7 +26,7 @@
                     <h2>notre formulaire</h2>
                     <ul class="thm-breadcrumb list-unstyled">
                   
-                        <li>20 questions</li>
+                        <li>9 questions</li>
                     </ul>
                 </div>
             </div>
@@ -76,42 +77,32 @@
                             </div>
                         </div>
                     </div>
-                <div class="col-xl-9 col-lg-8">
-                    <div class="faq-page__right">
-                    {# <div class="accrodion-grp" data-grp-name="faq-one-accrodion"> #}
-                        {# <div class="question"> #}
-                        <div class="accrodion">
-                            <div class="accrodion-title">
-                                <h1>Resultat du Formulaire</h1>
-                                <h3>Your health status is: {{ healthStatus }}</h3>
-                                <a href="{{ path('questionnaire_generate_pdf', {'questionnaireId': questionnaireId}) }}" class="btn btn-primary">Download PDF</a>
-                            </div>
-                        </div>
+        
+            <div class="col-xl-9 col-lg-8">
+            <div class="faq-page__right">
+                <div class="accrodion">
+                    <div class="accrodion-title">
+                        <h1>Resultat du Formulaire</h1>
+                        {# <h3>Your health status is: {{ healthStatus }}</h3> #}
+                        {% if healthStatus == 1 %}
+                         <p>Après avoir évalué votre état de santé, il apparaît que vous pourriez tirer profit d'un échange avec un professionnel de la santé mentale. Un thérapeute pourrait vous fournir le soutien nécessaire pour traverser cette période difficile. Nous vous encourageons à ne pas hésiter à prendre un rendez-vous afin de discuter de ce que vous ressentez.</p>
+                            <!-- Include link or action to make a reservation -->
+                            <a href="{{ path('listtherap') }}" class="btn btn-warning">Réserver Consultation</a>
+                        {% else %}
+                             <p>Votre état de santé semble être bon, ce qui est une excellente nouvelle. Nous avons une variété d'activités qui pourraient vous intéresser et contribuer à votre bien-être. Que ce soit pour le sport, la détente ou l'apprentissage de nouvelles compétences, il y a beaucoup à explorer. Consulter nos Actualité</p>
+                            <!-- Include link or action to view activities -->
+                             <a href="{{ path('ListPublication') }}" class="btn btn-success">Nos Publication</a> 
+                        {% endif %}
+                        <a href="{{ path('questionnaire_generate_pdf', {'questionnaireId': questionnaireId}) }}" class="btn btn-primary">Download PDF</a>
+
                     </div>
-                    </div>
+                </div>
             </div>
-        </section>
-        <!--Faq Page End-->
+        </div>
 
-                                
-                                        {# <h4>Avez-vous ressenti une détresse émotionnelle ou mentale persistante au cours des dernières semaines ou des derniers mois?</h4>
-                                    
-                                    <div class="accrodion-content">
-                                        <div class="inner">
-                                            <p>OUI - NON</p>
-                                        </div><!-- /.inner -->
-                                    </div>
-                                </div> #}
-
+   </section>
     </div><!-- /.page-wrapper -->
-
-
-
-
-
-
-
-    
+   
 </body>
 
 {% endblock %}

@@ -15,7 +15,7 @@ class QuestionnaireType extends AbstractType
         $builder
             ->add('title_questionnaire')
             ->add('date')
-            ->add('description')
+            ->add('description', CKEditorType::class)
             // Add other fields as needed
         
           
