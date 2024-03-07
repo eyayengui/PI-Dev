@@ -47,10 +47,14 @@ class RegistrationFormType extends AbstractType
             'required' => false, // Set to true if the field is required
         ])
         ->add('profile_picture', FileType::class, [
-            'label' => 'Photo', // Set your desired label
+            'label' => 'Image (JPEG, PNG)', // Set your desired label
+            'mapped' => false,
             'required' => false, // Set to true if the field is required
             // Add more options as needed, such as constraints
         ])
+
+ 
+
         ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller

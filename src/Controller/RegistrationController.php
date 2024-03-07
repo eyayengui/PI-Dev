@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use Symfony\Component\Security\Core\Security;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -9,6 +9,7 @@ use App\Security\LoginFormAuthentificatorAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,21 +26,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
-
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class RegistrationController extends AbstractController
 {
+    private $security;
     private EmailVerifier $emailVerifier;
-
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EmailVerifier $emailVerifier,Security $security)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->security = $security;
     }
 
 ////////////////////registration///////////////////////
 #[Route('/register', name: 'app_register')]
-public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthentificatorAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator,Security $security, LoginFormAuthentificatorAuthenticator $authenticator, EntityManagerInterface $entityManager, ParameterBagInterface $params): Response
 {
+    $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
     $user = new User();
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
@@ -53,26 +60,43 @@ public function register(Request $request, UserPasswordHasherInterface $userPass
             )
         );
 
+        // Handle profile picture upload
+        $profilePictureFile = $form->get('profile_picture')->getData();
+        if ($profilePictureFile) {
+            $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = preg_replace('/[^a-zA-Z0-9_.-]/', '', $originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePictureFile->guessExtension();
+
+            try {
+                $profilePictureFile->move(
+                    $params->get('image_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // Handle exception if something happens during file upload
+                $this->addFlash('error', 'Une erreur s\'est produite lors du téléchargement de la photo de profil.');
+                return $this->redirectToRoute('app_register');
+            }
+
+            $user->setProfilePicture($newFilename);
+        }
+
         $entityManager->persist($user);
         $entityManager->flush();
-
 
         $authenticatedUser = $userAuthenticator->authenticateUser(
             $user,
             $authenticator,
             $request
         );
-        /*
-        $userRoles = $user->getRoles();
-        */
+
         return $authenticatedUser;
     }
-    $this->sendEmail();
+
     return $this->render('registration/register.html.twig', [
         'registrationForm' => $form->createView(),
     ]);
 }
-
 public function sendEmail(){
     $email=(new Email())
         ->from('yenguieya6@gmail.com')
@@ -87,8 +111,13 @@ public function sendEmail(){
 
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists
@@ -107,8 +136,13 @@ public function sendEmail(){
     }
     
     #[Route('/profile', name: 'app_profile')]
-    public function profile(): Response
+    public function profile(Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         // Check if user is not authenticated
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');

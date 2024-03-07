@@ -15,12 +15,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Core\Security;
 
 class AdminController extends AbstractController
 {
-    #[Route('/index', name: 'app_admin_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository, PaginatorInterface $paginatorInterface,Request $request): Response
+    private $security;
+    public function __construct(Security $security)
     {
+        $this->security = $security;
+    }
+    #[Route('/index', name: 'app_admin_index', methods: ['GET'])]
+    public function index(UserRepository $userRepository, PaginatorInterface $paginatorInterface,Request $request,Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $data = $userRepository->findAll();
         $users = $paginatorInterface->paginate(
             $data,
@@ -52,8 +64,13 @@ class AdminController extends AbstractController
     }
 
     #[Route('/listtherap', name: 'app_therap_index', methods: ['GET'])]
-    public function indext(UserRepository $userRepository, PaginatorInterface $paginatorInterface,Request $request): Response
+    public function indext(UserRepository $userRepository, PaginatorInterface $paginatorInterface,Request $request,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $data = $this->findAllTherapists($userRepository);
         $users = $paginatorInterface->paginate(
             $data,
@@ -82,37 +99,58 @@ class AdminController extends AbstractController
 
 
     #[Route('/new', name: 'app_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+public function new(Request $request, EntityManagerInterface $entityManager,Security $security): Response
+{
+    $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+    $user = new User();
+    $form = $this->createForm(UserType::class, $user);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        $profilePictureFile = $form['profilePictureFile']->getData();
 
-            return $this->redirectToRoute('app_admin_index', [], Response::HTTP_SEE_OTHER);
+        if ($profilePictureFile) {
+            $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = preg_replace('/[^a-zA-Z0-9_.-]/', '', $originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePictureFile->guessExtension();
+
+            try {
+                $profilePictureFile->move(
+                    $this->getParameter('profile_pictures_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                $this->addFlash('error', 'Une erreur s\'est produite lors du téléchargement de l\'image de profil.');
+                return $this->redirectToRoute('app_admin_new');
+            }
+
+            $user->setProfilePicture($newFilename);
         }
 
-        return $this->renderForm('admin/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_admin_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/show/{id}', name: 'app_admin_show', methods: ['GET'])]
-    public function show(User $user): Response
-    {
-        return $this->render('admin/show.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
+    return $this->renderForm('admin/new.html.twig', [
+        'user' => $user,
+        'form' => $form,
+    ]);
+}
  
     #[Route('/{id}/edit', name: 'app_admin_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $form = $this->createForm(UserType::class, $user);
         $form->remove('plainPassword');
         $form->handleRequest($request);
@@ -131,7 +169,7 @@ class AdminController extends AbstractController
     
 
     #[Route('/delete/{id}', name: 'app_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager,Security $security): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
@@ -176,7 +214,7 @@ class AdminController extends AbstractController
     
      #[Route("/admin/verify/{id}", name:"verify_user")]
      
-    public function verifyUserAccount($id): Response
+    public function verifyUserAccount($id,Security $security): Response
     {
         $user = $this->getUser();
        

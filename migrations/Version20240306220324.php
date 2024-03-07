@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240306155949 extends AbstractMigration
+final class Version20240306220324 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -42,7 +42,7 @@ final class Version20240306155949 extends AbstractMigration
         $this->addSql('ALTER TABLE questionnaire ADD id_user_id INT DEFAULT NULL, ADD date DATETIME NOT NULL, ADD description LONGTEXT DEFAULT NULL, DROP id_u_id');
         $this->addSql('ALTER TABLE questionnaire ADD CONSTRAINT FK_7A64DAF79F37AE5 FOREIGN KEY (id_user_id) REFERENCES `user` (id)');
         $this->addSql('CREATE INDEX IDX_7A64DAF79F37AE5 ON questionnaire (id_user_id)');
-        $this->addSql('ALTER TABLE user CHANGE profile_picture profile_picture VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE user ADD profile_picture VARCHAR(255) NOT NULL');
     }
 
     public function down(Schema $schema): void
@@ -70,6 +70,6 @@ final class Version20240306155949 extends AbstractMigration
         $this->addSql('ALTER TABLE questionnaire ADD id_u_id INT NOT NULL, DROP id_user_id, DROP date, DROP description');
         $this->addSql('ALTER TABLE questionnaire ADD CONSTRAINT FK_7A64DAF6F858F92 FOREIGN KEY (id_u_id) REFERENCES user (id)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_7A64DAF6F858F92 ON questionnaire (id_u_id)');
-        $this->addSql('ALTER TABLE `user` CHANGE profile_picture profile_picture VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE `user` DROP profile_picture');
     }
 }

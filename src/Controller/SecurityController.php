@@ -38,7 +38,7 @@ class SecurityController extends AbstractController
         }
         if ($security->isGranted('ROLE_USER')) 
         {
-            return $this->render('base-index.html.twig');
+            return $this->render('base2-index.html.twig');
         }
         return $this->redirectToRoute('app_login');
     }

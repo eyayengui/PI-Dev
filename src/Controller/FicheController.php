@@ -240,7 +240,7 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
 
 
 
-
+/*
 
 
     #[Route('/export-pdf/{id}', name: 'app_generer_pdf_historiquee')]
@@ -286,7 +286,45 @@ public function ficheMedicaleOrderedByDateCreation1(FicheMedicaleRepository $fic
     $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
     
     return $response;
-}
+}*/
+#[Route('/export-pdf/{id}', name: 'app_generer_pdf_historiquee')]
+public function exportPdf($id, FichemedicaleRepository $ficheMedicaleRepository,Security $security): Response
+    {
+
+        $options = new Options(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+        $options->set('defaultFont', 'arial');
+        $options->set('isRemoteEnabled', true);
+        $publicImagesPath = realpath($this->getParameter('kernel.project_dir') . '/public/images');
+        $options->set('chroot', $publicImagesPath);
+        $dompdf = new Dompdf($options);
+        $context = stream_context_create([
+            'ssl' => [
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+                'allow_self_signed' => TRUE
+            ]
+        ]);
+        $dompdf->setHttpContext($context);
+
+        // Création du PDF
+        $fiche=$ficheMedicaleRepository->find($id);
+        $html = $this->render('fiche/pdf.html.twig', ['fiche' => $fiche]);
+
+        $dompdf->loadHtml($html, 'UTF-8');
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Préparation du fichier de téléchargement
+        $fichier =  'fichemedicale.pdf';
+
+        // envoie au navigateur dans le télechargement
+        $dompdf->stream($fichier, ['attachement' => TRUE]);
+        return new Response();
+    }
+
+
+
+
 
     #[Route('/generate_qr_code', name: 'generate_qr_code', methods: ['POST'])]
     public function generateQrCode(Request $request,Security $security): Response
