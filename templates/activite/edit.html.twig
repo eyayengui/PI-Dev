@@ -1,0 +1,24 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Edit Activite{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Edit Activite</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ include('activite/_form.html.twig', {'button_label': 'Update'}) }}
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="{{ path('app_activite_index') }}" class="btn btn-outline-primary">Back to List</a>
+                </div>
+                {{ include('activite/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

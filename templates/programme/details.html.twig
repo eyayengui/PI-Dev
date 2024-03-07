@@ -1,0 +1,67 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Activite{% endblock %}
+
+{% block body %}
+{% include 'chat.html.twig' %}
+
+    <h1>Programme</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ programme.id }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ programme.lieu }}</td>
+            </tr>
+            <tr>
+                <th>But</th>
+                <td>{{ programme.but }}</td>
+            </tr>
+            <tr>
+                <th>Activite</th>
+                <td>activity for a better mental health</td>
+            </tr>
+        </tbody>
+    </table>
+
+<input type="text" id="searchInput" placeholder="Search...">
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const row = document.querySelector('.row');
+    const initialOrder = Array.from(row.children); 
+    searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const packageItems = document.getElementsByClassName('packege__item');
+
+        for (let i = 0; i < packageItems.length; i++) {
+            const packageItem = packageItems[i];
+            const offerName = packageItem.querySelector('h4').textContent.toLowerCase();
+            const offerDescription = packageItem.querySelector('.packege__meta').innerText.toLowerCase();
+
+            if (searchTerm === '' || (activiteNom.includes(searchTerm) || activiteProgramme.includes(searchTerm))) {
+                packageItem.style.display = '';
+            } else {
+                packageItem.style.display = 'none';
+            }
+        }
+        const visibleItems = row.querySelectorAll('.packege__item:not([style*="display: none"])');
+        for (let i = 0; i < visibleItems.length; i++) {
+            row.appendChild(visibleItems[i]);
+        }
+        if (searchTerm === '') {
+            row.innerHTML = '';
+            for (let i = 0; i < initialOrder.length; i++) {
+                row.appendChild(initialOrder[i]);
+            }
+        }
+    });
+});
+  </script>
+
+{% endblock %}
+

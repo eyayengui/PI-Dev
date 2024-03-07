@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block body %}
+    <h1>Search Results</h1>
+    {% if programmes is not empty %}
+        <ul>
+            {% for programme in programmes %}
+                <li>{{ programme.id }} - {{ programme.lieu }} - {{ programme.but }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endblock %}

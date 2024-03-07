@@ -1,0 +1,24 @@
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar/main.min.css' rel='stylesheet' />
+
+<div id='calendar'></div>
+
+<script>
+    window.onload = () => {
+        let calendarElt = document.querySelector("#calendar");
+
+        let calendar = new FullCalendar.Calendar(calendarElt, {
+            initialView: 'timeGridWeek',
+            locale: 'fr',
+            timeZone: 'Europe/Paris',
+            headerToolbar: {
+                start: 'prev,next today',
+                center: 'title',
+                end: 'dayGridMonth,timeGridWeek'
+            },
+            events: {{ data|raw }},
+        });
+
+        calendar.render();
+    }
+</script>

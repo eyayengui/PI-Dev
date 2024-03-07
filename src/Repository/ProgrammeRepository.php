@@ -20,6 +20,17 @@ class ProgrammeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Programme::class);
     }
+    public function advancedSearch(string $lieu, string $but): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->where('p.lieu LIKE :lieu')
+            ->andWhere('p.but LIKE :but')
+            ->setParameter('lieu', '%' . $lieu . '%')
+            ->setParameter('but', '%' . $but . '%');
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
 
 //    /**
 //     * @return Programme[] Returns an array of Programme objects

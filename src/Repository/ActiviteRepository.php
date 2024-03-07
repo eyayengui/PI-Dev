@@ -45,4 +45,13 @@ class ActiviteRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function findByProgramme(Programme $programme): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.programme = :programme')
+            ->setParameter('programme', $programme)
+            ->getQuery()
+            ->getResult();
+    }
 }

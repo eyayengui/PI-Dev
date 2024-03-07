@@ -1,0 +1,45 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Programme index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="my-4">Programme Index</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Lieu</th>
+                        <th scope="col">But</th>
+                        <th scope="col">Nom_L</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for programme in programmes %}
+                        <tr>
+                            <td>{{ programme.id }}</td>
+                            <td>{{ programme.lieu }}</td>
+                            <td>{{ programme.but }}</td>
+                            <td>{{ programme.nomL }}</td>
+                            <td>
+                                <a href="{{ path('listeProgramme', {'id': programme.id}) }}" class="btn btn-info btn-sm">Show</a>
+                                <a href="{{ path('app_programme_edit', {'id': programme.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ path('app_programme_new') }}" class="btn btn-success">Create New</a>
+        </div>
+    </div>
+{% endblock %}

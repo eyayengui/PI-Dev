@@ -1,0 +1,72 @@
+{# templates/publication/listPublication.html.twig #}
+
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Liste des activités{% endblock %}
+
+{% block body %}
+{% include 'chat.html.twig' %}
+
+<div class="page-wrapper">
+
+    <!--Page Header Start-->
+    <section class="page-header">
+        <div class="page-header-bg" style="background-image: url(front-office/images/backgrounds/page-header-bg.jpg)">
+        </div>
+        <div class="container">
+            <div class="page-header__inner">
+                <h2>Activités</h2>
+                <ul class="thm-breadcrumb list-unstyled">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><span>/</span></li>
+                    <li>Activités</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!--Page Header End-->
+
+    <section class="blog-one">
+        <div class="container">
+            <div class="row">
+                {% for activite in activites %}
+                    <!--Blog One Single Start-->
+                    <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                        <div class="blog-one__single">
+                            <div class="blog-one__img-box">
+                                <!-- Assuming Activite entity has no image property -->
+                                <div class="blog-one__img">
+                                   <!-- Placeholder image or no image -->
+                                    <img src="front-office/images/blog/blog-content-img.jpg" alt="Activité Image" style="width: 400px; height: 250px;">
+                                    <a href="activite-details.html">
+                                        <span class="blog-one__plus"></span>
+                                    </a>
+                                    <div class="blog-one__date">
+                                        <!-- Display the date of the activité -->
+                                        <p>{{ activite.getDate()|date('Y-m-d') }}</p>
+                                    </div>
+                                </div>
+                                <div class="blog-one__content-top">
+                                    <!-- Assuming Activite entity has no content image -->
+                                    <div class="blog-one__content-img">
+                                        <img src="front-office/images/blog/blog-content-img.jpg" alt="">
+                                    </div>
+                                    <!-- Display the nom of the activité -->
+                                    <p class="blog-one__content-sub-title">Activité n°{{ activite.getId() }}:</p>
+                                    <h3><a href="{{ path('activite_details', {'id': activite.getId()}) }}">{{ activite.getNom() }}</a></h3>
+                                </div>
+                            </div>
+                            <div class="blog-one__content">
+                                <!-- Add more content as needed -->
+                            </div>
+                        </div>
+                    </div>
+                    <!--Blog One Single End-->
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

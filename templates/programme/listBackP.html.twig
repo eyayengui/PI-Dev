@@ -1,0 +1,67 @@
+{% extends 'base-back.html.twig' %}
+{% block title %}Gestion Programmes{% endblock %}
+{% block body %}
+<style>
+/* Paste your CSS styles here */
+/* CSS styles for .box, .box-body, .carousel-indicators, etc. */
+
+.form-group {
+    margin-bottom: 20px; /* Adjust margin-bottom to space out form fields */
+}
+
+.form-group label {
+    font-weight: bold; /* Optionally make form labels bold */
+}
+
+.form-control {
+    width: 100%; /* Make form controls full-width */
+}
+
+.btn-primary {
+    /* Copy the styles for .btn-primary from your provided CSS */
+}
+
+/* Add other styles as needed for form elements */
+
+</style>
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Ajouter un programme</h1>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="box">
+                <div class="box-body">
+                    <div class="form-group">
+                        {{ form_label(form.lieu) }}
+                        {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.lieu) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.but) }}
+                        {{ form_widget(form.but, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.but) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.nom_L) }}
+                        {{ form_widget(form.nom_L, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.nom_L) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.activite) }}
+                        {{ form_widget(form.activite, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.activite) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.exercice) }}
+                        {{ form_widget(form.exercice, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.exercice) }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Liste des programmes{% endblock %}
+
+{% block body %}
+{% include 'chat.html.twig' %}
+
+<div class="page-wrapper">
+    <!--Page Header Start-->
+    <section class="page-header">
+        <div class="page-header-bg" style="background-image: url(front-office/images/backgrounds/page-header-bg.jpg)">
+        </div>
+        <div class="container">
+            <div class="page-header__inner">
+                <h2>Programmes</h2>
+                <ul class="thm-breadcrumb list-unstyled">
+                    <li><a href="index.html">Home</a></li>
+                    <li><span>/</span></li>
+                    <li>Programmes</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!--Page Header End-->
+<div class="card-body">
+    <h5 class="card-title">Rechercher par Lieu et But</h5>
+    <form action="{{ path('app_programme_front') }}" method="get" class="row">
+        <div class="form-group col-md-6">
+            <label for="lieu">Lieu</label>
+            <input type="text" name="lieu" class="form-control" placeholder="Entrez le lieu" value="{{ app.request.query.get('lieu') }}">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="but">But</label>
+            <input type="text" name="but" class="form-control" placeholder="Entrez le but" value="{{ app.request.query.get('but') }}">
+        </div>
+        <div class="form-group col-md-12">
+            <button type="submit" class="btn btn-info btn-block">Rechercher</button>
+        </div>
+    </form>
+</div>
+
+    <section class="blog-one">
+        <div class="container">
+            <div class="row">
+                {% for programme in programmes %}
+                    <!--Blog One Single Start-->
+                    <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                        <div class="blog-one__single">
+                            <div class="blog-one__img-box">
+                                <!-- Modify the image source as per your requirements -->
+                                <div class="blog-one__img">
+                                    <div>
+                                    <img src="{{ asset('/upload-images/' ~ programme.getimage()) }}" >
+                                    </div>
+                                </div>
+                                <div class="blog-one__content-top">
+                                    <div class="blog-one__content-img">
+                                        <img src="front-office/images/blog/blog-content-img.jpg" alt="">
+                                    </div>
+                                    <p class="blog-one__content-sub-title">Programme n°{{ programme.getId() }}:</p>
+                                    <!-- Adjust the displayed content according to your entity properties -->
+                                    <h3><a href="{{ path('listeProgramme', {'id': programme.getId()}) }}">{{ programme.getNomL() }}</a></h3>
+                                </div>
+                            </div>
+                            <div class="blog-one__content">
+                                <!-- Modify the content as per your requirements -->
+                                <div class="blog-one__comment-and-btn">
+                                    <div class="blog-one__btn">
+                                        <a href="{{ path('details', {'id': programme.getId()}) }}"><span class="icon-right-arrow"></span>More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Blog One Single End-->
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+</div>
+<!--Services Two Single Start-->
+<div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+    <div class="services-two__single">
+        <div class="services-two__img-box">
+            <div class="services-two__img">
+                <img src="{{asset('front-office/images/services/idkwlh.png')}}" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
