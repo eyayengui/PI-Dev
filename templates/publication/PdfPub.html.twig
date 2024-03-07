@@ -1,0 +1,93 @@
+
+<style>
+ /* publication.css */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+}
+
+h1 {
+    color: #444;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+h1 span {
+    background-color: #007bff;
+    border-radius: 5px;
+    color: #fff;
+    padding: 5px 10px;
+}
+
+h1 div {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+/* Image Styles */
+img {
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 100%;
+}
+
+/* Description and Date Styles */
+div {
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+div:last-child {
+    color: #666;
+    font-size: 14px;
+    text-align: right;
+}
+/* Logo Styles */
+img[alt="logo"] {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    width: 100px; /* Adjust the width as needed */
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensure the logo is above other elements */
+}
+
+   </style>
+   <br><br><br><br>
+    <img src="{{ app.request.getSchemeAndHttpHost() ~ asset('back-office/images/logo-letter.png') }}" alt="logo">
+    <br><br><br><br>
+
+   
+        <div>Publication</div>
+         <h1>{{ publication.getTitreP() }}</h1>
+    
+    <div>
+                    <img src="{{ app.request.getSchemeAndHttpHost() ~ asset('upload-images/'~publication.getImageP()) }}" alt="images"style="width: 750px; height: 500px;">
+    </div>
+
+    <div>
+            <div>{{publication.getDescriptionP()}}</div>
+                        <div>{{publication.getDateP()|date('Y-m-d')}}</div>
+
+    </div>
+
+
+
+

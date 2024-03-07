@@ -42,11 +42,7 @@ class RegistrationController extends AbstractController
 #[Route('/register', name: 'app_register')]
 public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator,Security $security, LoginFormAuthentificatorAuthenticator $authenticator, EntityManagerInterface $entityManager, ParameterBagInterface $params): Response
 {
-    $user = $security->getUser();
-        if (!$user) {
-            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_login');
-        }
+   
     $user = new User();
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
@@ -113,11 +109,7 @@ public function sendEmail(){
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator,Security $security): Response
     {
-        $user = $security->getUser();
-        if (!$user) {
-            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_login');
-        }
+        
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists

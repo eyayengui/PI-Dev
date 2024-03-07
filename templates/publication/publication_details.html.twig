@@ -40,9 +40,16 @@
                             <div class="blog-details__content">
                                 <ul class="blog-details__meta list-unstyled">
                                     <li>
-                                        <a href="blog-details.html"><i class="fas fa-user-circle"></i>by {{ publication.IDUser.nom }}
+                                       <div class="user-info" style="display: flex; align-items: center;">
+                                         <div class="comment-one__image" style="width: 30px; height: 30px;">
+        <img src="{{ asset('/upload-images/' ~ publication.IDUser.getProfilePicture()) }}" style="width: 100%; height: 100%;">
+    </div>
+    <a href="blog-details.html" style="margin-right: 10px;">
+        <i></i>by {{ publication.IDUser.nom }} {{ publication.IDUser.prenom }} 
+    </a>
+  
+</div>
 
-                                        </a>
                                     </li>
                                     <li>
                                         <a href="blog-details.html"><i class="fas fa-comments"></i>{{ commentairesParPublication[publication.id] }} Comments</a>
@@ -53,14 +60,13 @@
                                 <p class="blog-details__text-1">{{ publication.getDescriptionP() }}</p>
                                 <p class="blog-details__text-2">{{ publication.getDateP()|date('Y-m-d') }}</p>
                                    <!-- Ajoutez les boutons de like et dislike ici -->
-    <div class="blog-details__likes">
-        <a href="{{ path('like_publication', {'id': publication.id}) }}" class="like-btn">
-            <i class="fas fa-thumbs-up"></i> Like (<span class="like-count">{{ likesCount }}</span>)
-        </a>
-        <a href="{{ path('dislike_publication', {'id': publication.id}) }}" class="dislike-btn">
-            <i class="fas fa-thumbs-down"></i> Dislike (<span class="dislike-count">{{ dislikesCount }}</span>)
-        </a>
-    </div>
+<a href="#" class="like-btn" data-id="{{ publication.id }}" data-action="like">
+    <i class="fas fa-thumbs-up"></i> Like (<span class="like-count" id="like-count-{{ publication.id }}">{{ likesCount }}</span>)
+</a>
+<a href="#" class="dislike-btn" data-id="{{ publication.id }}" data-action="dislike">
+    <i class="fas fa-thumbs-down"></i> Dislike (<span class="dislike-count" id="dislike-count-{{ publication.id }}">{{ dislikesCount }}</span>)
+</a>
+
  
                                 <div class="blog-details__bottom">
                                     <p class="blog-details__tags">
@@ -103,10 +109,11 @@
         <div class="comment-one">
             <div class="comment-one__single">
                 <div class="comment-one__image">
-                    <img src="{{ asset('front-office/images/blog/comment-1-1.jpg') }}" alt="">
+                     <img src="{{ asset('/upload-images/' ~ commentaire.IDUser.getProfilePicture()) }}" style="width: 150px; height: 150px;">
+
                 </div>
                 <div class="comment-one__content">
-                    <h3>user: {{ commentaire.IDUser.nom }}</h3>
+                    <h3> {{ commentaire.IDUser.nom }} {{ commentaire.IDUser.prenom }}</h3>
                     <p>{{ commentaire.getContenuC() }}</p>
                 </div>
             </div>
@@ -182,7 +189,7 @@
             </div>
         </section>
         <!--Blog Details End-->
-        <script>
+<script>
     document.querySelectorAll('.blog-details__pagenation-right').forEach(function(div) {
         div.addEventListener('click', function() {
             window.location.href = this.getAttribute('data-href');
@@ -215,6 +222,36 @@
     };
 </script>
 
+
+<script>
+   document.querySelectorAll('.like-btn, .dislike-btn').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        const publicationId = this.dataset.id;
+        const action = this.dataset.action;
+
+        fetch(`/${action}/${publicationId}`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id: publicationId})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('like-count-' + publicationId).textContent = data.likesCount;
+                document.getElementById('dislike-count-' + publicationId).textContent = data.dislikesCount;
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+</script>
 
 {% endblock %}
 

@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="blog-one__content-top">
                                     <div class="blog-one__content-img">
-                                        <img src="front-office/images/blog/blog-content-img.jpg" alt="">
+                                        <img src="{{ asset('/upload-images/' ~ publication.IDUser.getProfilePicture()) }}" style="width: 20%; height: 20%;">
                                     </div>
                                     <p class="blog-one__content-sub-title">pub n°{{ publication.id }}:</p>
 

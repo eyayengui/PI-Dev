@@ -99,38 +99,6 @@ hr {
 
 
  </style>
-
- <div class="container">
-        <h1 class="mt-4 mb-4">Ajouter une publication</h1>
-       <div class="row">
-    <div class="col-md-8 offset-md-2">
-        {{ form_start(formA, {'attr': {'novalidate': 'novalidate'}}) }}
-        <div class="form-group">
-            {{ form_label(formA.Titre_P) }}
-            {{ form_widget(formA.Titre_P, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(formA.Titre_P) }}
-        </div>
-
-                <div class="form-group">
-                    {{ form_label(formA.Description_P) }}
-                    {{ form_widget(formA.Description_P, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(formA.Description_P) }}
-                </div>
-                <div class="form-group">
-                    {{ form_label(formA.imageFile) }}
-                    {{ form_widget(formA.imageFile, {'attr': {'class': 'form-control-file'}}) }}
-                </div>
-                <div class="form-group">
-                    {{ form_label(formA.Date_P) }}
-                    {{ form_widget(formA.Date_P, {'attr': {'class': 'form-control'}}) }}
-                     {{ form_errors(formA.Date_P) }}
-                </div>
-            
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-                {{ form_end(formA) }}
-            </div>
-        </div>
-    </div>
  <hr> 
          <h1 class="mt-4 mb-4">List des  publication</h1>
 
@@ -158,7 +126,11 @@ hr {
                 <p>{{ publication.getDescriptionP() }}</p>
                 <p class="text-end">
                     <a class="btn btn-sm btn-bold btn-primary" href="{{ path('publication_details', {'id': publication.id}) }}">Read more</a>
+                    <form method="get" action="{{ path('PDF', {'id': publication.getId()}) }}">    
+        <button type="submit" class="generate-button">Generate PDF</button>
+    </form>
                 </p>
+
                   <p>
     <a href="{{ path('edit_publication', {'id': publication.id}) }}" class="edit-link">Edit</a>
 </p>

@@ -18,6 +18,9 @@ use App\Repository\CommentaireRepository;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Like;
 use App\Repository\LikeRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 
@@ -86,7 +89,7 @@ class PublicationController extends AbstractController
             'commentairesParPublication' => $commentairesParPublication,
         ]);
     }
-    #[Route('/ListBack', name: 'ListBack')]
+    #[Route('/addBack', name: 'addBack')]
     public function addPublication(EntityManagerInterface $em, Request $request, PublicationRepository $publicationRepo, CommentaireRepository $commentaireRepo, Security $security): Response
     {
         $user = $security->getUser();
@@ -115,7 +118,7 @@ class PublicationController extends AbstractController
                     );
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Une erreur s\'est produite lors du téléchargement de l\'image.');
-                    return $this->redirectToRoute('ListBack');
+                    return $this->redirectToRoute('addBack');
                 }
     
                 $publication->setImageP($newFilename);
@@ -139,7 +142,7 @@ class PublicationController extends AbstractController
             $commentairesParPublication[$publication->getId()] = count($commentaires);
         }
     
-        return $this->render('publication/ListBack.html.twig', [
+        return $this->render('publication/addBack.html.twig', [
             'formA' => $form->createView(),
             'publications' => $publications,
             'commentairesParPublication' => $commentairesParPublication,
@@ -210,54 +213,6 @@ public function delete(EntityManagerInterface $manager, int $id): Response
 
     return $this->redirectToRoute('ListBack'); // Assurez-vous que la route est correcte
 }
-
-// #[Route("/publication/{id}", name:"publication_details")]
-// public function showPublicationDetails($id, PublicationRepository $repo): Response
-// {
-//     $publication = $repo->find($id);
-
-//     if (!$publication) {
-//         throw $this->createNotFoundException('La publication n\'existe pas.');
-//     }
-
-//     return $this->render('publication/publication_details.html.twig', [
-//         'publication' => $publication,
-//     ]);
-// }
-
-
-// #[Route("/publication/{id}", name:"publication_details")]
-// public function showPublicationDetails($id, PublicationRepository $repo, EntityManagerInterface $em, Request $request): Response
-// {
-//     $publication = $repo->find($id);
-
-//     if (!$publication) {
-//         throw $this->createNotFoundException('La publication n\'existe pas.');
-//     }
-
-//     // Création du formulaire pour ajouter un commentaire
-//     $commentaire = new Commentaire();
-//     $form = $this->createForm(CommentaireType::class, $commentaire);
-
-//     // Gestion de la soumission du formulaire
-//     $form->handleRequest($request);
-//     if ($form->isSubmitted() && $form->isValid()) {
-//         $commentaire->setPublication($publication); // Associer le commentaire à la publication
-//         $em->persist($commentaire); 
-//         $em->flush();
-
-//         $this->addFlash('success', 'Commentaire ajouté avec succès!');
-        
-//         // Redirection vers la même page après la soumission du formulaire pour éviter les re-soumissions
-//         return $this->redirectToRoute('publication_details', ['id' => $id]);
-//     }
-
-//     // Affichage de la page avec les détails de la publication et le formulaire pour ajouter un commentaire
-//     return $this->render('publication/publication_details.html.twig', [
-//         'formB' => $form->createView(),
-//         'publication' => $publication,
-//     ]);
-// }
     
 #[Route("/publication/{id}", name: "publication_details")]
 public function showPublicationDetails($id, PublicationRepository $publicationRepo, CommentaireRepository $commentaireRepo, LikeRepository $likeRepo): Response
@@ -322,7 +277,7 @@ public function addComment($id, Request $request, PublicationRepository $publica
             // Publier une mise à jour Mercure
             $update = new Update(
                 'publication/' . $id,
-                json_encode(['user' => $user->getUsername(), 'message' => $commentaire->getContenuC()])
+                json_encode(['user' => $commentaire->getIDUser()->getNom(), 'message' => $commentaire->getContenuC()])
             );
             $hub->publish($update);
 
@@ -337,54 +292,35 @@ public function addComment($id, Request $request, PublicationRepository $publica
     return $this->redirectToRoute('publication_details', ['id' => $id]);
 }
 
-// #[Route("/publication/{id}/add-comment", name: "add_comment")]
-// public function addComment($id, Request $request, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response
-// {
-//     $publication = $publicationRepo->find($id);
-//     if (!$publication) {
-//         throw $this->createNotFoundException('La publication n\'existe pas.');
-//     }
-
-//     $commentaire = new Commentaire();
-//     $form = $this->createForm(CommentaireType::class, $commentaire);
-//     $form->handleRequest($request);
-//     if ($form->isSubmitted() && $form->isValid()) {
-//         $user = $this->getUser();
-//         if ($user) {
-//             $commentaire->setIDUser($user);
-//             $commentaire->setPublication($publication);
-
-//             $em->persist($commentaire);
-//             $em->flush();
-
-//             $this->addFlash('success', 'Commentaire ajouté avec succès!');
-//             return $this->redirectToRoute('publication_details', ['id' => $id]);
-//         } else {
-//             $this->addFlash('error', 'Vous devez être connecté pour ajouter un commentaire.');
-//             return $this->redirectToRoute('app_login');
-//         }
-//     }
-
-//     return $this->redirectToRoute('publication_details', ['id' => $id]);
-// }
-
 #[Route("/like/{id}", name: "like_publication")]
-public function likePublication($id, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response
+public function likePublication($id, PublicationRepository $publicationRepo, EntityManagerInterface $em): JsonResponse
 {
     $user = $this->getUser();
     if (!$user) {
-        $this->addFlash('error', 'Vous devez être connecté pour aimer une publication.');
-        return $this->redirectToRoute('app_login');
+        return $this->json([
+            'success' => false,
+            'message' => 'Vous devez être connecté pour aimer une publication.'
+        ]);
     }
 
     $publication = $publicationRepo->find($id);
     if (!$publication) {
-        throw $this->createNotFoundException('La publication n\'existe pas.');
+        return $this->json([
+            'success' => false,
+            'message' => 'La publication n\'existe pas.'
+        ]);
     }
 
     $like = $em->getRepository(Like::class)->findOneBy(['user' => $user, 'publication' => $publication, 'type' => true]);
 
-    if (!$like) {
+    if ($like) {
+        // Si l'utilisateur a déjà aimé la publication, supprimer le like
+        $em->remove($like);
+        $em->flush();
+
+        $message = 'Like annulé avec succès!';
+    } else {
+        // Sinon, ajouter un nouveau like
         $like = new Like();
         $like->setUser($user);
         $like->setPublication($publication);
@@ -393,31 +329,49 @@ public function likePublication($id, PublicationRepository $publicationRepo, Ent
         $em->persist($like);
         $em->flush();
 
-        $this->addFlash('success', 'Publication aimée avec succès!');
-    } else {
-        $this->addFlash('error', 'Vous avez déjà aimé cette publication.');
+        $message = 'Publication aimée avec succès!';
     }
 
-    return $this->redirectToRoute('publication_details', ['id' => $id]);
-}
+    // Mettre à jour les compteurs de likes et dislikes
+    $likesCount = $publicationRepo->countLikesByPublication($id);
+    $dislikesCount = $publicationRepo->countDislikesByPublication($id);
 
+    return $this->json([
+        'success' => true,
+        'message' => $message,
+        'likesCount' => $likesCount,
+        'dislikesCount' => $dislikesCount
+    ]);
+}
 #[Route("/dislike/{id}", name: "dislike_publication")]
-public function dislikePublication($id, PublicationRepository $publicationRepo, EntityManagerInterface $em): Response
+public function dislikePublication($id, PublicationRepository $publicationRepo, EntityManagerInterface $em): JsonResponse
 {
     $user = $this->getUser();
     if (!$user) {
-        $this->addFlash('error', 'Vous devez être connecté pour ne pas aimer une publication.');
-        return $this->redirectToRoute('app_login');
+        return $this->json([
+            'success' => false,
+            'message' => 'Vous devez être connecté pour ne pas aimer une publication.'
+        ]);
     }
 
     $publication = $publicationRepo->find($id);
     if (!$publication) {
-        throw $this->createNotFoundException('La publication n\'existe pas.');
+        return $this->json([
+            'success' => false,
+            'message' => 'La publication n\'existe pas.'
+        ]);
     }
 
     $like = $em->getRepository(Like::class)->findOneBy(['user' => $user, 'publication' => $publication, 'type' => false]);
 
-    if (!$like) {
+    if ($like) {
+        // Si l'utilisateur a déjà non aimé la publication, supprimer le dislike
+        $em->remove($like);
+        $em->flush();
+
+        $message = 'Dislike annulé avec succès!';
+    } else {
+        // Sinon, ajouter un nouveau dislike
         $like = new Like();
         $like->setUser($user);
         $like->setPublication($publication);
@@ -426,83 +380,55 @@ public function dislikePublication($id, PublicationRepository $publicationRepo, 
         $em->persist($like);
         $em->flush();
 
-        $this->addFlash('success', 'Publication non aimée avec succès!');
-    } else {
-        $this->addFlash('error', 'Vous avez déjà non aimé cette publication.');
+        $message = 'Publication non aimée avec succès!';
     }
 
-    return $this->redirectToRoute('publication_details', ['id' => $id]);
+    // Mettre à jour les compteurs de likes et dislikes
+    $likesCount = $publicationRepo->countLikesByPublication($id);
+    $dislikesCount = $publicationRepo->countDislikesByPublication($id);
+
+    return $this->json([
+        'success' => true,
+        'message' => $message,
+        'likesCount' => $likesCount,
+        'dislikesCount' => $dislikesCount
+    ]);
 }
 
-// #[Route("/publication/{id}", name:"publication_details")]
-// public function showPublicationDetails($id, PublicationRepository $publicationRepo, CommentaireRepository $commentaireRepo, EntityManagerInterface $em, Request $request): Response
-// {
-//     // Création du formulaire de recherche par titre
-//     $searchForm = $this->createFormBuilder(null)
-//         ->add('search', TextType::class, ['label' => 'Rechercher par titre', 'required' => false])
-//         ->add('searchBtn', SubmitType::class, ['label' => 'Rechercher'])
-//         ->getForm();
 
-//     $searchForm->handleRequest($request);
+#[Route('/PdfPub/{id}', name: 'PDF')]
+    public function exportPdf(Publication $publication)
+    {
 
-//     // Récupération de la publication correspondant à l'ID
-//     $publication = $publicationRepo->find($id);
+        $options = new Options(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+        $options->set('defaultFont', 'arial');
+        $options->set('isRemoteEnabled', true);
+        $publicImagesPath = realpath($this->getParameter('kernel.project_dir') . '/public/images');
+        $options->set('chroot', $publicImagesPath);
+        $dompdf = new Dompdf($options);
+        $context = stream_context_create([
+            'ssl' => [
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+                'allow_self_signed' => TRUE
+            ]
+        ]);
+        $dompdf->setHttpContext($context);
 
-//     if (!$publication) {
-//         throw $this->createNotFoundException('La publication n\'existe pas.');
-//     }
+        // Création du PDF
 
-//     // Récupération des commentaires de cette publication
-//     $commentaires = $commentaireRepo->findBy(['publication' => $publication]);
+        $html = $this->render('publication/PdfPub.html.twig', ['publication' => $publication]);
 
-//     // Récupération de toutes les publications
-//     $publications = $publicationRepo->findAll();
+        $dompdf->loadHtml($html, 'UTF-8');
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
 
-//     // Calculer le nombre de commentaires pour chaque publication
-//     $commentairesParPublication = [];
-//     foreach ($publications as $pub) {
-//         $commentairesParPublication[$pub->getId()] = count($commentaireRepo->findBy(['publication' => $pub]));
-//     }
+        // Préparation du fichier de téléchargement
+        $fichier =  $publication->getTitreP() . '.pdf';
 
-//     // Si le formulaire de recherche est soumis et valide, filtrer les publications par titre
-//     $searchedPublications = [];
-//     if ($searchForm->isSubmitted() && $searchForm->isValid()) {
-//         $searchData = $searchForm->getData();
-//         $searchedTitle = $searchData['search'];
-
-//         if ($searchedTitle) {
-//             $searchedPublications = $publicationRepo->findByTitle($searchedTitle);
-//         }
-//     }
-
-//     // Création du formulaire pour ajouter un commentaire
-//     $commentaire = new Commentaire();
-//     $form = $this->createForm(CommentaireType::class, $commentaire);
-
-//     // Gestion de la soumission du formulaire
-//     $form->handleRequest($request);
-//     if ($form->isSubmitted() && $form->isValid()) {
-//         $commentaire->setPublication($publication); // Associer le commentaire à la publication
-//         $em->persist($commentaire);
-//         $em->flush();
-
-//         $this->addFlash('success', 'Commentaire ajouté avec succès!');
-
-//         // Redirection vers la même page après la soumission du formulaire pour éviter les re-soumissions
-//         return $this->redirectToRoute('publication_details', ['id' => $id]);
-//     }
-
-//     // Affichage de la page avec les détails de la publication, les commentaires de la publication, la liste de toutes les publications, le nombre de commentaires par publication, le formulaire pour ajouter un commentaire et les publications filtrées par titre
-//     return $this->render('publication/publication_details.html.twig', [
-//         'formB' => $form->createView(),
-//         'searchForm' => $searchForm->createView(),
-//         'publication' => $publication,
-//         'commentaires' => $commentaires,
-//         'publications' => $publications,
-//         'commentairesParPublication' => $commentairesParPublication,
-//         'searchedPublications' => $searchedPublications,
-//     ]);
-// }
-
+        // envoie au navigateur dans le télechargement
+        $dompdf->stream($fichier, ['attachement' => TRUE]);
+        return new Response();
+    }
 
 }

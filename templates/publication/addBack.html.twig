@@ -1,0 +1,135 @@
+{% extends 'base-back.html.twig' %}
+{% block title %}gestion publications{% endblock %}
+{% block body %}
+<style>
+.box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.box-body {
+    margin-top: 15px;
+}
+
+.carousel-indicators li {
+    background-color: #007bff;
+}
+
+.carousel-item img {
+    display: block;
+    margin: 0 auto;
+}
+
+.nav.nav-dot-separated {
+    list-style-type: none;
+    padding: 0;
+}
+
+.nav.nav-dot-separated li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.nav.nav-dot-separated li::after {
+    content: "•";
+    margin-left: 10px;
+}
+
+.nav.nav-dot-separated li:last-child::after {
+    content: "";
+}
+
+h4 a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+h4 a:hover {
+    text-decoration: underline;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.edit-link {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #17a2b8;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid #17a2b8;
+}
+
+.edit-link:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+hr {
+    border-top: 1px solid #ddd;
+}
+
+
+ </style>
+
+ <div class="container">
+        <h1 class="mt-4 mb-4">Ajouter une publication</h1>
+       <div class="row">
+    <div class="col-md-8 offset-md-2">
+        {{ form_start(formA, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="form-group">
+            {{ form_label(formA.Titre_P) }}
+            {{ form_widget(formA.Titre_P, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(formA.Titre_P) }}
+        </div>
+
+                <div class="form-group">
+                    {{ form_label(formA.Description_P) }}
+                    {{ form_widget(formA.Description_P, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(formA.Description_P) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.imageFile) }}
+                    {{ form_widget(formA.imageFile, {'attr': {'class': 'form-control-file'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(formA.Date_P) }}
+                    {{ form_widget(formA.Date_P, {'attr': {'class': 'form-control'}}) }}
+                     {{ form_errors(formA.Date_P) }}
+                </div>
+            
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(formA) }}
+            </div>
+        </div>
+    </div>
+ 
+  {% endblock %}

@@ -53,16 +53,7 @@
 			</li>
 			<li class="btn-group d-lg-inline-flex d-none">
 				<div class="app-menu">
-					<div class="search-bx mx-5">
-						<form>
-							<div class="input-group">
-							  <input type="search" class="form-control" placeholder="Search">
-							  <div class="input-group-append">
-								<button class="btn" type="submit" id="button-addon3"><i class="icon-Search"><span class="path1"></span><span class="path2"></span></i></button>
-							  </div>
-							</div>
-						</form>
-					</div>
+					
 				</div>
 			</li>
 		</ul> 
@@ -75,16 +66,17 @@
 				<a href="#" class="waves-effect waves-light dropdown-toggle w-auto l-h-12 bg-transparent p-0 no-shadow" data-bs-toggle="dropdown" title="User">
 					<div class="d-flex pt-1">
 						<div class="text-end me-10">
-							<p class="pt-5 fs-14 mb-0 fw-700 text-primary">yengui eya</p>
+							<p class="pt-5 fs-14 mb-0 fw-700 text-primary">{{ app.user.nom }} {{ app.user.prenom }}</p>
 							<small class="fs-10 mb-0 text-uppercase text-mute">Admin</small>
 						</div>
-							<img src="{{ asset('back-office/images/avatar/avatar-1.png') }}" class="avatar rounded-10 bg-primary-light h-40 w-40" alt="">
+							<img src="{{ asset('/upload-images/' ~ app.user.getProfilePicture()) }}" class="avatar rounded-10 bg-primary-light h-40 w-40" alt="">
+							
 					</div>
 				</a>
 				<ul class="dropdown-menu animated flipInX">
 				  <li class="user-body">
 					 <a class="dropdown-item" href="extra_profile.html"><i class="ti-user text-muted me-2"></i> Profile</a>
-					 <a class="dropdown-item" href="auth_login.html"><i class="ti-lock text-muted me-2"></i> Logout</a>
+					 <a class="dropdown-item" href="logout"><i class="ti-lock text-muted me-2"></i> Logout</a>
 				  </li>
 				</ul>
 			</li>	
@@ -157,12 +149,7 @@
 			</ul>
 		  </li>			  
           <!-- Control Sidebar Toggle Button -->
-          <li class="btn-group nav-item">
-              <a href="#" data-toggle="control-sidebar" title="Setting" class="waves-effect full-screen waves-light btn-danger-light">
-			  	<i class="icon-Settings1"><span class="path1"></span><span class="path2"></span></i>
-			  </a>
-          </li>
-			
+         
         </ul>
       </div>
     </nav>
@@ -184,7 +171,7 @@
 					</span>
 				  </a>
 				  <ul class="treeview-menu">
-					<li><a href="index.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>ADMIN Dashboard</a></li>
+					<li><a href="index"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>ADMIN Dashboard</a></li>
 
 				  </ul>
 				</li>
@@ -198,7 +185,6 @@
 					</span>
 				  </a>
 				  <ul class="treeview-menu">
-					<li><a href="patients.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Patients</a></li>
 					<li><a href="listaddfiche1"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Fiches medicales</a></li>
 				  </ul>
 				</li>
@@ -208,50 +194,23 @@
 					<span>Liste des consultations</span>
 				  </a>
 				</li>	
-				<li>
-					<a href="ListBack">
-					  <i class="icon-Settings"><span class="path1"></span><span class="path2"></span></i>
-					  <span>Publication</span>
-					</a>
-				  </li>					
 				<li class="treeview">
-				  <a href="#">
-					<i class="icon-Diagnostics"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-					<span>Doctors</span>
+				  <a href="">
+					<i class="icon-Settings"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+					<span>Publications</span>
 					<span class="pull-right-container">
 					  <i class="fa fa-angle-right pull-right"></i>
 					</span>
 				  </a>
 				  <ul class="treeview-menu">
-					<li><a href="doctor_list.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Doctors</a></li>
-					<li><a href="doctors.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Doctor Details</a></li>
+					<li><a href="ListBack"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Publication</a></li>
+					<li><a href="addBack"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>add pub</a></li>
 				  </ul>
-				</li>
-				<li class="header">Components</li>
-				<li class="treeview">
-				  <a href="#">
-					<i class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
-					<span>Fiches</span>
-					<span class="pull-right-container">
-					  <i class="fa fa-angle-right pull-right"></i>
-					</span>
-				  </a>
-				  <ul class="treeview-menu">											
-					<li class="treeview">
-						<a href="#">
-							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>list
-							<span class="pull-right-container">
-								<i class="fa fa-angle-right pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="box_cards.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>liste des fiches</a></li>
-					
-						</ul>
-					</li>												
-					
-				  </ul>
-				</li>	
+				</li>				
+				
+				
+				<li class="header">Quiz et prog</li>
+				
 
 
 				<li class="treeview">
@@ -316,9 +275,8 @@
 				  </a>
 				  <ul class="treeview-menu">
 					<li><a href="auth_login.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Login</a></li>
-					<li><a href="auth_register.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Register</a></li>
-					<li><a href="auth_lockscreen.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lockscreen</a></li>
-					<li><a href="auth_user_pass.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Recover password</a></li>	
+					<li><a href="{{ path('app_admin_new') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Register</a></li>
+
 				  </ul>
 				</li>
 				
@@ -644,12 +602,7 @@
 	
 	<!-- ./side demo panel -->
 	<div class="sticky-toolbar">	    
-	    <a href="https://themeforest.net/item/doclinic-medical-responsive-bootstrap-admin-dashboard/32737529" data-bs-toggle="tooltip" data-bs-placement="left" title="Buy Now" class="waves-effect waves-light btn btn-success btn-flat mb-5 btn-sm" target="_blank">
-			<span class="icon-Money"><span class="path1"></span><span class="path2"></span></span>
-		</a>
-	    <a href="https://themeforest.net/user/multipurposethemes/portfolio" data-bs-toggle="tooltip" data-bs-placement="left" title="Portfolio" class="waves-effect waves-light btn btn-danger btn-flat mb-5 btn-sm" target="_blank">
-			<span class="icon-Image"></span>
-		</a>
+	  
 	    <a id="chat-popup" href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Live Chat" class="waves-effect waves-light btn btn-warning btn-flat btn-sm">
 			<span class="icon-Group-chat"><span class="path1"></span><span class="path2"></span></span>
 		</a>

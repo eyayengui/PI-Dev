@@ -64,7 +64,7 @@
                                                     </td>
                                                 {% endif %}
                 <td>
-                    <a href="{{ path('app_admin_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('app_admin_index', {'id': user.id}) }}">show</a>
                     <a href="{{ path('app_admin_edit', {'id': user.id}) }}">edit</a>
                 </td>
             </tr>
@@ -86,6 +86,5 @@
         {{ gc_draw(piechart, 'div_chart') }}
     </script>
 <div id="div_chart"></div>
-<a href="{{ path('app_admin_new') }}">Create new</a>
    
 {% endblock %}
