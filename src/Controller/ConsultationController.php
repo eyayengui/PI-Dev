@@ -57,7 +57,7 @@ class ConsultationController extends AbstractController
 
 
     #[Route('/addconsultation/{id}', name: 'addconsultation')]
-    public function Addconsultation($id,EntityManagerInterface $em,ConsultationRepository $CRepo, Request $request,Security $security,UserRepository $urepo): Response
+    public function Addconsultation($id,FichemedicaleRepository $frepo,EntityManagerInterface $em,ConsultationRepository $CRepo, Request $request,Security $security,UserRepository $urepo): Response
     {
         $user = $security->getUser();
         if (!$user) {
@@ -68,6 +68,8 @@ class ConsultationController extends AbstractController
     $con->setIdp($user);
     $therap=$urepo->find($id);
     $con->setIdt($therap);
+    $fiche=$frepo->findByTherapistAndPatientId($therap,$user);
+    $con->setFichemedicale($fiche);
     $form=$this->createform(ConsultationType::class,$con);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()){

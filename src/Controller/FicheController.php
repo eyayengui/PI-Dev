@@ -80,8 +80,8 @@ class FicheController extends AbstractController
         }
     $p=$urepo->find($id);
     $f =New Fichemedicale;
-    $f->setidp($user);
-    $f->setIdT($p);
+    $f->setidp($p);
+    $f->setIdT($user);
     $fs =$fRepo->findByTherapistId($user);
     $form=$this->createform(FicheType::class,$f);
     $form->handleRequest($request);
