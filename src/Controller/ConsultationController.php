@@ -218,15 +218,20 @@ public function calendar(ConsultationRepository $consultationRepository,Security
 
 
     #[Route('/searchConsultation', name: 'search_consultation')]
-    public function searchConsultation(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository): Response
+    public function searchConsultation(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $p = $request->query->get('Pathologie'); 
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
         $fiche = $fichemedicaleRepository->find(0);
-        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate,$p);
+        $consultations = $consultationRepository->findConsultationsBetweenDatespatient($startDate, $endDate,$p,$user);
         if (!$consultations) {
             return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
         }
@@ -237,15 +242,20 @@ public function calendar(ConsultationRepository $consultationRepository,Security
     }
 
     #[Route('/searchConsultation1', name: 'search_consultation1')]
-    public function searchConsultation1(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository): Response
+    public function searchConsultation1(Request $request, ConsultationRepository $consultationRepository,FichemedicaleRepository $fichemedicaleRepository,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $p = $request->query->get('Pathologie'); 
         $startDate = $request->query->get('start_date');
         $endDate = $request->query->get('end_date');
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
         $fiche = $fichemedicaleRepository->find(0);
-        $consultations = $consultationRepository->findConsultationsBetweenDates($startDate, $endDate,$p);
+        $consultations = $consultationRepository->findConsultationsBetweenDatestherap($startDate, $endDate,$p,$user);
         if (!$consultations) {
             return new Response('Consultation not found.', Response::HTTP_NOT_FOUND);
         }
@@ -277,11 +287,15 @@ public function calendar(ConsultationRepository $consultationRepository,Security
     }
     
     #[Route('/consultations_ordered_by_date', name: 'consultations_ordered_by_date')]
-    public function consultationsOrderedByDate(ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository): Response
+    public function consultationsOrderedByDate(ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository,Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
         $fiche = $fichemedicaleRepository->find(0);
-        $consultations = $consultationRepository->findAllOrderedByDate();
-        $fiche = $fichemedicaleRepository->find(0);
+        $consultations = $consultationRepository->findAllOrderedByDatep($user);
         return $this->render('consultation/orderbydate.html.twig', [
             'consultations' => $consultations,
             'fiche' => $fiche,
@@ -289,9 +303,14 @@ public function calendar(ConsultationRepository $consultationRepository,Security
     }
 
     #[Route('/consultations_ordered_by_date1', name: 'consultations_ordered_by_date1')]
-    public function consultationsOrderedByDate1(ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository): Response
+    public function consultationsOrderedByDate1(ConsultationRepository $consultationRepository, FichemedicaleRepository $fichemedicaleRepository,Security $security): Response
     {
-        $consultations = $consultationRepository->findAllOrderedByDate();
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+        $consultations = $consultationRepository->findAllOrderedByDatet($user);
         $fiche = $fichemedicaleRepository->find(0);
         return $this->render('consultation/orderbydate1.html.twig', [
             'consultations' => $consultations,

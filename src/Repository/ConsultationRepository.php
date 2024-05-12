@@ -65,22 +65,50 @@ public function findByTherapistId($id): array
             ->getResult();
     }
 
-public function findConsultationsBetweenDates(DateTime $startDate, DateTime $endDate, string $pathologie): array
+public function findConsultationsBetweenDatespatient(DateTime $startDate, DateTime $endDate, string $pathologie,$id): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.date_c BETWEEN :start_date AND :end_date')
             ->andWhere('c.pathologie = :pathologie')
+            ->andWhere('c.idp = :idp')
             ->setParameter('start_date', $startDate)
             ->setParameter('end_date', $endDate)
             ->setParameter('pathologie', $pathologie)
+            ->setParameter('idp', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findConsultationsBetweenDatestherap(DateTime $startDate, DateTime $endDate, string $pathologie,$id): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.date_c BETWEEN :start_date AND :end_date')
+            ->andWhere('c.pathologie = :pathologie')
+            ->andWhere('c.idt = :idt')
+            ->setParameter('start_date', $startDate)
+            ->setParameter('end_date', $endDate)
+            ->setParameter('pathologie', $pathologie)
+            ->setParameter('idt', $id)
             ->getQuery()
             ->getResult();
     }
     
-    public function findAllOrderedByDate(): array
+    public function findAllOrderedByDatep($id): array
     {
         return $this->createQueryBuilder('c')
+            ->andWhere('c.idp = :idp')
             ->orderBy('c.date_c', 'ASC') // Order by dateC in ascending order
+            ->setParameter('idp', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllOrderedByDatet($id): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.idt = :idt')
+            ->orderBy('c.date_c', 'ASC') // Order by dateC in ascending order
+            ->setParameter('idt', $id)
             ->getQuery()
             ->getResult();
     }
@@ -88,6 +116,15 @@ public function findConsultationsBetweenDates(DateTime $startDate, DateTime $end
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.date_c', 'DESC') // Order by dateC in ascending order
+  //          ->setParameter('idt', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllOrderedByDate(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.date_c', 'ASC') // Order by dateC in ascending order
             ->getQuery()
             ->getResult();
     }

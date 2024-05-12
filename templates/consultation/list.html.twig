@@ -215,19 +215,6 @@
     <div class="consultation-card">
         <div class="card-details">
             <div class="card-detail">
-                <span class="detail-label">Id consultation:</span>
-                <span class="detail-value">{{ consultation.getid() }}</span>
-            </div>
-            <div class="card-detail">
-                <span class="detail-label">Id fiche:</span>
-                {% if consultation.getFichemedicale() is null or consultation.getFichemedicale().id==0 %}
-                    {% set _ = consultation.setFichemedicale(fiche) %}
-                    <span class="detail-value">pas de fiche médicale</span>
-                {% else %}
-                    <span class="detail-value">{{ consultation.getFichemedicale().id }}</span>
-                {% endif %}
-            </div>
-            <div class="card-detail">
                 <span class="detail-label">Nom Patient:</span>
                 <span class="detail-value">{{ consultation.getIdp().nom }}</span>
             </div>
@@ -259,7 +246,7 @@
                 </div>
             {% endif %}
 
-            {% if consultation.getFichemedicale().id == 0 %}
+            {% if consultation.getFichemedicale() == null %}
                 <div class="card-detail" style="margin-top: 10px;"> <!-- Adjust margin-top as needed -->
                     <form action="{{ path('addfiche', {'id': consultation.getidp().id}) }}" method="post">
                         <button id="send-email-btn" class="btn btn-primary" type="submit">Ajouter Fiche</button>
@@ -270,12 +257,12 @@
         {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
              <div class="warning-box">Non confimé</div>
         {% endif %}
-        {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == true %}
+        {% if consultation.getFichemedicale() is not null and consultation.getFichemedicale().getid()!=0  and consultation.getConfirmation() == true %}
             <form action="{{ path('send_emailconf', {'id': consultation.getid()}) }}" method="post">
                 <button id="send-email-btn" class="light-green-button" type="submit">Send Email</button>
             </form>
         {% endif %}
-        {% if consultation.getFichemedicale() is not null and consultation.getFichemedicale().id == 0 %}
+        {% if consultation.getFichemedicale() is null or consultation.getFichemedicale().id == 0 %}
              <div class="warning-box">Fiche Non Attribuée</div>
         {% endif %}
         <div class="action-links">
