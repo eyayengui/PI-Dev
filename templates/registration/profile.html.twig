@@ -1,153 +1,70 @@
-{% block title %}{% endblock %}
-
-{% block css %}
-<style>
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .profile-container {
-        display: flex;
-        align-items: stretch;
-        min-width: 300px;
-        max-width: 800px;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .profile-card {
-        flex: 1;
-        background: #ffffff;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .profile-image {
-        width: 100%;
-        height: 200px; /* Adjusted for portrait */
-        object-fit: cover;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-    }
-
-    .user-info {
-        font-size: 22px;
-        color: #333;
-        margin: 20px 0;
-    }
-
-    .profile-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
-
-    .profile-table th,
-    .profile-table td {
-        border-bottom: 1px solid #dee2e6;
-        padding: 12px;
-        text-align: left;
-        color: #555;
-    }
-
-    /* Remove last border for a cleaner look */
-    .profile-table tr:last-child th,
-    .profile-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .profile-footer {
-        width: 100%;
-        padding: 20px;
-        text-align: center;
-    }
-
-    .logout-btn,
-    .edit-btn {
-        padding: 10px 30px;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        font-weight: bold;
-        text-transform: uppercase;
-        transition: background-color 0.3s ease;
-    }
-
-    .logout-btn:hover {
-        background-color: #c82333;
-    }
-
-    .edit-btn:hover {
-        background-color: #0056b3;
-    }
-
-    .logout-btn {
-        background-color: #dc3545;
-        color: #fff;
-        margin-right: 10px;
-    }
-
-    .edit-btn {
-        background-color: #007bff;
-        color: #fff;
-        margin-left: 10px;
-    }
-    .profile-image {
-        width: 200px; /* Ajustez la largeur selon vos besoins */
-        height: 200px; /* Ajustez la hauteur selon vos besoins */
-        border-radius: 50%; /* Assurez-vous que l'image est arrondie */
-        margin-bottom: 20px; /* Espacement sous l'image */
-    }
-</style>
-{% endblock %}
+{% extends 'base-front.html.twig' %}
 
 {% block body %}
-<div class="profile-container">
-    <div class="profile-card">
-      {% if app.user.profile_picture %}
-    <img src="{{ asset('/upload-images/' ~ app.user.getProfilePicture()) }}" alt="Profile Picture" class="profile-image" Image"style=width: 400px; height: 250px;">
-                                    
-{% else %}
-    <!-- Placeholder image or default image si l'utilisateur n'a pas de photo de profil -->
-    <img src="{{ asset('images/default_profile_picture.png') }}" alt="Profile Picture" class="profile-image">
-{% endif %}
-        <h1 class="user-info">{{ app.user.nom }} {{ app.user.prenom }}</h1>
-        <table class="profile-table">
-            <tbody>
-                <tr>
-                    <th>Id</th>
-                    <td>{{ app.user.id }}</td>
-                </tr>
-                <tr>
-                    <th>Email</th>
-                    <td>{{ app.user.email }}</td>
-                </tr>
-                <tr>
-                    <th>Nom</th>
-                    <td>{{ app.user.nom }}</td>
-                </tr>
-                <tr>
-                    <th>Prenom</th>
-                    <td>{{ app.user.prenom }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="profile-footer">
-            <a href="{{ path('app_logout') }}" class="logout-btn">Logout</a>
-            
-        </div>
-    </div>
+<body class="custom-cursor">
+
+    <div class="custom-cursor__cursor"></div>
+    <div class="custom-cursor__cursor-two"></div>
+
+<div class="page-wrapper">
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+        <!--Page Header Start-->
+        <section class="page-header">
+            <div class="page-header-bg" style="background-image: url(assets/images/backgrounds/page-header-bg.jpg)">
+            </div>
+            <div class="container">
+                <div class="page-header__inner">
+                    <h2>Votre Profile</h2>
+                    <ul class="thm-breadcrumb list-unstyled">
+                        <li><a href="index.html">Home</a></li>
+                        <li><span>/</span></li>
+                        <li>Votre Profile</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--Page Header End-->
+
+        <!--Team Page Start-->
+        <section class="team-page">
+            <div class="container">
+                <div class="row">
+                    <!--Team One Single Start-->
+                    <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
+                        <div class="team-one__single">
+                            <div class="team-one__img-box">
+                                <div class="team-one__img">
+                                   <img src="{{ asset('/upload-images/' ~ app.user.getProfilePicture()) }}" alt="Profile Picture" class="profile-image" Image"style=width: 400px; height: 250px;">
+                                </div>
+                                <div class="team-one__shape-1"></div>
+                                <div class="team-one__name-box">
+                                    <h3><a href="team-details.html"><span>{{ app.user.nom }}</span>
+                                            <br>  {{ app.user.prenom }}</a></h3>
+                                </div>
+                                <div class="team-one__sub-title-and-share-btn">
+                                    <div class="team-one__sub-title">
+                                        <p>-  {{ app.user.email }}</p>
+                                    </div>
+                                    <div class="team-one__share-and-email">
+                                        <a href="{{ path('app_logout') }}" class="logout-btn">Logout</a>
+                                    </div>
+                                </div>
+                                <ul class="list-unstyled team-one__social">
+                                    <li><a href="team-details.html"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="team-details.html"><i class="fab fa-facebook"></i></a></li>
+                                    <li><a href="team-details.html"><i class="fab fa-pinterest-p"></i></a></li>
+                                    <li><a href="team-details.html"><i class="fab fa-instagram"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>        
+           </section>
+               
+
 </div>
+</body>
 {% endblock %}

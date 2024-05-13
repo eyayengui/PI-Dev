@@ -144,4 +144,21 @@ public function sendEmail(){
 
         ]);
     }
+    #[Route('/profileadmin', name: 'app_profilee')]
+    public function profileadmin(Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+        // Check if user is not authenticated
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('registration/profileadmin.html.twig', [
+
+        ]);
+    }
 }
