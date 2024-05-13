@@ -97,8 +97,8 @@ public function calendar(ConsultationRepository $consultationRepository,Security
     foreach ($consultations as $consultation) {
         $events[] = [
             'id' => $consultation->getId(),
-            'title' => sprintf('Pathologie: %s Therapeute: %s', $consultation->getPathologie(), $consultation->getIdt()->getUsername()),
-            'start' => $consultation->getDateC()->format('Y-m-d'),
+            'title' => sprintf('%s chez %s', $consultation->getPathologie(), $consultation->getIdt()->getUsername()),
+            'start' => $consultation->getDateC()->format('Y-m-d H:i:s'), // Include the time
         ];
     }
     $data = json_encode($events);
