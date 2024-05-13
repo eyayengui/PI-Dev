@@ -56,6 +56,17 @@ public function findByPatientId($id): array
             ->getResult();
     }
 
+    public function findConfirmedByPatientId($id): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.idp = :patientId')
+            ->andWhere('c.confirmation = :conf')
+            ->setParameter('patientId',$id)
+            ->setParameter('conf',1)
+            ->getQuery()
+            ->getResult();
+    }
+
 public function findByTherapistId($id): array
     {
         return $this->createQueryBuilder('c')
