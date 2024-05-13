@@ -274,13 +274,6 @@ public function addComment($id, Request $request, PublicationRepository $publica
             $em->persist($commentaire);
             $em->flush();
 
-            // Publier une mise à jour Mercure
-            $update = new Update(
-                'publication/' . $id,
-                json_encode(['user' => $commentaire->getIDUser()->getNom(), 'message' => $commentaire->getContenuC()])
-            );
-            $hub->publish($update);
-
             $this->addFlash('success', 'Commentaire ajouté avec succès!');
             return $this->redirectToRoute('publication_details', ['id' => $id]);
         } else {

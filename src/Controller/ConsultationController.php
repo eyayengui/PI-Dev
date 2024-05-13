@@ -139,7 +139,7 @@ public function calendar(ConsultationRepository $consultationRepository,Security
     $cons = $paginatorInterface->paginate(
         $cons,
         $request->query->getInt('page', 1),
-        4
+        3
     );
     $pieChart = new PieChart();
     $pieChart->getData()->setArrayToDataTable([

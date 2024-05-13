@@ -145,6 +145,10 @@
                     <span class="detail-label">Date consultation:</span>
                     <span class="detail-value">{{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : '' }}</span>
                 </div>
+                    <div class="card-detail">
+                    <span class="detail-label">Nom Thérapeute:</span>
+                    <span class="detail-value">{{ consultation.getIdt().username }}</span>
+                </div>
                 <div class="card-detail">
                     <span class="detail-label">Pathologie:</span>
                     <span class="detail-value">{{ consultation.getpathologie }}</span>
