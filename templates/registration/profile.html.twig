@@ -104,13 +104,25 @@
         color: #fff;
         margin-left: 10px;
     }
+    .profile-image {
+        width: 200px; /* Ajustez la largeur selon vos besoins */
+        height: 200px; /* Ajustez la hauteur selon vos besoins */
+        border-radius: 50%; /* Assurez-vous que l'image est arrondie */
+        margin-bottom: 20px; /* Espacement sous l'image */
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="profile-container">
     <div class="profile-card">
-       
+      {% if app.user.profile_picture %}
+    <img src="{{ asset('/upload-images/' ~ app.user.getProfilePicture()) }}" alt="Profile Picture" class="profile-image" Image"style=width: 400px; height: 250px;">
+                                    
+{% else %}
+    <!-- Placeholder image or default image si l'utilisateur n'a pas de photo de profil -->
+    <img src="{{ asset('images/default_profile_picture.png') }}" alt="Profile Picture" class="profile-image">
+{% endif %}
         <h1 class="user-info">{{ app.user.nom }} {{ app.user.prenom }}</h1>
         <table class="profile-table">
             <tbody>

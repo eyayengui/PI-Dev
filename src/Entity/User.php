@@ -73,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $questionnaires;
 
     #[ORM\Column(length: 255)]
-    private ?string $profile_picture = null;
+    public ?string $profile_picture = null;
 
     public function __construct()
     {
