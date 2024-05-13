@@ -1,0 +1,24 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Edit Exercice{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Edit Exercice</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ include('exercice/form.html.twig', {'button_label': 'Update'}) }}
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="{{ path('app_exercice_index') }}" class="btn btn-outline-primary">Back to List</a>
+                </div>
+                {{ include('exercice/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

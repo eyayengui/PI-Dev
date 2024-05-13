@@ -1,0 +1,38 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Exercice Index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="my-4">Exercice Index</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Nom Coach</th>
+                        <th scope="col">Durée</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exercice in exercices %}
+                        <tr>
+                            <td>{{ exercice.id }}</td>
+                            <td>{{ exercice.nomcoach }}</td>
+                            <td>{{ exercice.duree }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ path('app_activite_new') }}" class="btn btn-success">Create New</a>
+        </div>
+    </div>
+{% endblock %}

@@ -5,63 +5,122 @@
 {% block body %}
 {% include 'chat.html.twig' %}
 
-    <h1>Programme</h1>
+<!--Page Header Start-->
+<section class="page-header">
+    <div class="page-header-bg" style="background-image: url(assets/images/backgrounds/page-header-bg.jpg)">
+    </div>
+    <div class="container">
+        <div class="page-header__inner">
+            <h2>
+                <img src="{{ asset(programme.image) }}" alt="Programme Image" style="max-width: 100px; max-height: 100px;">
+                {{ programme.nomL }}
+            </h2>
+            <ul class="thm-breadcrumb list-unstyled">
+                <li><a href="{{ path('app_home') }}">Home</a></li>
+                <li><span>/</span></li>
+                <li><a href="{{ path('app_programme_index') }}">Programme</a></li>
+                <li><span>/</span></li>
+                <li>{{ programme.nomL }}</li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ programme.id }}</td>
-            </tr>
-            <tr>
-                <th>Lieu</th>
-                <td>{{ programme.lieu }}</td>
-            </tr>
-            <tr>
-                <th>But</th>
-                <td>{{ programme.but }}</td>
-            </tr>
-            <tr>
-                <th>Activite</th>
-                <td>activity for a better mental health</td>
-            </tr>
-        </tbody>
-    </table>
-
-<input type="text" id="searchInput" placeholder="Search...">
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const row = document.querySelector('.row');
-    const initialOrder = Array.from(row.children); 
-    searchInput.addEventListener('input', function() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const packageItems = document.getElementsByClassName('packege__item');
-
-        for (let i = 0; i < packageItems.length; i++) {
-            const packageItem = packageItems[i];
-            const offerName = packageItem.querySelector('h4').textContent.toLowerCase();
-            const offerDescription = packageItem.querySelector('.packege__meta').innerText.toLowerCase();
-
-            if (searchTerm === '' || (activiteNom.includes(searchTerm) || activiteProgramme.includes(searchTerm))) {
-                packageItem.style.display = '';
-            } else {
-                packageItem.style.display = 'none';
-            }
-        }
-        const visibleItems = row.querySelectorAll('.packege__item:not([style*="display: none"])');
-        for (let i = 0; i < visibleItems.length; i++) {
-            row.appendChild(visibleItems[i]);
-        }
-        if (searchTerm === '') {
-            row.innerHTML = '';
-            for (let i = 0; i < initialOrder.length; i++) {
-                row.appendChild(initialOrder[i]);
-            }
-        }
-    });
-});
-  </script>
+<!--Programme Details Start-->
+<div class="programme-details">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-4 col-lg-5">
+                <!-- Sidebar Start -->
+                <div class="programme-details__sidebar">
+                    <div class="programme-details__info">
+                        <h3>Programme Details</h3>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>nom du leader</th>
+                                    <td>{{ programme.nomL }}</td>
+                                </tr>
+                                <tr>
+                                    <th>But</th>
+                                    <td>{{ programme.but }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Activite</th>
+                                    <td>activity for a better mental health</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Sidebar End -->
+            </div>
+            <div class="col-xl-8 col-lg-7">
+                <!-- Content Start -->
+                <div class="programme-details__content">
+                    <h3 class="programme-details__title">{{ programme.Lieu }}</h3>
+                    <p class="programme-details__text">one of the best places to relax
+                    </p>
+                    <!-- Process End -->
+                    <!-- Benefit Start -->
+                    <div class="programme-details__benefit">
+                        <div class="row">
+                            <div class="blog-one__img">
+                                <div>
+                                <img src="{{ asset('/upload-images/' ~ programme.getimage()) }}" >
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="programme-details__benefit-content">
+                                    <h3 class="programme-details__benefit-title">Therapy Benefits</h3>
+                                    <p class="programme-details__benefit-text">Build a strong, happy, healthy and loving
+                                        relationship</p>
+                                    <ul class="programme-details__benefit-points list-unstyled">
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fa fa-check"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p>Problem solving and conflict resolution</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fa fa-check"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p>Process underlying pain and anger</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fa fa-check"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p>Repair your past hurts and issues</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="icon">
+                                                <span class="fa fa-check"></span>
+                                            </div>
+                                            <div class="text">
+                                                <p>Rebuild your respect and trust</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Benefit End -->
+                </div>
+                <!-- Content End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!--Programme Details End-->
 
 {% endblock %}
-
