@@ -150,12 +150,13 @@ public function findConsultationsBetweenDatespatient(DateTime $startDate, DateTi
     }
 
     public function countUnconfirmedConsultations(): int
-    {
-        return $this->createQueryBuilder('c')
-            ->select('COUNT(c)')
-            ->andWhere('c.confirmation = :confirmed')
-            ->setParameter('confirmed', false)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
+{
+    return $this->createQueryBuilder('c')
+        ->select('COUNT(c)')
+        ->where('c.confirmation = :confirmed OR c.confirmation IS NULL')
+        ->setParameter('confirmed', false)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
 }
