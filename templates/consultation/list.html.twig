@@ -254,7 +254,7 @@
                 </div>
             {% endif %}
         </div>
-        {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == false %}
+        {% if consultation.getFichemedicale() is not null and consultation.getConfirmation() == NULL or consultation.getConfirmation() == 0 %}
              <div class="warning-box">Non confimé</div>
         {% endif %}
         {% if consultation.getFichemedicale() is not null and consultation.getFichemedicale().getid()!=0  and consultation.getConfirmation() == true %}

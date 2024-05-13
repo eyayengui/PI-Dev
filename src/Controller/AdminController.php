@@ -84,7 +84,7 @@ class AdminController extends AbstractController
 
         public function findAllTherapists(UserRepository $userRepository): array
     {
-        $users = $userRepository->findAll(); // Retrieve all users
+        $users = $userRepository->findAllTherapistsExceptAdmin(); // Retrieve all users
 
         $therapists = [];
         foreach ($users as $user) {

@@ -280,6 +280,7 @@
 </div>
 </div>
 <br>
+{% if consultations != null %}
 <div class="container">
             <div class="row">
 <form action="{{ path('calendar') }}" method="get">
@@ -287,4 +288,5 @@
 </form>
 </div>
 </div>
+{% endif %}
 {% endblock %}

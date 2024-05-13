@@ -323,7 +323,9 @@
         </div>
 
         <div class="action-links">
+            {% if fiche.getConsultations == null %}
             <a href="{{ path('supp_fiche', {'id': fiche.getId()}) }}" class="button">Delete</a>
+            {% endif %}
             <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
         </div>
 

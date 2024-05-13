@@ -103,7 +103,6 @@ public function calendar(ConsultationRepository $consultationRepository,Security
     }
     if (empty($events)) {
         $this->addFlash('notice', 'Aucune consultation trouvée pour les dates sélectionnées.');
-        $data = json_encode([['title' => 'Aucune consultation', 'start' => date('Y-m-d'), 'allDay' => true]]);
     } else {
         $data = json_encode($events);
     }

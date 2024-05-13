@@ -151,20 +151,6 @@
 <div class="form-container">
     {{ form_start(formB) }}
     <div class="form-group">
-        {{ form_label(formB.id_p, 'ID Patient', {'label_attr': {'for': 'id_patient'}}) }}
-        {{ form_widget(formB.id_p, {'attr': {'id': 'id_patient', 'name': 'id_patient', 'placeholder': 'Enter Id Patient'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_p) }}
-        </div>
-    </div>
-    <div class="form-group">
-        {{ form_label(formB.id_t, 'ID Therapeute', {'label_attr': {'for': 'id_therapeute'}}) }}
-        {{ form_widget(formB.id_t, {'attr': {'id': 'id_therapeute', 'name': 'id_therapeute', 'placeholder': 'Enter Id Therapeute'}}) }}
-        <div class="error-message">
-            {{ form_errors(formB.id_t) }}
-        </div>
-    </div>
-    <div class="form-group">
         {{ form_label(formB.date_creation, 'Date Creation', {'label_attr': {'for': 'date_creation'}}) }}
         {{ form_widget(formB.date_creation, {'attr': {'id': 'date_creation', 'name': 'date_creation'}}) }}
         <div class="error-message">

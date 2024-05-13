@@ -86,4 +86,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+
+/**
+ * Returns all therapists except the one with id = 0.
+ *
+ * @return User[] Returns an array of User objects
+ */
+public function findAllTherapistsExceptAdmin(): array
+{
+    return $this->createQueryBuilder('u')
+        ->where('u.roles LIKE :therapistRole')
+        ->andWhere('u.id != :excludedId')
+        ->setParameter('therapistRole', '%ROLE_THERAPEUTE%')
+        ->setParameter('excludedId', 0)
+        ->getQuery()
+        ->getResult();
+}
+
 }
