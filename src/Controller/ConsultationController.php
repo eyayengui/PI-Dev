@@ -93,11 +93,11 @@ public function calendar(ConsultationRepository $consultationRepository,Security
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
             return $this->redirectToRoute('app_login');
         }
-    $consultations = $consultationRepository->findConfirmedByPatientId($user);
+    $consultations = $consultationRepository->findByPatientId($user);
     foreach ($consultations as $consultation) {
         $events[] = [
             'id' => $consultation->getId(),
-            'title' => sprintf('%s: %s', $consultation->getPathologie(), $consultation->getIdt()->getUsername()),
+            'title' => sprintf('%s %s', $consultation->getPathologie(), $consultation->getIdt()->getUsername()),
             'start' => $consultation->getDateC()->format('Y-m-d H:i:s'), // Include the time
         ];
     }
