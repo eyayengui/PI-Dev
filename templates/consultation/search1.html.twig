@@ -215,10 +215,6 @@
     <div class="consultation-card">
         <div class="card-details">
             <div class="card-detail">
-                <span class="detail-label">Id consultation:</span>
-                <span class="detail-value">{{ consultation.getid() }}</span>
-            </div>
-            <div class="card-detail">
                 <span class="detail-label">Id fiche:</span>
                 {% if consultation.getFichemedicale() is null or consultation.getFichemedicale().id==0 %}
                     {% set _ = consultation.setFichemedicale(fiche) %}

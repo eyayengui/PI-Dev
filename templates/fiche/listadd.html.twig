@@ -261,6 +261,12 @@
 .generate-button:hover {
     background-color: #45a049;
 }
+.card-container {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+align-items: flex-start;
+}
 </style>
 <div class="container">
             <div class="row">
@@ -303,10 +309,9 @@
     {% for fiche in fiches %}
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
+            <h4 class="card-title">Patient:{{ fiche.getIdP().nom}}</h4>
         </div>
         <div class="card-body">
-            <p><strong>Patient:</strong> {{ fiche.getIdP().nom}}</p>
             <p><strong>Thérapeute:</strong> {{ fiche.getidT().nom }}</p>
             <p><strong>Date Creation:</strong> {{ fiche.getDateCreation()|date('Y-m-d') }}</p>
             <p><strong>Derniere Mise a jour:</strong> {{ fiche.getDerniereMaj()|date('Y-m-d') }}</p>
@@ -315,7 +320,7 @@
             <h5>Consultations:</h5>
             <ul>
                 {% for consultation in fiche.getConsultations() %}
-                    <li>Id Consultation: {{ consultation.getId() }}</li>
+                    <li>Patient: {{ consultation.getId() }}</li>
                     <li>Date Consultation: {{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : 'N/A' }}</li>
                     <hr class="consultation-line"> 
                 {% endfor %}

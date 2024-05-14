@@ -1,6 +1,8 @@
 {% extends 'base-front.html.twig' %}
 
 {% block body %}
+{% include 'chat.html.twig' %}
+
 <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="0">
     <TR>
         <TD BACKGROUND="fade.gif">
@@ -52,11 +54,7 @@
         background-color: #0056b3;
     }
 
-    .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
+
 .card {
     background-color: #f5f5f5;
     border-radius: 8px;
@@ -153,27 +151,34 @@
     margin-bottom: 5px;
 }
 .search-form {
-    margin-bottom: 20px; /* Add some spacing below the form */
-}
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
-.search-form label {
-    margin-right: 10px; /* Add spacing between label and input */
-}
+    .search-form label {
+        font-weight: bold;
+        margin-right: 5px;
+        margin-bottom: 5px; /* Added margin bottom for stacking */
+    }
 
-.search-form input[type="text"] {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-right: 10px; /* Add spacing between input and button */
-}
+    .search-form input[type="text"],
+    .search-form input[type="date"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 200px; /* Adjust width as needed */
+    }
 
-.search-form button {
-    padding: 6px 12px;
+    .search-form button {
+    padding: 5px 10px;
     background-color: #007bff;
     color: #fff;
     border: 1px solid #007bff; /* Add border */
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    align-self: flex-start; /* Align button to the start of the container */
 }
 
 .search-form button:hover {
@@ -181,28 +186,127 @@
     border-color: #0056b3; /* Change border color on hover */
 }
 
+.order-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+.order-button:hover {
+        background-color: #0056b3; /* Change background color on hover */
+    }
+
+    .submit-button {
+    background-color: #0f4c75; /* Dark Blue */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.submit-button:hover {
+    background-color: #003366; /* Darker shade of blue on hover */
+}
+.generate-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.generate-button:hover {
+    background-color: #45a049;
+}
+.qr-code-form-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.qr-code-form {
+    display: inline-block;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.qr-code-form input[type="hidden"] {
+    display: none;
+}
+
+.generate-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.generate-button:hover {
+    background-color: #45a049;
+}
 </style>
-
-
-<form action="{{ path('search_fiche_medicale') }}" method="get" class="search-form">
-    <label for="id">Search by ID:</label>
-    <input type="text" id="id" name="id">
-    <button type="submit">Search</button>
+<div class="container">
+            <div class="row">
+<p><strong>Chercher par date de création</strong></p>
+<form action="{{ path('search_fichedate') }}" method="get" class="search-form">
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date" name="start_date">
+    </div>
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date" name="end_date">
+    </div>
+    <p><strong>et par date de dérniere mise a jour</strong></p>
+    <div>
+        <label for="start_date">Date début:</label>
+        <input type="date" id="start_date1" name="start_date1">
+    </div>
+    <div>
+        <label for="end_date">Date limite:</label>
+        <input type="date" id="end_date1" name="end_date1">
+    </div>
+    <button type="submit">Chercher</button>
 </form>
+</div>
+</div>
+
+
+<div class="container">
+            <div class="row">
 <form action="{{ path('fiche_medicale_ordered_by_date_creation') }}" method="get">
-    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Order by Date</button>
+    <button type="submit" class="order-button">Trier par Date de creation</button>
 </form>
+</div>
+</div>
+
 
 
 <div class="card-container">
     {% for fiche in fiches %}
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
+            <h4 class="card-title">Patient:{{ fiche.getIdP().nom}}</h4>
         </div>
         <div class="card-body">
-            <p><strong>Patient:</strong> {{ fiche.getIdP().nom }}</p>
-            <p><strong>Thérapeute:</strong> {{ fiche.getidT().nom}}</p>
+            <p><strong>Thérapeute:</strong> {{ fiche.getidT().nom }}</p>
             <p><strong>Date Creation:</strong> {{ fiche.getDateCreation()|date('Y-m-d') }}</p>
             <p><strong>Derniere Mise a jour:</strong> {{ fiche.getDerniereMaj()|date('Y-m-d') }}</p>
         </div>
@@ -210,7 +314,7 @@
             <h5>Consultations:</h5>
             <ul>
                 {% for consultation in fiche.getConsultations() %}
-                    <li>Id Consultation: {{ consultation.getId() }}</li>
+                    <li>Patient: {{ consultation.getId() }}</li>
                     <li>Date Consultation: {{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : 'N/A' }}</li>
                     <hr class="consultation-line"> 
                 {% endfor %}
@@ -218,12 +322,34 @@
         </div>
 
         <div class="action-links">
+            {% if fiche.getConsultations == null %}
             <a href="{{ path('supp_fiche', {'id': fiche.getId()}) }}" class="button">Delete</a>
+            {% endif %}
             <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
         </div>
 
+<div class="qr-code-form-container">
+    <form method="get" action="{{ path('app_generer_pdf_historiquee', {'id': fiche.getId()}) }}" class="qr-code-form">
+        <input type="hidden" name="text" value="
+            ID de fiche: {{ fiche.getId() }}
+            ID de patient: {{ fiche.getIdP().prenom }}
+            ID de Thérapeute: {{ fiche.getIdT().prenom }}
+            Date de création: {{ fiche.getDateCreation()|date('Y-m-d') }}
+            Dernière mise à jour: {{ fiche.getDerniereMaj()|date('Y-m-d') }}
+        ">
+        <button type="submit" class="generate-button">Generate PDF</button>
+    </form>
+    <form method="post" action="{{ path('generate_qr_code', {'id': fiche.getId()}) }}" class="qr-code-form">
+        <input type="hidden" name="text" value="
+            ID de fiche: {{ fiche.getId() }}
+            ID de patient: {{ fiche.getIdP().prenom }}
+            ID de Thérapeute: {{ fiche.getIdT().prenom }}
+            Date de création: {{ fiche.getDateCreation()|date('Y-m-d') }}
+            Dernière mise à jour: {{ fiche.getDerniereMaj()|date('Y-m-d') }}
+        ">
+        <button type="submit" class="generate-button">Genérer un code QR</button>
+    </form>
+</div>
     </div>
     {% endfor %}
-</div>
-
 {% endblock %}

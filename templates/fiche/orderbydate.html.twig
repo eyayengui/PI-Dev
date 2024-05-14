@@ -122,11 +122,9 @@
     {% for fiche in fiches %}
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Id Fiche: {{ fiche.getId() }}</h4>
+            <h4 class="card-title">Patient: {{ fiche.getIdP().nom }}</h4>
         </div>
         <div class="card-body">
-            <p><strong>Patient:</strong> {{ fiche.getIdP().nom }}</p>
-            <p><strong>Thérapeute:</strong> {{ fiche.getidT().nom}}</p>
             <p><strong>Date Creation:</strong> {{ fiche.getDateCreation()|date('Y-m-d') }}</p>
             <p><strong>Derniere Mise a jour:</strong> {{ fiche.getDerniereMaj()|date('Y-m-d') }}</p>
         </div>
@@ -134,18 +132,12 @@
             <h5>Consultations:</h5>
             <ul>
                 {% for consultation in fiche.getConsultations() %}
-                    <li>Id Consultation: {{ consultation.getId() }}</li>
+                    <li>Patient: {{ consultation.getIdP().getusername() }}</li>
                     <li>Date Consultation: {{ consultation.getDateC() ? consultation.getDateC()|date('Y-m-d') : 'N/A' }}</li>
                     <hr class="consultation-line"> 
                 {% endfor %}
             </ul>
         </div>
-
-        <div class="action-links">
-            <a href="{{ path('supp_fiche', {'id': fiche.getId()}) }}" class="button">Delete</a>
-            <a href="{{ path('edit_fiche', {'id': fiche.getId()}) }}" class="button">Edit</a>
-        </div>
-
     </div>
     {% endfor %}
 </div>
